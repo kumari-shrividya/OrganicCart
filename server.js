@@ -7,7 +7,7 @@ require('dotenv').config();
 var mongourl=process.env.MONGO_URL;
 
 const mongoose=require('mongoose');
-//mongoose.connect("mongodb+srv://shrividya:iM9YNo2J2av4SN6i@cluster1.nf1wxyp.mongodb.net/ecommerce_organic_cart");
+
 mongoose.connect(mongourl);
 
 const path = require('path')
