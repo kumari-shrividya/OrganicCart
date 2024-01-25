@@ -1,0 +1,27 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<section style="background-color: #eee; padding-top: 5px;" >
+    <div style="text-align: right;">Welcome, admin123@gmail.com</div>
+    <div class="container">
+          <h5> Total Sales</h5>
+          <table class="table mt-5 table-striped">
+
+            <thead>
+             <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Total Sales</th>
+             </tr>
+              </thead>
+            <tbody>
+            
+                <% TotalSales.forEach(function(sales){ %>
+               <tr>
+                <td><%= sales._id %></td>
+                <td>Rs.<%=sales.Total_Sales %>.00</td>
+                           
+              <% }); %>
+            </tbody>
+          </table>
+    
+   </div>
+</section>

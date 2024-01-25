@@ -1,0 +1,94 @@
+<%- include('../layouts/header.ejs') %>
+
+<section style=" padding-top: 5px; margin-right: 40px; " >
+
+  <div class="row  mt-4  col-1">
+    <a class="btn btn-primary m-5" style="width: 200px;border-radius: 10px;";  href="/address/addAddress">Add Address</a>
+    </div>
+    <h4 style=" padding-top: 15px; text-align: center; margin-top: 20px;">Address List</h4>
+     <div class="col-md-6 col-lg-12 col-xl-12 order-2 order-lg-1">  
+           
+      <% if  (typeof addressList!=='undefined' || addressList!==[]){%>
+          <table class="table mt-5" style=" margin-left: 20px; margin-right: 20px; border-spacing:10px; border-collapse: separate;text-align: center; font-size: small;">
+            <thead>
+             <tr>
+                  <th scope="col">Default</th> 
+                  <th scope="col">Full Name</th>
+                  <th scope="col">House Name</th> 
+                  <th scope="col">StreetName</th>
+                  <th scope="col">City</th>
+                  <th scope="col">State</th>
+                  <th scope="col"> Pincode</th>
+                  <th scope="col"> ContactNumber</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                  <th>Set As Default</th>
+             </tr>
+            </thead>
+            <tbody>
+                <% addressList.forEach(function(address){ %>
+               <tr>   
+                
+                    <td>
+                        <% if( address.isDefault ===true){%>
+                         <input type="radio" checked name="default">&nbsp;
+                       
+                         <% }else {%>
+                          <input type="radio" name="default">&nbsp;
+                        <% }%>
+                        </td> 
+                        <td><%=address.FullName %></td>
+                       <td><%=address.HouseName %></td>
+                       <td><%=address.StreetName %></td>
+                       <td><%=address.City %></td>
+                       <td><%=address.State %></td>
+                       <td><%=address.Pincode %></td>
+                       <td><%=address.ContactNumber %></td>
+                         
+                     <td>
+                        <a  style="font-size:small;border-radius: 10px;height:20px" href="/address/editAddress/<%=address._id%>"  class="btn btn-success">Edit
+                        </a></td>
+                    <td>
+                        <a style="font-size:small;border-radius: 10px; height:20px" href="/address/deleteAddress/<%=address._id%>" class="btn btn-danger" 
+                      onclick="return confirm ('do you want to delete the address ?')">Delete
+                       </a>
+                   </td>
+                   <td>
+                    <a style="font-size:small;border-radius: 10px;height:20px" href="/address/set_As_Default/<%=address._id%>" 
+                        class="btn btn-primary">Set as Deault
+                   </a>
+               </td>
+              </tr>
+              <% }); %>
+            </tbody>
+         </table>  
+         <%} else {%>
+          <h5>No Address available!</h5>
+          <%}%>
+   </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<% if(typeof isAdrAdded!=='undefined' && isAdrAdded===true) { %>
+  <script>
+   Swal.fire("Address added successfully");
+   
+
+</script>
+<% } %>
+<% if(typeof isAdrDeleted!=='undefined' && isAdrDeleted===true) { %>
+  <script>
+   Swal.fire("Address deleted successfully"); 
+</script>
+<% } %>
+
+<% if(typeof isAdrEditted!=='undefined' && isAdrEditted===true) { %>
+  <script>
+   Swal.fire("Address editted successfully"); 
+</script>
+<% } %>
+<% if(typeof isDefault!=='undefined' && isDefault===true) { %>
+  <script>
+   Swal.fire("Default address set successfully"); 
+</script>
+<% } %>
+

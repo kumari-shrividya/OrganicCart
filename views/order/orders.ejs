@@ -1,0 +1,86 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<section style="padding-top: 5px;" >
+  <br><br>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
+    <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
+    <div class="container">
+            <!-- <div class="row  mt-4  col-1">
+          <a class="btn btn-success" style="width: 100px;"  href="/admin/product">Add Product</a>
+
+          </div> -->
+          <h4 style="text-align: center;">Order List</h4>
+          <% if( typeof orders !=='undefined' ) { %>
+          <table id="myTable"  class="display nowrap" class="table mt-10 style="border-right: 1px; border-spacing:10px; border-collapse: separate;" >
+
+            <thead>
+             <tr>
+                  <th scope="col">Order Id</th>
+                  <th scope="col">Order Date</th>
+                  <th scope="col">Amount&nbsp;</th>
+                  <th scope="col">Mehod</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"></th>
+                  <th scope="col">Action</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+            <tbody>
+                <% orders.forEach(function(order){ %>
+               <tr>
+                <td><%=order._id %></td>
+                <td><%= order.order_Date.toLocaleString() %></td>
+                <td>Rs.<%=order.total_Amount %>.00&nbsp;</td>
+                <td><%=order.payment_Method %></td>
+                <td><%=order.order_Status %></td>
+                                       
+                     <!-- <td ><a href="/order/updateOrderStatus/<%=order._id%>" class="btn btn-success"
+                      style="font-size:small">Update Status</a></td> -->
+                      <td>
+                        <td>
+                          <form action="/order/updateOrderStatus/<%=order._id%>" method="post" >
+                          <select name="status" id="status" class="form-control" style="color:blue;width:130px;border:2px">
+                          <option value="">Select Status</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Cancelled">Cancelled</option>
+                          <option value="Returned">Returned</option>
+                          
+                          <option value="RejectedCancellation">Rejected Cancellation</option>
+                          <option value="Completed">Completed</option>
+                          </select>
+                          <button type="submit" style="width:120px" class="btn btn-secondary btn-block">Update Status</button>
+                          <!-- <a href="/order/updateOrderStatus/<%=order._id%>" class="btn btn-secondary"
+                        style="font-size:small">Update Status</a></td> -->
+                     </div>
+                    </form>
+                      </td>
+                      <td><a href="/order/adminOrderDetails/<%=order._id%>" class="btn btn-primary"style="font-size:small;width:100px"
+                        >View Details</a></td>
+              </tr> 
+              <% }); %>
+            </tbody>
+          </table>
+        
+          <% } else { %>
+            <h3 class="text-center"> No Orders</h3>
+          <% } %>
+    
+   </div>
+   <br><br>
+</section>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable({
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
+    }
+  });
+} );
+  </script>

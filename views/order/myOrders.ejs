@@ -1,0 +1,85 @@
+<%- include('../layouts/header.ejs') %>
+<div name="error" >
+  <%
+  if(typeof message !=='undefined'){
+
+   %>
+ <h5 style="color:red;text-align: center;"><%= message %></h5>
+ <%
+  }
+ %>
+</div>
+
+<section style=" padding-top: 5px;" >
+
+  <!-- Toast message for success
+  <% if (typeof success!=='undefined'){ %>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+        <div class="toast-header">
+            <strong class="mr-auto">Success</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+           Order cancelled successfully ! 
+        </div>
+    </div>
+    <%}%> -->
+   
+    <div class="container">
+           <div class="row  mt-4  col-1">
+          <!-- <a class="btn btn-success" style="width: 100px;"  href="/admin/product">Add Product</a> -->
+          
+        </div>
+          <% if( typeof orders !=='undefined' ) { %>
+            <h5 style="text-align: center;">My Orders</h5>
+          <table id="myTable" class="table mt-5 " style=" text-align: center;vertical-align: middle">
+
+            <thead>
+             <tr>
+                  <th scope="col">OrderId</th>
+                  <th scope="col">OrderDate</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Status</th>
+                  <th></th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+            <tbody>
+                <% orders.forEach(function(order){ %>
+                
+               <tr>
+                <td><%=order._id %></td>
+                 <td><%= order.order_Date.toLocaleString() %></td>
+                <td>₹<%=order.total_Amount %>.00</td>
+                 <td><%=order.payment_Method %></td>
+                <td><%=order.order_Status %></td>
+                <%  if(order.order_Status ==='Pending' || order.order_Status ==='Placed'||order.order_Status ==='pending' || order.order_Status ==='placed' )  {   %>       
+                     <td ><a href="/order/cancelMyOrder/<%=order._id%>?" class="btn btn-success"
+                      style="font-size:small ;border-radius: 10px;">Cancel Order</a></td>
+                  <% } %>
+                      <td><a href="/order/orderDetails/<%=order._id%>" class="btn btn-primary"style="font-size:small;border-radius: 10px;"
+                        >View Details</a></td>
+                        <td></td>
+              </tr> 
+              <% }); %>
+            </tbody>
+          </table>
+          <br><br>
+        
+          <% } else { %>
+            <h3 class="text-center"> No Orders</h3>
+          <% } %>
+          <!-- </div> -->
+   </div>
+
+   <!-- <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script> -->
+   
+</section>
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+  </script>

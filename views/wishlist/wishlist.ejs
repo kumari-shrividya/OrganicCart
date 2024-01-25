@@ -1,0 +1,100 @@
+<%- include('../layouts/header.ejs') %>
+
+<section class="main">
+  <div class="container py-5">
+      <div class="row py-4">
+          <div class="col-lg-7 pt-5 text-center">
+              <h2 class="pt-4">Nature Has Always Cared For Us!</h2>
+          </div>
+      </div>
+  </div>
+
+</section>
+
+<br>
+
+<section style=" padding-top: 5px;" >
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/all_products">Back to Home</a></li>
+          <!-- <li class="breadcrumb-item active" aria-current="page">My Cart</li> -->
+        </ol>
+      </nav>
+ </section>
+   
+ <h4 style="text-align: center;">Wish List</h4>
+
+        <% if( typeof user !=='undefined' ) { %>
+           
+            <% if( typeof wishlist !=='undefined' ) { %>
+                <div class="container">
+                   
+                  <table class="table mt-5 " style="vertical-align: middle;">
+        
+                    <thead>
+                     <tr>
+                          <th scope="col"></th>
+                          <th scope="col">Title</th>
+                          <th scope="col">Unit Price</th>
+                            <th></th>
+                          <!-- <th scope="col"></th> -->
+                          <th scope="col">Quantity</th> 
+                          <th scope="col" >SubTotal</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                        <% let total=parseFloat(0)  %>
+                        <% wishlist.forEach(function(product){ %>
+                        <% let sub = (parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+                        <% total += parseFloat(+sub) %>
+                        <!-- +sub -->
+                       <tr>
+                        <td><img style="width:100px;height: 100px;"; src="/images/product/<%= product.image %>" alt=" "><a href="/wishlist/add_To_Cart/<%=product.product_Id %>"><strong> Add</strong><i class="fa fa-shopping-cart"></i></a></td>&nbsp;
+                        <td><%= product.name %></td>
+                        <td><%=product.price %></td>
+                        <td></td>
+                        <!-- <td><%=product.quantity %></td> -->
+                        <td>
+                          <a  href="/wishlist/updateWishlist/<%=product.product_Id %>?action=remove" style="text-decoration: none;font-size: x-large;color:red"><strong>-</strong>&nbsp;</a>&nbsp;
+                          <strong> <%=product.quantity %></strong>
+                          <a   href="/wishlist/updateWishlist/<%=product.product_Id %>?action=add" style="text-decoration: none; font-size:x-large;color:red">&nbsp;&nbsp;<strong>+</strong></a>&nbsp;
+                         
+                       
+                        <a href="/wishlist/updateWishlist/<%=product.product_Id %>?action=clear" style="text-decoration: none;font-size: large; color:blue">&nbsp;clear</a></td>
+                        <td>Rs.<%= sub %></td>
+                        </tr>
+                        <% }) %>
+                        
+                        <tr>
+                          <td colspan="6" align="right">Total: Rs.&nbsp;<b><span name="total"><%= parseFloat(total).toFixed(2) %></span></b></td>
+                        </tr>
+                        <% if( wishlist.length>0 ) { %>
+                        <tr>
+                     <td colspan="6" align="left"> <a class="btn btn-secondary" style="border-radius: 10px;font-size: small;"  href="/wishlist/clearWishlist"  onclick="return confirm ('do you want to clear the wishlist ?')">
+                        Clear Wishlist</a> </td> 
+                        
+                         
+                        </tr>
+                        <% } %>
+                    </tbody>
+                  </table>
+            <br><br>
+           </div>
+               
+                 <% } else { %>
+                    <h3 class="text-center"> Your Wishlist is empty</h3>
+               
+                 <% } %>
+              
+         <% } %>       
+         <br><br>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <% if(typeof isAddedToCart!=='undefined' && isAddedToCart===true) { %>
+ <script>
+Swal.fire("Added to Cart");
+</script>
+<% } %>
+
+        
+
+    

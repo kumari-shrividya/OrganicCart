@@ -1,0 +1,138 @@
+<%- include('../layouts/adminHeader.ejs') %>
+<hr>
+    <!-- <div class="row" > -->
+      <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/cart/checkout">My Cart</a></li> -->
+        <!-- <li class="breadcrumb-item active" aria-current="page">Order Summary</li>
+      </ol> -->
+    <!-- </nav> --> 
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> -->
+<div class="container mt-3">
+  <h2>User Details</h2><br>
+ 
+
+    <div class="row">
+      
+      
+                  <h4>Address </h4>
+                       			                                    
+               
+                  
+                      <div class="col">
+                        <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0) { %>
+                            <% if( typeof cart !=='undefined' ) { %>
+                                <% var count=parseFloat(0) %>
+                                <% let total=parseFloat(0)  %>
+                               
+                              <ul class="list-group mb-3">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                  <span class="text-muted">Your cart</span>
+                                  <span  style="color:red"></span>
+                                </h4>
+                                <% cart.forEach(function(product){ %>   
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                  <div >
+                                    <% let sub =(parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+                                    <% total += parseFloat(+sub) %>
+                                    <h6 class="my-0"><%=product.name %> <span ><%=product.quantity %>&nbsp; Nos.</span></h6>
+                                   
+                                  </div>
+                                  <span class="text-muted">₹&nbsp;<%=parseFloat(+sub)  %>.00</span>
+                                </li>
+                                
+                             
+                                <% count+=1%>
+                                <% }) %>
+                
+                                 <li class="list-group-item d-flex justify-content-between">
+                                  <div>
+                                    <h6 class="my-0"></h6>
+                                   </div>
+                                   <span>SubTotal: &nbsp; </span>
+                                   <span>₹&nbsp;<%=parseFloat(total)  %>.00</span>
+                                  </li>
+                
+                                   <li class="list-group-item d-flex justify-content-between">
+                                    <div>
+                
+                                    </div>
+                                   <span>Shipping: &nbsp; </span>
+                                   <span>₹&nbsp;0.00</span>
+                                  
+                                  </li>
+                                  <li class="list-group-item d-flex justify-content-between">
+                                    <div></div>
+                                   <span>Total:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; <span>
+                                   <strong>₹&nbsp;<%=total%>.00</strong>
+                                  
+                                  </li>
+                                <% } %>
+                              </ul>
+
+
+                            <% }  %>
+                     </div>
+               
+                    
+                     <div class="col mt-3">
+     
+                        <% if( typeof cart !=='undefined' ) { %>
+                          <% var count=parseFloat(0) %>
+                          <% let total=parseFloat(0)  %>
+                         
+                        <ul class="list-group mb-3">
+                          <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Your cart</span>
+                            <span  style="color:red"></span>
+                          </h4>
+                          <% cart.forEach(function(product){ %>   
+                          <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div >
+                              <% let sub =(parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+                              <% total += parseFloat(+sub) %>
+                              <h6 class="my-0"><%=product.name %> <span ><%=product.quantity %>&nbsp; Nos.</span></h6>
+                             
+                            </div>
+                            <span class="text-muted">₹&nbsp;<%=parseFloat(+sub)  %>.00</span>
+                          </li>
+                          
+                       
+                          <% count+=1%>
+                          <% }) %>
+          
+                           <li class="list-group-item d-flex justify-content-between">
+                            <div>
+                              <h6 class="my-0"></h6>
+                             </div>
+                             <span>SubTotal: &nbsp; </span>
+                             <span>₹&nbsp;<%=parseFloat(total)  %>.00</span>
+                            </li>
+          
+                             <li class="list-group-item d-flex justify-content-between">
+                              <div>
+          
+                              </div>
+                             <span>Shipping: &nbsp; </span>
+                             <span>₹&nbsp;0.00</span>
+                            
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                              <div></div>
+                             <span>Total:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; <span>
+                             <strong>₹&nbsp;<%=total%>.00</strong>
+                            
+                            </li>
+                          <% } %>
+                        </ul>
+                      
+                </div>
+          
+          
+     
+           
+                     
+
+    </div>
+</div>

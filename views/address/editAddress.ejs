@@ -1,0 +1,71 @@
+<%- include('../layouts/header.ejs') %>
+<section style=" padding-top: 5px;" >
+    <div class="category-form">
+        <form action="/address/editAddress/<%=address._id%>" method="post" >
+            <h2 class="text-center">Edit address</h2>
+
+            <div name="error" style="font-size:x-small; color:green; text-align: center;">
+                <% if(typeof message !=='undefined' ){ %>
+                    <h4>
+                        <%= message %>
+                    </h4>
+                <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="FullName" name="FullName" id="FullName"  text-center required="required" value="<%=address.FullName %>">
+                <% if( typeof errors !=='undefined' && errors.FullName ) { %>
+                    <span class="text-danger"><%= errors.FullName.msg %></span>
+                    <% } %>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Apt/HouseName" name="HouseName" id="HouseName"  text-center required="required" value="<%=address.HouseName %>">
+                <% if( typeof errors !=='undefined' && errors.HouseName ) { %>
+                    <span class="text-danger"><%= errors.HouseName.msg %></span>
+                    <% } %>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="StreetName" name="StreetName" id="StreetName"  text-center required="required" value="<%=address.StreetName %>">
+                <% if( typeof errors !=='undefined' && errors.StreetName ) { %>
+                    <span class="text-danger"><%= errors.StreetName.msg %></span>
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="City" name="City" id="City"  text-center required="required" value="<%=address.City %>">
+                <% if( typeof errors !=='undefined' && errors.City ) { %>
+                    <span class="text-danger"><%= errors.City.msg %></span>
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="State" name="State" id="State"  text-center required="required" value="<%=address.State %>">
+                <% if( typeof errors !=='undefined' && errors.State ) { %>
+                    <span class="text-danger"><%= errors.State.msg %></span>
+                    <% } %>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Pincode" name="Pincode" id="Pincode"  text-center required="required" value="<%=address.Pincode %>">
+                <% if( typeof errors !=='undefined' && errors.Pincode ) { %>
+                    <span class="text-danger"><%= errors.Pincode.msg %></span>
+                    <% } %>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="ContactNumber" name="ContactNumber" id="ContactNumber"  text-center required="required" value="<%=address.ContactNumber %>">
+                <% if( typeof errors !=='undefined' && errors.ContactNumber ) { %>
+                    <span class="text-danger"><%= errors.ContactNumber.msg %></span>
+                    <% } %>
+            </div>  <button type="submit" class="btn btn-primary btn-block">Update Address</button>
+            <!-- <div class="form-group">
+               
+            </div> -->
+
+        </form>
+
+    </div>
+</section>
+</body>
+
+</html>

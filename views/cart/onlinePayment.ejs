@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Organic Cart</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    </head>
+    <body>
+
+<div  style="text-align: center;"> 
+    <form class="pay-form">
+    <!-- <a href="#" class="btn btn-secondary" >Proceed To Pay</a> -->
+    <input type="hidden" name="orderId" value="<%=orderId %>">
+    <input type="hidden" name="total" value="<%=total %>">
+    
+    <input type="submit" style="border-radius: 10px;width:200px; height:60px;margin-top:200px; background-color: blue;color:white;font-size: large;"  value="Proceed To Pay">
+   </form>
+</div>
+</body>
+</html>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.pay-form').submit(function(e){
+            e.preventDefault();
+            var formData=$(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url:"/cart/onlinePayment",
+                data:formData,
+                success:function(res){
+                    if(res.success){ 
+                        var options = {
+                             "key": ""+res.key_id+"", 
+                             "amount": ""+res.amount+"",
+                             "currency": "INR",
+                            "handler": function (response){
+                        // alert("payment succeeded");
+                         window.open("/cart/orderSuccess","_self")     
+                           // window.open("/orderSuccess","_self")
+                                },
+                            //verifypayment(response)
+                        };
+                        var razorpayObject = new Razorpay(options);
+                        razorpayObject.on('payment.failed', function (response){
+                                alert(response.error.code);
+                               
+                        });
+                            razorpayObject.open(); 
+                                           
+                    }
+                    else{
+                        alert(res.msg);
+                    }
+                }
+            })
+        })
+
+    })
+</script> 

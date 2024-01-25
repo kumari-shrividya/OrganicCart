@@ -1,0 +1,90 @@
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Organic Cart</title>
+    
+<style>
+body{
+    padding :0;
+    padding:0;
+    margin:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.OTP-container{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    padding: 3rem;
+    justify-content: center;
+}
+form1 button{
+    padding: 10px;
+    font-size: 18px;
+    margin-top: 15px;
+
+}
+.input-field{
+    display: flex;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 40px -20px black;
+    align-items: center;
+    justify-content: center;
+}
+.input-field input{
+    margin:30px 0;
+    font-size: 25px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(5,auto);
+    align-items: center;
+    justify-content: center;
+}
+/* .input-field input::-webkit-inner-spin-button,
+.input-field input::-webkit-outer-spin-button{
+    display: none;
+} */
+
+   </style>
+</head>
+<body>
+
+<section>
+    <h4>Your registration completed sucessfully.</h4>
+<h4>OTP has been send to your email address.Please verify.</h4>
+<div name="error" >
+    <%
+    if(typeof message !=='undefined'){
+
+     %>
+   <h5 style="color:red;text-align: center;"><%= message %></h5>
+   
+   <%
+    } else {  %>
+     <h5 style="color:red;text-align: center;"></h5>
+  <%} %>
+</div>
+<div class="OTP-container">
+<form name="form1"  method="post">
+<h4>Enter OTP Code</h4>
+<div class="input-field">
+ <input type="text" name="inp1" style="height: 45px;width: 45px;"  placeholder=""  maxlength="1" autofocus>
+<input type="text" name="inp2" style="height: 45px;width: 45px;" placeholder="" maxlength="1" required>
+<input type="text" name="inp3" style="height: 45px;width: 45px;" placeholder=""  maxlength="1" required>
+<input type="text" name="inp4" style="height: 45px;width: 45px;" placeholder="" maxlength="1" required>
+</div>
+<input type="submit"  name="submit" style="height: 25px;width: 90px; margin-top: 15px; " value="Verify" >
+<a class="btn btn-success" style="width: 100px;"  href="/resendOTP">Resend OTP</a>
+</form>
+</div>
+</section>
+
+</body>
+</html>

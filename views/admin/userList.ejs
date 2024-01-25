@@ -1,0 +1,73 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<section style=" padding-top: 5px;" >
+    <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
+    <div class="container"  >
+            <!-- <div class="row  mt-4  col-1">
+          <a class="btn btn-success" style="width: 100px;"  href="/admin/product">Add Product</a>
+          </div> -->
+          <br><br>
+          <h4 style="text-align: center;">User List</h4>
+          <table id="myTable"  class="display nowrap" width="100%" style="border: 1px solid transparent !important; border-spacing:10px; border-collapse: separate;" class="table mt-5 table-striped">
+
+            <thead>
+             <tr>
+                  <th scope="col" style=" text-align: center;vertical-align: middle"; >User Name</th>
+                  <th scope="col" style=" text-align: center;vertical-align: middle"; >Email</th>
+                  <th scope="col" style=" text-align: center;vertical-align: middle"; >Phone No</th>
+                  <th scope="col" style=" text-align: center;vertical-align: middle";>Address</th>
+                  <th scope="col" style=" text-align: center;vertical-align: middle";>Details</th>
+                  <!-- <th></th> -->
+                  <th scope="col" style=" text-align: center;vertical-align: middle"; >Block/Unblock</th>
+                </tr>
+              </thead>
+            <tbody>
+                <% users.forEach(function(user){ %>
+               <tr>
+                <td style=" text-align: center;vertical-align: middle"; ><%=user.name %></td>
+                <td style=" text-align: center;vertical-align: middle"; ><%=user.email %></td>
+                <td style=" text-align: center;vertical-align: middle"; ><%=user.phone %></td>
+                <td style=" text-align: center;vertical-align: middle; " >
+                  <a href="/admin/userAddress/<%=user._id%>" class="btn btn-primary" style="border-radius: 10px;"
+                 >Show Address</a></td>
+                <td style=" text-align: center;vertical-align: middle; " >
+                 <a href="#" class="btn btn-secondary" style="border-radius: 10px;"
+                  >Details</a></td> 
+                  <% var status= user.is_blocked  %>
+                    <% if(status==0) {%>
+                    <td style=" text-align: center;vertical-align: middle;border-radius: 10px;" >
+                      <a href="/admin/blockUser/<%=user._id%>" class="btn btn-danger" style="border-radius: 10px;"
+                      onclick="return confirm ('do you want to block the user : <%=user.name %> ?')">Block</a></td>
+                
+                     <%}else { %>
+               
+                    <td style=" text-align: center;vertical-align: middle;" >
+                      <a href="/admin/unblockUser/<%=user._id%>" class="btn btn-danger" style="border-radius: 10px;"
+                      onclick="return confirm ('do you want to unblock the user : <%=user.name %> ?')">Unblock</a></td>
+                    <%} %>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+    
+   </div>
+   
+</section>
+<br><br>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable({
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
+    }
+  });
+   
+} );
+  </script>

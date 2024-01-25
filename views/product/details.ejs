@@ -1,0 +1,47 @@
+<%- include('../layouts/header.ejs') %>
+
+<section style=" padding-top: 5px;" > 
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <!-- <li class="breadcrumb-item"><a href="/all_products">BackToHome</a></li> -->
+          <!-- <li class="breadcrumb-item active" aria-current="page">Product Details</li> -->
+        </ol>
+      </nav>
+     <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 text-center">
+                <% if( typeof Product !=='undefined'){ %>
+                    <div class="product text-center" >
+                     <h3><%= Product.title %></h3>
+                    <img src="/images/product/<%= Product.images[0] %>"  style="width:80%; height:200px; padding:5px" class="img-fluid">              
+                    <br> 
+                <div style="padding-bottom: 5px;">Weight:&nbsp;<%= Product.Weight %></div>
+                <% var qty=parseFloat(Product.quantity) %>
+                <% if(qty<=0) {%>
+                    <div style="padding-bottom: 5px;"><strong>Out of Stock</strong></div> 
+                <%  }else {%>
+                    <div style="padding-bottom: 5px;">Available:&nbsp;<strong>:<%= Product.quantity %></strong>&nbsp;nos</div> 
+                <% } %>
+
+                <div> <strong>₹&nbsp;<%= Product.unit_price %>.00</strong></div>
+               
+                <div class="my-2"> <a href="/cart/add_To_Cart/<%= Product._id %>" class="btn btn-success" style="height:15px">Add To Cart</a></div>
+                <p style="text-align: left; padding-left: 5px;;"><strong>Description: </strong><%= Product.description %></p>
+            </div>
+                <% } %>
+            </div>
+        </div>
+     </div><br>
+</section> 
+
+
+
+
+
+
+
+
+<!--This is a Vegetarian product 
+    Smooth, Slimely & mildly crunchy texture
+Light to Dark Green Hue, mild & mellow flavor, Naturally Grown, Freshly handpicked
+Hygienically packed, refigerate to maintain freshness    366 ratings   -->

@@ -1,0 +1,379 @@
+<%- include('../layouts/header.ejs') %>
+
+<!-- <% if(typeof message !=='undefined'){
+%>
+
+<p style="color:black;"><%= message %></p>
+
+<%
+}
+%> -->
+
+  <!-- <section class="main">
+        <div class="container py-5">
+            <div class="row py-4">
+                <div class="col-lg-7 pt-5 text-center">
+                    <h2 class="pt-4">Nature Has Always Cared For Us!</h2>
+                </div>
+            </div>
+        </div>
+
+    </section> -->
+    <style>
+    .carousel-control-next,
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+
+.carousel-indicators li {  background-color: red; }
+      marquee{
+      font-size: 15px;
+      color: #8ebf42;
+      font-family: sans-serif;
+      }
+    
+.checked {
+  color: orange;
+  font-size: small;
+  
+}
+.container{
+  display:flex;
+}
+.image-container{
+           width: 225px; 
+            height: 225px; 
+            background-repeat: no-repeat; 
+            background-size: contain; 
+            /* border: 0.25rem solid black;  */
+            margin-left: 10%; 
+            margin-top: 5%; 
+            margin-right: 10%; 
+}
+ 
+
+ /* tooltip
+ .tooltip{ 
+            display: none; 
+            position: absolute;  
+            z-index: 100; 
+            border: 1px; 
+            background-color: white; 
+            border: 1px solid green; 
+            padding: 3px; 
+            color: green;  
+            top: 20px;  
+            left: 20px; 
+        } 
+        .parentDiv:hover .tooltip{ 
+            display:block; 
+        }  */
+
+
+
+        .emboss-effect {
+      filter: drop-shadow(3px 3px 3px rgba(255, 255, 255, 0.8));
+       /* drop-shadow(-3px -3px 3px rgba(0, 0, 0, 0.4)); */
+     
+      transition: filter 0.3s ease-in-out;
+    }
+    
+    .emboss-effect:hover {
+      filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.4)) drop-shadow(-3px -3px 3px rgba(255, 255, 255, 0.4));
+  
+    }
+
+</style>
+
+<!--  List categories -->
+<section > 
+     
+  <% if (categories !=='undefined' && categories.length) {%> 
+    <div class="row">
+         <% categories.forEach(function(c){ %>
+        <div class="col-md-3 emboss-effect" style="padding:10px;text-align: center; margin-top: 5px;margin-bottom: 5px; ">
+          
+            <!-- <div class="  bg-cover bg-center h:56 p-4 " 
+            style="background-image: url('/images/category/<%= c.image %>');width: 250px; 
+            height:250px; background-repeat: no-repeat; display:inline-block ">
+           </div> -->
+           <a><img class="rounded-circle shadow-4-strong" src="/images/category/<%= c.image %>" style="padding:5px;width:150px;height:100px"></a>
+         
+            <p class="uppercase tracking-wide text-sm font-bold text-gray-700  "><strong><%= c.category %></strong></p>
+   
+        </div> 
+     
+        <% }) %> 
+    </div>
+ <% }else {%>
+  
+  <!-- <h3>No products available.</h3> -->
+  <% } %>
+  </div> 
+</div>
+</div>
+</section>
+</br>
+<hr style="box-sizing: border-box; border: solid 3px #8ebf42">
+
+<!-- images -->
+    <!-- <section>
+        <div id="carouselExampleCaptions" class="carousel slide ">
+        <div class="carousel-indicators"  >
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"  aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="/images/background/bg8.jpg" class="d-block w-100 "   alt="...">
+            <div class="carousel-caption d-none d-md-block" ><br>
+              <p style="color:brown">Unlock your potential with nutrition</p>
+              
+           
+             
+              <marquee 
+             color:"green"
+              direction="left"
+              >
+        
+         <div >100% Organic Fruits, Vegetables and More...</div>
+         </marquee>
+      
+           <img src="/images/background/offer3.jpg" style="float:left">
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="/images/category-2.jpg" class="d-block w-100"   alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Fresh from Garden</h5>
+              <p>Sweet and yummy </p>
+            
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="/images/category-3.jpg" class="d-block w-100"   alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Be Healthy Organic Food</h5>
+              <p>Go with nature's greens</p>
+                           
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section> -->
+
+    <section class="main">
+      <div class="container py-5">
+          <div class="row py-4">
+              <div class="col-lg-7 pt-5 text-center">
+                  <h2 class="pt-4">Nature Has Always Cared For Us!</h2>
+              </div>
+          </div>
+      </div>
+
+  </section>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+
+     
+
+        <% if (products.length) {%> 
+      <div class="row" style="margin-left: 5px;">
+        <h2 style="margin:10px"><%=title %></h2>
+   
+
+        <hr style="box-sizing: border-box; margin-bottom:10px ;margin-top:10px;">
+
+           <% products.forEach(function(p){ %>
+          <div class="col-md-3" style="padding:10px;">
+            <div  class="card border-1px   mb-2">
+             
+               <!-- <div class="text-center" style="padding-left:5px;" > -->
+               
+                <!-- <a > <img class="image" src="/images/product/<%= p.images[0] %>" style="width:50%;padding-top:15px;" class="card-img-top" alt="">
+                </a> -->
+                
+               <!--  </div class="class=bg-white shadow-xl rounded-lg overflow-hidden" > -->
+               <!-- <div class="container"> -->
+               <div class="  bg-cover bg-center h:56 p-4  emboss-effect" 
+               style="background-image: url('/images/product/<%= p.images[0] %>');width: 250px; 
+               height:250px; background-repeat: no-repeat; display:inline-block ">
+              </div>
+          <!-- </div>  -->
+
+           
+
+            <!-- <h5 class="card-title" style="padding-left:5px;text-align: center;" ><%= p.title %></h5>
+                 <div style="padding-left:5px;text-align: center;">&nbsp;₹&nbsp;<strong><%= p.unit_price %>.00 &nbsp;&nbsp;<small><%= p.Weight %></small></strong></div> -->
+                 <div class="m-2 ">
+                  <p class="uppercase tracking-wide text-sm font-bold text-gray-700 " style="margin-left: 5px;"><strong><%= p.title %></strong>&nbsp;&nbsp;
+                    <!-- <div class="parentDiv">wish
+                      <div class="tooltip">Tooltip text</div>
+                    </div> -->
+                    <span  class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked "></span>
+                    <span class="fa fa-star checked "></span>
+                    <span class="fa fa-star checked "></span>
+                    <span class="fa fa-star-half-stroke checked "></span></p>
+                  <p class="text-3xl text-gray-900 " style="margin-left: 5px;">₹&nbsp;<strong><%= p.unit_price %>.00</strong>
+                    &nbsp;&nbsp; <%= p.Weight %> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist" href="/wishlist/add_To_Wishlist/<%= p._id %>"><i class="fa fa-heart" style=" color:lightblue"></i></a></p>
+               
+                  <!-- <p class="text-gray-700 "></p> -->
+              <!-- </div> -->
+                
+                 <!-- <div style=" text-align: center;"> -->
+                  
+
+             </div> 
+                <div class="my-2" style="padding-left:5px;;"> 
+                 
+                  <a data-toggle="tooltip" data-placement="top" title="Product Details" href="/product/details/<%= p._id %>" style="color:#cdc22a;text-decoration:none;margin-left: 10px" >View Details</a>&nbsp;&nbsp;
+                  <a data-toggle="tooltip" data-placement="top" title="Add to Cart" href="/cart/add_To_Cart/<%= p._id %>" style="height:5px;text-decoration:none;border-radius: 40px; font-size: smaller; margin-left: 5px"><strong>Add To Cart</strong></a></div>
+                
+            </div>
+      
+          </div>
+          
+          <% }) %>
+         
+        </div>
+
+       
+       
+     <% }else {%>
+      
+      <h3>No products available.</h3>
+      <% } %>
+      <br><br>
+      </div> 
+      
+    </div>
+  </div>
+</div>
+<hr style="margin-top: 15px; margin-bottom: 0px;  border: solid 3px #8ebf42">
+<br>
+
+<!-- <hr style="margin-top: 15px;  border: solid 3px #8ebf42">
+<br> -->
+
+<section>
+   <div class="container d-flex justify-content-center align-items-center mb-2 ">
+        <div class="row" style="margin-left: 5px;">
+          <h2 style="text-align:center; margin-top:5px;margin-bottom: 15px;" class="emboss-effect">
+            <!-- <a href="/product/user_Product_List" style="text-decoration: none;color:orangered;font-size: large;font-style: italic;font-stretch: semi-expanded; margin-bottom: 30px;"> -->
+              <a href="/product/user_Products_Search" style="text-decoration: none;color:orangered;font-size: large;font-style: italic;font-stretch: semi-expanded; margin-bottom: 30px;">
+             
+               Search Your Favourite Item in  Our Various Range of Products Now >></a></h2>
+            <div class="container col-md-12 justify-content-center align-items-center mb-2 emboss-effect" style="display: flex ;">
+              <img  src="/images/bg_3.jpg" style=" height:300px;width:100%"><img  src="/images/category-4.jpg" style=" height:300px;width:100%"><img  src="/images/bg_1.jpg" style=" height:300px;width:100%">
+            </div>
+            
+         
+          <br>
+         
+          </div>
+          </div>
+          </div>
+      </section> 
+
+      <hr style="margin-top: 15px;  border: solid 3px #8ebf42">
+      <br>
+
+<section>
+  <h4 style="text-align: center;">Our Features</h4>
+  
+  <br>
+  <div class="container d-flex justify-content-center align-items-center mb-2 emboss-effect ">
+    <div class="row no-gutters ftco-services " style=" background-color: #8ebf42;">
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate ">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div class="icon bg-color-1 active d-flex justify-content-center align-items-center mb-2 emboss-effect">
+            <!-- <span class="flaticon-shipped"></span> -->
+            <img src="/images/shipping.jpg" style="width:200px;height:150px"> 
+           
+            </div>
+            <div  >
+              <h5 class="heading">Free Shipping</h5>
+              <span>On all products</span>
+          </div>
+
+         
+        </div>      
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div class="icon bg-color-2 d-flex justify-content-center align-items-center mb-2 emboss-effect">
+            <!-- <span class="flaticon-diet"></span> -->
+            <img src="/images/bg_1.jpg" style="width:200px;height:150px"> 
+          </div>
+          <div class="media-body ">
+            <h5 class="heading">Always Fresh</h5>
+            <span>Product well package</span>
+          </div>
+        </div>    
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div class="icon bg-color-3 d-flex justify-content-center align-items-center mb-2 emboss-effect">
+            <!-- <span class="flaticon-award"></span> -->
+          
+            <img src="/images/quality.jpg" style="width:200px;height:150px"> 
+          </div>
+          <div class="media-body" >
+            <h5 class="heading">Superior Quality</h5>
+            <span>Quality Products</span>
+          </div>
+        </div>      
+      </div>
+      <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services mb-md-0 mb-4">
+          <div class="icon bg-color-4 d-flex justify-content-center align-items-center mb-2 emboss-effect">
+            <!-- <span class="flaticon-customer-service"></span> -->
+            <img src="/images/support.jpg" style="width:200px;height:150px">
+          </div>
+          <div class="media-body ">
+            <h5 class="heading">Support</h5>
+            <span>24/7 Support</span>
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script> -->
+<script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script>
+          $(document).ready(function () {
+              $('.dropdown-toggle').dropdown();
+          });
+      </script> -->
+<br><br><br>
+<hr style="border: solid 3px #8ebf42">
+
+      <%- include('../layouts/footer.ejs') %> 
+</body>
+</html>

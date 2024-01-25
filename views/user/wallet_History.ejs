@@ -1,0 +1,39 @@
+<%- include('../layouts/header.ejs') %>
+
+<!-- <section style="background-color: #eee; padding-top: 5px;" > -->
+    <!-- <div style="text-align: right;"></div> -->
+    <div class="container">
+        <hr>
+        <h5>Wallet History</h5>
+        <hr>
+         <h6>Wallet balance:&nbsp;Rs.<%=user.wallet_Balance%>.00</h6>
+          <table class="table mt-5 table-striped">
+            <thead>
+             <tr>
+                  <th scope="col">Order _Id</th>
+                  <th scope="col">Updated Date</th>
+                  <th>Reason</th>
+                  <th scope="col">Returned Amount</th>
+                  <th scope="col">Deducted Amount</th>
+             </tr>
+              </thead>
+            <tbody>
+                <% if(typeof user.wallet_History !=='undefined')%>
+                <% user.wallet_History.forEach(function(wallet){ %>
+               <tr>
+                <td><%= wallet.order_id %></td>
+
+                <td><% if(wallet.updated_Date) {%>
+                    <%=wallet.updated_Date.toLocaleString() %>
+                    <% } %>
+                </td>
+                <td><%=wallet.reason%></td>
+                <td><%=wallet.returned_Amount %></td> 
+                <td><%=wallet.deducted_Amount %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+    
+   </div>
+<!-- </section> -->

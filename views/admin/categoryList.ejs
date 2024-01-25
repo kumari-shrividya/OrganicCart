@@ -1,0 +1,65 @@
+<%- include('../layouts/adminHeader.ejs') %>
+<section style=" padding-top: 5px;" >
+    <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
+    <div class="container">
+        <div class="row  mt-4  col-1">
+      <a class="btn btn-success m-5" style="width: 100px; border-radius: 10px;"  href="/admin/category">Add Category</a>
+      </div>
+      <h4 style="text-align: center;">Category List</h4>
+      <table id="myTable" style="border-right: 1px; border-spacing:10px; border-collapse: separate;" class="table mt-5 d">
+
+        <thead>
+         <tr>
+              <th scope="col"  style=" font-size: x-small; text-align: center;vertical-align: middle";>Image</th>
+              <th scope="col" style="font-size: x-small; text-align: center;vertical-align: middle";>Title</th> 
+              <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>Edit</th>
+              <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>List&nbsp;/&nbsp;Unlist</th>
+            </tr>
+          </thead>
+        <tbody>
+            <% categories.forEach(function(category){ %>
+           <tr>
+           
+            <td  style=" text-align: center;vertical-align: middle";><img class="rounded" style="  width:100px;height: 100px;"; src="/images/category/<%=category.image%>" alt=" "></td>
+            <td  style=" text-align: center;vertical-align: middle";><strong><%= category.category %></strong></td>
+            <td  style=" text-align: center;vertical-align: middle";><a href="/admin/editCategory/<%=category._id %>" style="border-radius: 10px; font-size: small;width:50px;" class="btn btn-primary">Edit</a></td>
+            <% var status= category.unlisted  %>
+                <% if(status==0) {%>
+                <td  style=" text-align: center;vertical-align: middle";><a href="/admin/deleteCategory/<%=category._id%>" style="border-radius: 10px; font-size: small; width:50px;" class="btn btn-danger"
+                  onclick="return confirm ('do you want to unlist the category : <%=category.category %> ?')">Unlist</a></td>
+            
+                 <%}else { %>
+           
+                <td ><a href="/admin/listCategory/<%=category._id%>" style="border-radius: 10px; text-align: center;vertical-align: middle ;font-size: small;width:50px;" class="btn btn-danger"
+                  onclick="return confirm ('do you want to list the category : <%=category.category %> ?')">List</a></td>
+                <%} %>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+</div>
+</section>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable({
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
+    }
+  }
+
+    );
+} );
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <% if(typeof isEdit!=='undefined' && isEdit===true) { %>
+    <script>
+     Swal.fire("category editted");
+  </script>
+ <% } %>
+

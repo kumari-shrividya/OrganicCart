@@ -1,0 +1,252 @@
+<%- include('../layouts/header.ejs') %>
+<hr>
+    <!-- <div class="row" > -->
+      <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/cart/checkout">My Cart</a></li> -->
+        <!-- <li class="breadcrumb-item active" aria-current="page">Order Summary</li>
+      </ol> -->
+    <!-- </nav> --> 
+<!-- ceheck -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> -->
+
+
+    <style>
+ .address-cards {
+    /* display: flex;
+    flex-wrap: wrap; */
+     /* gap:20px;  */
+} 
+
+ .address-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+   width: 300px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+} 
+
+.address-card:hover {
+    transform: scale(1.05);
+} 
+
+/* .address-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.address-details {
+    margin: 10px 0;
+} */
+
+/* .select-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 4px;
+} */
+
+.select-button:hover {
+    background-color: #45a049;
+}
+
+
+
+    </style>
+<div class="container mt-3">
+  <h2>Check out</h2><br>
+
+    <div class="container" style="display:flex;">
+      <!-- <div class="col">     -->
+      <% if(typeof user!=='undefined' && Array.isArray( user.address) && user.address.length>0 ) { %>
+      
+        <% user.address.forEach(function(addr){ %>
+         
+        <div class="address-cards">          
+           <div class="address-card">
+              <p class="address-title"><%=addr.FullName%></p>
+              <p class="address-details"><%=addr.HouseName%>,<%=addr.StreetName%>,</p>
+              <p><%=addr.City%>,<%=addr.Pincode%>,&nbsp;Mob:<%=addr.ContactNumber%></p>
+              <a style="font-size:small;border-radius: 10px;height:20px" href="#" 
+                class="btn btn-secondary">Select Billing  Address</a>
+          </div>
+        </div>
+      &nbsp;&nbsp; &nbsp;&nbsp;
+        <% })%>
+        <% }%>
+      </div>
+      <hr>
+      <!-- </div> -->
+      </div>
+      <div class="row m-5">
+                  <h4> Billing Address </h4>
+                  <small style="color:red">*Default&nbsp;*You can select/ enter a new billing address here</small>
+                                 
+                    <!-- <label for="firstName">Full Name</label> -->
+                    <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0) { %>
+                      <div class="col">    
+                     <form method="post" action="/cart/payment" >
+
+                    <input type="text" style="font-weight:bold" class="form-control mt-2" id="Full Name" name="Name" placeholder="Full Name" value="<%=bill_address[0].FullName%>" required >
+                    
+                
+                    <!-- <label for="HouseName">House Name</label> -->
+                    <input type="text" class="form-control  mt-2" id="HouseName" name="HouseName" placeholder="HouseName" value="<%=bill_address[0].HouseName%>" required >
+                   
+               
+
+                
+                  <!-- <label for="StreetName">StreetName</label> -->
+                  <input type="text" class="form-control  mt-2" id="StreetName" name="StreetName" placeholder="StreetName" value="<%=bill_address[0].StreetName%>" required >
+                 
+             
+             
+                <!-- <label for="City">City</label> -->
+                <input type="text" class="form-control  mt-2" id="City" name="City" placeholder="City" value="<%=bill_address[0].City%>" required >
+               
+            
+                <!-- <label for="State">State</label> -->
+                <input type="text" class="form-control  mt-2" id="State" placeholder="State" value="<%=bill_address[0].State%>" required >
+               
+                
+                <!-- <label for="lastName">Pincode</label> -->
+                <input type="text" class="form-control mt-2" id="Pincode"  name="Pincode" placeholder="Pincode" value="<%=bill_address[0].Pincode%>"  required>
+               
+                
+                <!-- <label for="lastName">Contact Number</label> -->
+                <input type="text" class="form-control mt-2" id="ContactNumber" name="ContactNumber" placeholder="ContactNumber" value="<%=bill_address[0].ContactNumber%>" required >
+                 <!-- <hr class="mb-4"> --><br>
+
+                 <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to Payment</button>
+                 <br> <br>
+
+                </form>
+               </div>
+                <% } else if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length==0) {%>
+                  <div class="col">
+                   <form method="post" action="/cart/payment" >
+                      
+                    <input type="text" class="form-control mt-2" id="Full Name" name="Name" placeholder="Full Name" value="" required >
+                    
+                
+                    <!-- <label for="HouseName">House Name</label> -->
+                    <input type="text" class="form-control  mt-2" id="HouseName" name="HouseName" placeholder="HouseName" value="" required >
+                   
+               
+
+                
+                  <!-- <label for="StreetName">StreetName</label> -->
+                  <input type="text" class="form-control  mt-2" id="StreetName" name="StreetName" placeholder="StreetName" value="" required >
+                 
+             
+             
+                <!-- <label for="City">City</label> -->
+                <input type="text" class="form-control  mt-2" id="City" name="City" placeholder="City" value="" required >
+               
+            
+                <!-- <label for="State">State</label> -->
+                <input type="text" class="form-control  mt-2" id="State" placeholder="State" value="" required >
+               
+                
+                <!-- <label for="lastName">Pincode</label> -->
+                <input type="text" class="form-control mt-2" id="Pincode"  name="Pincode" placeholder="Pincode" value=""  required>
+               
+                
+                <!-- <label for="lastName">Contact Number</label> -->
+                <input type="text" class="form-control mt-2" id="ContactNumber" name="ContactNumber" placeholder="ContactNumber" value="" required >
+                 <!-- <hr class="mb-4"> --><br>
+
+                 <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to Payment</button>
+                 <br> <br>
+
+                </form>
+              </div>
+
+                 <% }  %>
+    
+          
+     
+            <div class="col mt-3">
+     
+              <% if( typeof cart !=='undefined' ) { %>
+                <% var count=parseFloat(0) %>
+                <% let total=parseFloat(0)  %>
+               
+              <ul class="list-group mb-3">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="text-muted">Your cart</span>
+                  <span  style="color:red"></span>
+                </h4>
+                <% cart.forEach(function(product){ %>   
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                  <div >
+                    <% let sub =(parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+                    <% total += parseFloat(+sub) %>
+                    <h6 class="my-0"><%=product.name %> <span ><%=product.quantity %>&nbsp; Nos.</span></h6>
+                   
+                  </div>
+                  <span class="text-muted">₹&nbsp;<%=parseFloat(+sub)  %>.00</span>
+                </li>
+                
+             
+                <% count+=1%>
+                <% }) %>
+
+                 <li class="list-group-item d-flex justify-content-between">
+                  <div>
+                    <h6 class="my-0"></h6>
+                   </div>
+                   <span>SubTotal: &nbsp; </span>
+                   <span>₹&nbsp;<%=parseFloat(total)  %>.00</span>
+                  </li>
+
+                   <li class="list-group-item d-flex justify-content-between">
+                    <div>
+
+                    </div>
+                   <span>Shipping: &nbsp; </span>
+                   <span>₹&nbsp;0.00</span>
+                  
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between">
+                    <div></div>
+                   <span>Total:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; <span>
+                   <strong>₹&nbsp;<%=total%>.00</strong>
+                  
+                  </li>
+                <% } %>
+              </ul>
+            
+      </div>
+
+
+    </div>
+</div>
+<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+function getAddress(addressId){
+  $.ajax({
+        url: '/getCheckoutAddress',  // Replace with the actual server endpoint
+        method: 'POST',
+        data: { addressId: addressId },
+        success: function (response) {
+            // Update the selectedAddress div with the received data
+            // $('#selectedAddress').html(response);
+            $('#FullName').val=response.FullName;
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+} 
+
+</script>-->

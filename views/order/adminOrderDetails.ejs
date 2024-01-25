@@ -1,0 +1,78 @@
+<%- include('../layouts/adminHeader.ejs') %>
+<div class="container">
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <!-- <li class="breadcrumb-item"><a href="/order/myOrders">My Orders</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Order Details</li> -->
+            </ol>
+          </nav>
+         
+
+          <!--items-->
+          <!-- <section style="background-color: #eee; padding-top: 15px; margin-top: 10px;" > -->
+          <% if( typeof orders.products !=='undefined' ) { %>
+        <!-- <div class="container"> -->
+          <div class="row"><h5 style="margin-top:10px"></h5></div>
+          <h4 style="text-align: center;margin-top: 10px;margin-bottom: 10px;">Order Details</h4>
+           <table class="table mt-5" style="vertical-align: middle; ">
+            <thead>
+              <th>Items</th>
+              <th>Qty</th>
+              <th>Price</th>
+               <th>Status</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+            <% orders.products.forEach(function(product){ %>
+           <tr>
+            <td><img style="width:50px;height: 50px;"; src="/images/product/<%= product.image %>" alt=" ">&nbsp;&nbsp;<%= product.name %></td>&nbsp;
+            
+            <td><%=product.quantity %></td>
+            <td><%=product.price %></td>
+            <td><%=product.status %></td>
+                <% if( product.status ==='request_for_return' ){%>
+                    <td>
+                      <a href="/order/acceptReturnRequest/<%=orders._id%>?prod_id=<%=product.product_Id%>"  
+                        style="font-size:small">Accept</a>
+                      </td>
+
+                    <td>
+                      <a href="/order/rejectReturnRequest/<%=orders._id%>?prod_id=<%=product.product_Id%>" 
+                      style="font-size:small">Reject</a>
+                    </td>
+              
+                <% } else{%>
+                    <td>No request</td>
+                    <td></td>
+                    <% } %>
+
+            <% }) %>
+            
+        </tbody>
+      </table>
+      <br><br>
+     
+   
+    <% } %>
+   
+
+    <section style="padding-top: 5px;" > 
+      <br><br>
+      <% if( typeof orders!=='undefined' ) { %>
+       
+      <div class="row" style="text-align: right;">
+      
+        <h6> Order No:&nbsp;<small><%=orders._id%></small></h6>
+          <h6> Order Status:&nbsp;<small><%=orders.order_Status%></small></h6>
+          <h6>Placed on:&nbsp;<small><%=orders.order_Date.toLocaleString()%></small> </h6>
+          <h6>Delivery Date:&nbsp;<small><%=orders.delivery_Date.toLocaleString()%></small></h6>
+          <h6>Total:&nbsp;&nbsp;Rs.<%=orders.total_Amount%>.00</h6>
+          <div style="text-align-last:right;">             
+                    
+         </div>
+      </div>           
+      <% } %>
+      <br>
+     </section>
+  </div>

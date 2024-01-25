@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Organic Cart</title>
+        <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+    <body><br><br><br>
+    <section style=" padding-top: 5px;" >
+     <div  class="row" style="text-align: center; "> 
+      
+      
+            <div class="col-md-12" style="text-align: center; ">
+                <h4>Choose Your Payment Method</h4>
+                <hr style="margin-left: 40px; margin-right: 40px;">
+                <% if(typeof orderTotal !=='undefined'){%>
+                <label>Order Total:&nbsp;<span>Rs.<%=orderTotal %>.00</span> </label>
+                 <%} %>
+
+                <form action="/cart/placeOrder" method="post">
+                 <br>
+      <div style="border: 1px;">
+       <% if(typeof wallet !=='undefined'){%>
+      <label><input type="checkbox" name="chkwallet">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Wallet balance:&nbsp;&nbsp; <span>(Rs.<%=wallet %>.00)</span></strong></label> <br>
+
+      <% }else { %>
+        <label><input type="checkbox" name="chkwallet">&nbsp;Wallet balance:&nbsp;&nbsp; <span>(0.00)</span>  </label><br>
+       
+        <%} %>
+        <br>
+     
+      
+    <div style="text-align: center;">
+        <label style="color: darkblue"><input type="radio" name="payment" value="COD">&nbsp;Cash on Delivery</label><br><br>&nbsp;
+        <label style="color: darkblue"><input type="radio" name="payment"  value="OnlinePayment">&nbsp;Online Payment</label>&nbsp;&nbsp; &nbsp;&nbsp;<br>
+        <!-- <img src='/images/payment.jpg' style="height:40px;width:200px;"><br> -->
+        
+<img alt="" title="" src="https://www.shift4shop.com/images/credit-card-logos/cc-sm-4.png" width="198" height="28" border="0" />
+<br><br>
+
+        <br><input type="submit" style="font-weight: bolder; border: 0cap; width:300px;height:40px; border-radius:30px;background-color:  chartreuse;" name="" value="Place Order">
+        
+    </div>
+    <br>
+    <hr style="margin-left: 40px; margin-right: 40px;">
+    <div class="col-md-12" style="text-align: center; ">
+
+        <img class="rounded-circle shadow-4-strong" src="/images/shipping.jpg" style="width:80px;height:80px">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+       
+    
+        <img class="rounded-circle shadow-4-strong" src="/images/quality.jpg" style="width:100px;height:100px">  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+        <img  class="rounded-circle shadow-4-strong" src="/images/support.jpg" style="width:100px;height:100px">
+    </div>
+    <hr style="margin-left: 40px; margin-right: 40px;">
+ 
+   
+    </div>
+</div>
+    
+   </form>
+   
+</div>
+        
+
+
+    
+</div>
+</section>
+<!-- jQuery('form.checkout').on('checkout_place_order', function() {
+    jQuery('button.place-order').attr('disabled', true);
+}); -->
+
+  
+</body>
+</html>

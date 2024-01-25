@@ -1,0 +1,152 @@
+<%- include('../layouts/header.ejs') %>
+<hr>
+    <!-- <div class="row" > -->
+      <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cart/checkout">My Cart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Order Summary</li>
+      </ol>
+    </nav>
+    <section style="" >   
+           <div class="container" >
+           <div class="row">
+            <!-- <a href="/address/addressList/?status=1" class="btn btn-secondary" style="width:20%">Get My Default Address as Shipping Address</a>  -->
+            <!-- <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0) { %> -->
+             
+            <!-- <div class="row" > -->
+              <!-- <h4>Shipping Address</h4>
+             <h5 style="border-width: 1px;"> <%=user.name%></h5>
+             <h5 style="border-width: 1px;"><%=bill_address[0].HouseName%></h5>
+             <h5 style="border-width: 1px;"><%=bill_address[0].StreetName%></h5>
+             <h5 style="border-width: 1px;"><%=bill_address[0].City%></h5>&nbsp;
+             <h5 style="border-width: 1px;"><%=bill_address[0].State%></h5>
+                <%=bill_address[0].Country%>,<br>&nbsp;<%=bill_address[0].Pincode%><br>
+               &nbsp;<%=bill_address[0].ContactNumber%></small>  -->
+            <!-- <a href="/address/addressList/?status=1" class="btn btn-secondary" style="width:20%">Use different Address</a> -->
+            <!-- </div>            -->
+            <!-- <% } %> -->
+          <br>
+
+          <div class="col-md-4 order-md-2 mb-4">
+              <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Your cart</span>
+                <span class="badge badge-secondary badge-pill">3</span>
+              </h4>
+              <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                  <div>
+                    <h6 class="my-0">Product name</h6>
+                    <small class="text-muted">Brief description</small>
+                  </div>
+                  <span class="text-muted">$12</span>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Total (USD)</span>
+                  <strong>$20</strong>
+                </li>
+              </ul>
+              
+              <!-- <form class="card p-2" ">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Promo code">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-secondary">Redeem</button>
+                  </div>
+                </div>
+              </form> -->
+
+
+            </div>
+        
+
+            <div class="col-md-8 order-md-1">
+             
+              <form >
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <form >
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                    <!-- <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div> -->
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="lastName">Last name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                    <!-- <div class="invalid-feedback">
+                      Valid last name is required.
+                    </div> -->
+                  </div>
+               
+
+                <div class="col-md-6 mb-3">
+                  <label for="lastName">Last name</label>
+                  <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                  <!-- <div class="invalid-feedback">
+                    Valid last name is required.
+                  </div> -->
+                </div>
+             
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                <!-- <div class="invalid-feedback">
+                  Valid last name is required.
+                </div> -->
+              </div>
+            
+          </div>
+                <!-- <hr class="mb-4"> --><br>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+              </form>
+            <!-- </div> -->
+          </div>
+
+        </div>
+      
+          
+<!--           
+          <% if( typeof cart !=='undefined' ) { %>
+          <table class="table " style="vertical-align: middle; width:100% ">
+            <thead ">
+              <th>Item</th>
+              <th>Qty</th>
+              <th style="text-align: end;">Price</th>
+            </thead>
+            <tbody>
+            <% var count=parseFloat(0) %>
+            <% cart.forEach(function(product){ %>        
+           <tr >
+            <td><img style="width:100px;height: 100px; text-align: right;"; src="/images/product/<%= product.image %>" alt=" ">&nbsp;&nbsp;<%= product.name %></td>&nbsp;
+            <td><%=product.quantity %></td>
+            <td style="text-align: right;"><%=product.price %></td>
+            <% count+=1%>
+            <% }) %>
+           </tr>
+           <tr>
+            <td colspan="3" style="text-align-last:right">
+                
+            <p>Sub Total(<%=count%>)Items:<%=total%>.00</p>
+            <p>Shipping:0.00</p>
+            <p>Total:<%=total%>.00</p>
+          </td>
+        </tr>
+          <tr>
+            <td></td><td></td>
+           <td>
+             <div style="text-align: right"> 
+              <a class="btn btn-primary" href="/cart/payment">Select Pament Method</a>
+           </div>
+           </td>
+          </tr>
+        </tbody>
+      </table>
+      
+       -->
+     </section> 
+
+<!-- </div> -->
+<% } %>
+<!-- </div> -->

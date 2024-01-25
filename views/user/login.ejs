@@ -1,0 +1,136 @@
+
+<!-- <!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Organic Cart</title> -->
+<!-- <style>
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+    font-size: 15px;
+}
+
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+
+.login-form h2 {
+    margin: 0 0 15px;
+  
+}
+.login-form input{
+    padding: 10px;
+    margin:10px;
+    height:15px;
+    
+}
+.form-control,
+.btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+
+.btn {
+    margin:10px;
+    padding:10px;
+    font-size: 15px;
+    font-weight: bold;
+}    
+
+</style> -->
+<!-- </head>
+<body> -->
+
+
+<%- include('../layouts/header.ejs') %> 
+
+<!-- <section class="main">
+        <div class="container py-5">
+            <div class="row py-4">
+                <div class="col-lg-7 pt-5 text-center">
+                    <h2 class="pt-4">Nature Has Always Cared For Us!</h2>
+                </div>
+            </div>
+        </div>
+
+    </section> -->
+<!--    -->
+<section>
+   <div class="container main" style="display:flex; margin-top: 30px;" >
+    <!-- <div   class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2 " style="float:left;" >
+             <br>
+        <img  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+          class="img-fluid" alt="Sample image" >
+       
+      </div> -->
+
+<div class="login-form" style="align-items:center;justify-content: center; box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);">
+   
+    
+    <form action="/login" method="post" >
+        <h4 class="text-center">Login</h4>
+
+        <div name="error" >
+            <%
+            if(typeof message !=='undefined'){
+
+             %>
+           <h5 style="color:red;text-align: center;"><%= message %></h5>
+           <%
+            }
+           %>
+        </div>
+
+        <div class="form-group" style="padding: 5px;">
+            <!-- &nbsp;&nbsp;<label><i class="fas fa-envelope "></i>Your email</label> -->
+            <input type="text" class="form-control" placeholder="&nbsp;email" name="email" id="email" style="width:250px;" required="required">
+            <input type="password" class="form-control " placeholder="&nbsp;password" name="password" id="password1" style="width:250px" required="required">
+        </div>
+        <!-- <div class="form-group">
+            &nbsp;&nbsp;<label style="margin-bottom: 0px;padding-bottom: 0px;"><i class="fas fa-lock"></i>Your password</label> -->
+            <!-- <input type="password" class="form-control " placeholder="&nbsp;password" name="password" id="password1" style="width:250px" required="required"> -->
+        <!-- </div>  -->
+        <div class="form-group"  >
+            <p class="text-center">
+            <button type="submit" style="font-size: small;border-radius: 30px; width:50%;background-color: #28a745;" class="btn  btn-block"  >SIGN IN</button>
+        </p>
+        </div>
+     <div class="clearfix">
+            <!-- <label class="float-left form-check-label"><input type="checkbox"> Remember me</label> -->
+           <p class="text-center">  <a href="/register" ;>Don't have an account?</a><br><br>
+             <a href="/forgotPassword" class="float-right" >Forgot your Password?</a></p>
+            <!-- <br><br><small></small><br>&nbsp;&nbsp; -->
+           
+            <!-- <p class="text-center"></p> -->
+        </div>
+    </form>
+   
+</div>
+
+</div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <% if(typeof isOtpVerified!=='undefined' && isOtpVerified===true) { %>
+ <script>
+//   Swal.fire({
+//   title: "Organic Cart",
+//   text: "Product Added",
+//   icon: "success"
+// });
+Swal.fire("Otp verification completed.Enjoy shopping");
+// swal.fire(
+//   'Organic Cart',
+//   'Product Added',
+//   'success'
+//   )
+</script>
+<% } %>
+
+</body>
+</html>

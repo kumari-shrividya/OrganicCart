@@ -1,0 +1,65 @@
+<%- include('../layouts/header.ejs') %>
+
+  <style>
+    .vertical-menu {
+      width: 200px;
+    }
+
+    .vertical-menu a {
+      background-color: #22b05d;
+      color: black;
+      display: block;
+      padding: 12px;
+      text-decoration: none;
+    }
+
+    .vertical-menu a:hover {
+      background-color: #ccc;
+    }
+
+    .vertical-menu a.active {
+      background-color:#cdc22a;
+      color: white;
+    }
+  </style>
+  </head>
+
+  <body>
+    <!-- <section style="background-color: #eee; padding-top: 5px;"> -->
+    
+    <% if( typeof user !=='undefined' ) { %>
+      <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1 ">
+   
+        
+    </div>
+    <hr>
+    <h5 style="text-align: center;" >Welcome to your Account,&nbsp;<%=user.name%> &nbsp;&nbsp;&nbsp;<small>Email:&nbsp;<%=user.email%> &nbsp;&nbsp;&nbsp;Mob:&nbsp;<%=user.phone%></small></h5><br>
+    <hr>
+    <!-- <div style="text-align: center;">
+       -->
+      <!-- <h6> Email: <span>
+          <%=user.email%>
+        </span> &nbsp;&nbsp;&nbsp;Mob:<span>
+          <%=user.phone%>
+        </span></h6> -->
+      
+      <% }%>
+        <span></span>
+      <!-- </div> -->
+    </div >
+        <div class="vertical-menu" style="background-color: #41b47e; ">
+          <a href="/all_products" class="active">Home</a>
+          <a href="/address/addAddress">Add Address</a>
+          <a href="/address/addressList">Show Address</a>
+          <!-- <a href="/product/userProductList">Search products</a> -->
+          <a href="#">My WishList</a>
+          <a href="/order/myOrders">My Orders </a>
+          <a href="/walletHistory">Wallet History</a>
+          <a href="/changePassword">Change Password</a>
+          
+        </div>
+       
+        <!-- </section> -->
+  </body>
+
+  </html>

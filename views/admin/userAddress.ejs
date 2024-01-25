@@ -1,0 +1,48 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<section style=" padding-top: 5px; margin-right: 40px; " >
+
+  <div class="container">
+  <div class="row  mt-4 ml-3 ">
+    <div class="col">
+   
+    <h4 style=" padding-top: 15px; text-align: center; margin-top: 20px;">Address List</h4>
+     <div class="col-md-6 col-lg-12 col-xl-12 ">  
+           
+      <% if  (typeof addressList!=='undefined' || addressList!==[]){%>
+          <table class="table  table-striped" >
+            <thead>
+             <tr>
+                  <!-- <th scope="col">Default</th>  -->
+                  <th scope="col">House Name</th> 
+                  <th scope="col">StreetName</th>
+                  <th scope="col">City</th>
+                  <th scope="col">State</th>
+                  <th scope="col"> Pincode</th>
+                  <th scope="col"> ContactNumber</th>
+                
+             </tr>
+            </thead>
+            <tbody>
+                <% addressList.forEach(function(address){ %>
+               <tr>   
+                      <td><%=address.HouseName %></td>
+                       <td><%=address.StreetName %></td>
+                       <td><%=address.City %></td>
+                       <td><%=address.State %></td>
+                       <td><%=address.Pincode %></td>
+                       <td><%=address.ContactNumber %></td>
+                 
+              </tr>
+              <% }); %>
+            </tbody>
+         </table>  
+         <%} else {%>
+          <h5>No Address available!</h5>
+          <%}%>
+        </div>
+   </div>
+  </div>
+</section>
+
+

@@ -1,0 +1,70 @@
+<%- include('../layouts/header.ejs') %>
+<div class="container">
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <!-- <li class="breadcrumb-item"><a href="/order/myOrders">My Orders</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Order Details</li> -->
+            </ol>
+          </nav>
+          <section style=" padding-top: 5px;" > 
+           
+            <% if( typeof orders!=='undefined' ) { %>
+             
+            <div class="row">
+              <h5 style="text-align: center;margin-top: 10px;margin-bottom: 10px;">Order Details</h5>
+              <h6> Order No:&nbsp;<%=orders._id%></h6>
+              
+                <h6> Order Status:&nbsp;<%=orders.order_Status%></h6>
+                
+                <small>Placed on:&nbsp;<%=orders.order_Date.toLocaleString() %></small>  
+                
+                <small>Delivery Date:&nbsp;<%=orders.delivery_Date.toLocaleString() %></small>
+               
+                <div style="text-align-last: right;">             
+                  <h6>Total:&nbsp;&nbsp;Rs.<%=orders.total_Amount%>.00</h6>
+               
+               </div>
+            </div>           
+            <% } %>
+           </section>
+
+          <!--items-->
+          <!-- <section style="background-color: #eee; padding-top: 15px; margin-top: 10px;" > -->
+          <% if( typeof orders.products !=='undefined' ) { %>
+        <!-- <div class="container"> -->
+          <!-- <div class="row"><h5 style="margin-top:10px">Items</h5></div> -->
+           <table class="table table-striped" style="vertical-align: middle;">
+            <thead>
+              <th>Items</th>
+              <th>Qty</th>
+              <th>Price</th>
+              </thead>
+            <tbody>
+            <% orders.products.forEach(function(product){ %>
+           <tr>
+            <td><img style="width:50px;height: 50px;"; src="/images/product/<%= product.image %>" alt=" ">&nbsp;&nbsp;<%= product.name %></td>&nbsp;
+            
+            <td><%=product.quantity %></td>
+            <td><%=product.price %></td>
+            <td><%=product.status %></td>
+                <% if((orders.order_Status==='Pending' || orders.order_Status==='Placed') && admin===false){%>
+                  <td ><a href="/order/sendReturnRequest/<%=orders._id%>?prod_id=<%=product.product_Id%>" class="btn btn-danger"
+                   style="font-size:small">Send Return Request</a></td>
+                <% }  else if(orders.order_Status=='request_for_return' && admin===true){ %>
+                  <td ><a href="#"          style="font-size:small">Accept</a></td>
+                    <td ><a href="#" 
+                      style="font-size:small">Reject</a></td>
+
+                <% } %>
+               
+
+            <% }) %>
+            
+        </tbody>
+      </table>
+      <!-- </section>  -->
+
+<!-- </div> -->
+<% } %>
+    </div>
