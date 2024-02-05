@@ -16,7 +16,7 @@
                   <th scope="col" style=" text-align: center;vertical-align: middle"; >Email</th>
                   <th scope="col" style=" text-align: center;vertical-align: middle"; >Phone No</th>
                   <th scope="col" style=" text-align: center;vertical-align: middle";>Address</th>
-                  <th scope="col" style=" text-align: center;vertical-align: middle";>Details</th>
+                  <!-- <th scope="col" style=" text-align: center;vertical-align: middle";>Details</th> -->
                   <!-- <th></th> -->
                   <th scope="col" style=" text-align: center;vertical-align: middle"; >Block/Unblock</th>
                 </tr>
@@ -30,9 +30,11 @@
                 <td style=" text-align: center;vertical-align: middle; " >
                   <a href="/admin/userAddress/<%=user._id%>" class="btn btn-primary" style="border-radius: 10px;"
                  >Show Address</a></td>
-                <td style=" text-align: center;vertical-align: middle; " >
+
+                <!-- <td style=" text-align: center;vertical-align: middle; " >
                  <a href="#" class="btn btn-secondary" style="border-radius: 10px;"
-                  >Details</a></td> 
+                  >Details</a></td>  -->
+
                   <% var status= user.is_blocked  %>
                     <% if(status==0) {%>
                     <td style=" text-align: center;vertical-align: middle;border-radius: 10px;" >

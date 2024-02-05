@@ -33,7 +33,9 @@ const userSchema= new mongoose.Schema({
         type:Number,
         default:0
     },
-   
+   coupon_Code:{type : Array ,
+   default : [] }
+   ,
     cart_Data:[{
         product_Id:String,
         name:String,
@@ -62,6 +64,14 @@ const userSchema= new mongoose.Schema({
         isDefault:Boolean          
     }],
     token:{
+        type:String,
+        default:''
+    },
+    isOrdered:{
+        type:Number,
+        default:0
+    },
+    referral_Code:{
         type:String,
         default:''
     },

@@ -1,4 +1,13 @@
 <%- include('../layouts/adminHeader.ejs') %>
+
+<style>
+
+  .swal2-confirm {
+        height: 20px; /* Adjust the height as needed */
+        background-color: aquamarine;
+      }
+  
+    </style>
 <section style=" padding-top: 5px;" >
     <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
     <div class="container">
@@ -12,6 +21,7 @@
          <tr>
               <th scope="col"  style=" font-size: x-small; text-align: center;vertical-align: middle";>Image</th>
               <th scope="col" style="font-size: x-small; text-align: center;vertical-align: middle";>Title</th> 
+              <th scope="col" style="font-size: x-small; text-align: center;vertical-align: middle";>Offer%</th> 
               <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>Edit</th>
               <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>List&nbsp;/&nbsp;Unlist</th>
             </tr>
@@ -22,6 +32,8 @@
            
             <td  style=" text-align: center;vertical-align: middle";><img class="rounded" style="  width:100px;height: 100px;"; src="/images/category/<%=category.image%>" alt=" "></td>
             <td  style=" text-align: center;vertical-align: middle";><strong><%= category.category %></strong></td>
+        
+            <td  style=" text-align: center;vertical-align: middle";><strong><%= category.offer_Percentage %></strong></td>
             <td  style=" text-align: center;vertical-align: middle";><a href="/admin/editCategory/<%=category._id %>" style="border-radius: 10px; font-size: small;width:50px;" class="btn btn-primary">Edit</a></td>
             <% var status= category.unlisted  %>
                 <% if(status==0) {%>
@@ -59,7 +71,13 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <% if(typeof isEdit!=='undefined' && isEdit===true) { %>
     <script>
-     Swal.fire("category editted");
+    //  Swal.fire("category editted");
+    Swal.fire({
+        title: 'Category',
+        text: 'Category editted successfully',
+      
+        confirmButtonText: 'OK'
+    })
   </script>
  <% } %>
 

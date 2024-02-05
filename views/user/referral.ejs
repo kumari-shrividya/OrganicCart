@@ -1,0 +1,34 @@
+
+
+
+
+<%- include('../layouts/header.ejs') %>     
+<section style=" padding-top: 5px;">
+<div class="login-form">
+    <form action="/SendReferralLink" method="post">
+      
+
+        <div name="error" >
+            <%
+            if(typeof message !=='undefined'){
+
+             %>
+           <h5 style="color:red;text-align: center;"><%= message %></h5>
+           <%
+            }
+           %>
+        </div>
+        <h2 class="text-center">Refer a Friend</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="email" name="email" id="email" required="required">
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Send Referral Link</button>
+        </div>
+    </form>
+   
+</div>
+</section>
+</body>
+</html>

@@ -16,6 +16,12 @@
               <h6> Order No:&nbsp;<%=orders._id%></h6>
               
                 <h6> Order Status:&nbsp;<%=orders.order_Status%></h6>
+                <h6>Delivery Address:</h6><small><%=orders.delivery_Address[0].HouseName%>,
+                  <%=orders.delivery_Address[0].StreetName%>,
+                  <%=orders.delivery_Address[0].City%>,
+                  Mob:<%=orders.delivery_Address[0].ContactNumber%>
+                
+                </small>
                 
                 <small>Placed on:&nbsp;<%=orders.order_Date.toLocaleString() %></small>  
                 

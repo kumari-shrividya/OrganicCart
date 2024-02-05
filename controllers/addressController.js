@@ -12,7 +12,7 @@ const loadAdd_Address = async (req, res) => {
 
         const userData = await User.findOne({ _id: req.session.user_id });
         if(userData){
-        res.render('addAddress',{user:userData,cart:req.session.cart,errors:'',data:''});
+        res.render('addAddress',{user:userData,cart:req.session.cart,wishlist:req.session.wishlist,errors:'',data:''});
         }
     } catch (error) {
         console.log(error)

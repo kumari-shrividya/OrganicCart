@@ -13,11 +13,7 @@
 
 
     <style>
- .address-cards {
-    /* display: flex;
-    flex-wrap: wrap; */
-     /* gap:20px;  */
-} 
+ 
 
  .address-card {
     border: 1px solid #ccc;
@@ -76,8 +72,8 @@
               <p class="address-title"><%=addr.FullName%></p>
               <p class="address-details"><%=addr.HouseName%>,<%=addr.StreetName%>,</p>
               <p><%=addr.City%>,<%=addr.Pincode%>,&nbsp;Mob:<%=addr.ContactNumber%></p>
-              <a style="font-size:small;border-radius: 10px;height:20px" href="#" 
-                class="btn btn-secondary">Select Billing  Address</a>
+              <a style="font-size:small;border-radius: 10px;height:20px" href="/cart/selectBillingAddress/<%=addr._id%>" 
+                class="btn btn-secondary">Select Shipping  Address</a>
           </div>
         </div>
       &nbsp;&nbsp; &nbsp;&nbsp;
@@ -88,8 +84,8 @@
       <!-- </div> -->
       </div>
       <div class="row m-5">
-                  <h4> Billing Address </h4>
-                  <small style="color:red">*Default&nbsp;*You can select/ enter a new billing address here</small>
+        <span><small style="color:red"></small></span><h4> Shipping Address </h4>
+                  <small style="color:red ;">*You can change the default Shipping address by selecting/ entering a new </small>
                                  
                     <!-- <label for="firstName">Full Name</label> -->
                     <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0) { %>
@@ -180,6 +176,7 @@
               <% if( typeof cart !=='undefined' ) { %>
                 <% var count=parseFloat(0) %>
                 <% let total=parseFloat(0)  %>
+               <% var amt_Payable=parseFloat(0)%>
                
               <ul class="list-group mb-3">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -191,6 +188,8 @@
                   <div >
                     <% let sub =(parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
                     <% total += parseFloat(+sub) %>
+                    
+                    <%  amt_Payable=parseInt(total)-parseInt(discount)%>
                     <h6 class="my-0"><%=product.name %> <span ><%=product.quantity %>&nbsp; Nos.</span></h6>
                    
                   </div>
@@ -218,19 +217,77 @@
                   
                   </li>
                   <li class="list-group-item d-flex justify-content-between">
+                    <div>
+
+                    </div>
+                   <span>Discount: &nbsp; </span>
+                   <span id="discount"><%=discount%>.00</span>
+                  
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between">
                     <div></div>
-                   <span>Total:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; <span>
-                   <strong>₹&nbsp;<%=total%>.00</strong>
+                   <span>Amount Payable:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; </span>
+                   <span id="total"><strong>₹&nbsp;<%=amt_Payable %>.00</strong></span>
                   
                   </li>
                 <% } %>
+                <div class="col ">
+                  <form class="card p-2" id="promoForm" method="post" action="/cart/apply_promoCode">
+                    <div class="input-group">
+                      <input type="text" class="form-control"  name="promoCode" id="promoCode" placeholder="Promo code">
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-secondary">Redeem</button>
+                       
+                      </div>
+                    </div>
+                  </form>
+                  <div id="message"></div>
+                </div>
+             
               </ul>
-            
+              
       </div>
 
 
     </div>
 </div>
+
+<!-- <script>
+  document.getElementById("promoForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+     
+      applyPromoCode(document.getElementById("promoCode").value);
+  });
+
+  function applyPromoCode(promoCode) {
+      fetch("/cart/apply_promoCode", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ promoCode: promoCode })
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok");
+          }
+          return response.json();
+      })
+      .then(data => {
+          // Handle response from server
+          document.getElementById("message").textContent = data.message;
+          document.getElementById("discount").textContent = data.discount;
+          document.getElementById("total").textContent = data.total;
+      })
+      .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+      });
+  }
+</script>
+ -->
+
+
+
 <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 function getAddress(addressId){

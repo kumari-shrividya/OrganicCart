@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const UserOTPVerification = require("../models/userOTPVerification");
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
+const coupon = require('../models/couponModel');
+const Referral=require('../models/referralModel')
 
 const randomstring = require("randomstring");
 const bcrypt = require("bcrypt");
@@ -304,7 +306,9 @@ const loadAllProducts = async (req, res) => {
   try {
     const userData = await User.findOne({ _id: req.session.user_id });
     const categories = await Category.find({ unlisted: 0 }).limit(8);
-    const products = await Product.find({ unlisted: 0 }).limit(12);
+    const products = await Product.find({ unlisted: 0 }).populate("category_id").limit(12);
+    // console.log(products);
+    // console.log(products[0].category_id.offer_Percentage);
     if (products) {
       res.render("all_products", {
         title: "Fresh Produce",
@@ -331,7 +335,7 @@ const loadMyProfile = async (req, res) => {
       res.render("myProfile", {
         user: userData,
         cart: req.session.cart,
-        wishlist: req.session.wishlist,
+        wishlist: req.session.wishlist,message:''
       });
     }
   } catch (error) {
@@ -364,6 +368,14 @@ const editMyProfile = async (req, res) => {
       { $set: { name: name, email: email, phone: phoneno } }
     );
     if (updatedData) {
+    //   const userData = await User.findOne({ _id: req.session.user_id });
+    // if (userData) {
+    //  res.render("myProfile", {
+    //     user: userData,
+    //     cart: req.session.cart,
+    //     wishlist: req.session.wishlist,message:'Profile Updated'
+    //   });
+    // }
       return res.send("Your profile data  has been updated successfully");
     }
   } catch (error) {
@@ -558,6 +570,127 @@ const loadWalletHistory = async (req, res) => {
     return res.status(500).send("Server error");
   }
 };
+
+ //coupon List
+ const loadUserCouponList=async(req,res)=>{
+  try{
+    const userData = await User.findOne({ _id: req.session.user_id });
+      const coupons=await coupon.find({});
+    if(coupons){
+      const itemsperpage = 3;
+        const currentpage = parseInt(req.query.page) || 1;
+        const startindex = (currentpage - 1) * itemsperpage;
+        const endindex = startindex + itemsperpage;
+        const totalpages = Math.ceil(coupons.length / 3);
+        let currentCoupon = coupons.slice(startindex,endindex);
+          res.render('userCoupon',{ user: userData,
+            cart: req.session.cart,
+            wishlist: req.session.wishlist,coupons:currentCoupon,totalpages,currentpage});
+
+      }
+   }catch(error){
+    console.log(error)
+    return res.status(500).send("Server Error");
+  }
+}
+//load send referral link
+const loadSendReferralLink = async (req, res) => {
+  try {
+
+    const userData = await User.findOne({ _id: req.session.user_id });
+    res.render("referral",{user: userData,
+      cart: req.session.cart,
+      wishlist: req.session.wishlist});
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+};
+// sending referral link to  mail and generate  a code
+const sendReferralLink = async (req, res) => {
+  try {
+    let email = req.body.email;
+
+    const randomstr = randomstring.generate();
+    const updatedData = await User.updateOne(
+      { email: email },
+      { $set: { referral_code: randomstr } },
+      { multi: true }
+    );
+
+    const refer = Referral({
+      user_id: req.session.user_id,
+      referred_email: req.body.email,
+      referral_Code:randomstr,
+     });
+    const refData = await refer.save();
+
+    if (refData) {
+      sendReferralLinkByMail(req.body.email, randomstr);
+
+      // res.render('forgotPassword',{user:'',errors:'',data:'',message:'Please check your mail to reset password'});
+      return res.send(
+        "Link has been sent to the given mail id");
+    } else {
+      return res.send("Code not updated");
+
+    }
+
+
+  } catch (error) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+     return res.send('email already exists');
+     }
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+};
+
+//method to send  Reset Password Link by mail
+const sendReferralLinkByMail = async ( email, code) => {
+  try {
+    //for temp smtp account by Ethereal.com
+   // let testAccount = await nodemailer.createTestAccount();
+    var testemail = "organiccart24@gmail.com";
+    //connect with smtp
+    const transporter = nodemailer.createTransport({
+      name: "gmail.com",
+      host: "smtp.gmail.com", //'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        // TODO: replace `user` and `pakennedi82@ethereal.emailss` values from <https://forwardemail.net>
+        user: process.env.EMAIL_USER, //temp id from ethereal.com
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+    const mailOptions = {
+      from: "organic Cart",
+      to: testemail,//"organiccart24@gmail.com", //email,
+      subject: "For Referral Link from Organic Cart",
+      // text:`hi+${token}`
+      html:
+        "<p>hi," +
+       
+        ' Please click here to <a href="http://127.0.0.1:3000/register?code=' +
+        code +
+        '"> Sign Up Now</a></p> ',
+    };
+
+    let data = await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(console.error.message);
+      } else {
+        console.log("Email sent successfully.");
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).send("Server error");
+  }
+};
 //Exports
 module.exports = {
   loadRegister,
@@ -574,11 +707,19 @@ module.exports = {
 
   loadAllProducts,
 
+  //change password
   loadchangePassword,
   saveChangePassword,
   loadForgotPassword,
   verifyForgotPassword,
   loadResetPassword,
   saveResetPassword,
+
+  //referral
+  loadSendReferralLink,
+  sendReferralLink,
+
+
   loadWalletHistory,
+  loadUserCouponList
 };

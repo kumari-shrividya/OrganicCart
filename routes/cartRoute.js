@@ -35,6 +35,14 @@ cart_route.get('/clearCart',cartController.clearCart);
 //load  order Summary while clicking buy now ->checkout & select payment method
 cart_route.get('/orderSummary',cartController.loadOrderSummary);
 
+//apply promo code
+cart_route.post('/apply_promoCode',cartController.applyPromoCode);
+
+//select billing address from the list checkout page
+cart_route.get('/selectBillingAddress/:id',cartController.getBillingAddress);
+
+
+
 //place order
 //cart_route.get('/placeOrder',cartController.placeOrder);
 

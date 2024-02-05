@@ -162,7 +162,7 @@ const loadOrderStatus = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server Error");
-  }
+    }
 };
 
 //update  order status
@@ -171,8 +171,9 @@ const updateOrderStatus = async (req, res) => {
     const order = await Order.findByIdAndUpdate(
       req.params.id,
       { order_Status: req.body.status },
-      { new: true }
+      
     );
+    //{ new: true }
     if (!order) {
       return res.status(400).send("Not updated");
     }

@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const couponSchema = new mongoose.Schema({
-    name: {
+    code: {
         type: String,
         required: true,
         unique: true,
     },
-    discription: {
+    description: {
         type: String,
         required: true,
     },
@@ -36,6 +36,4 @@ const couponSchema = new mongoose.Schema({
 
 couponSchema.index({ expiryDate: 1 }, { expireAfterSeconds: 0 });
 
-const Coupon = mongoose.model('Coupon', couponSchema);
-
-module.exports = Coupon;
+module.exports=mongoose.model('coupons',couponSchema)

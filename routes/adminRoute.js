@@ -13,6 +13,7 @@ const adminController=require('../controllers/adminController');
 //middleware
 const adminAuth=require('../middleware/adminAuth');
 const Category = require('../models/categoryModel');
+const validation=require("../middleware/validation")
 
 //express validator
 const {check , validationResult,matchedData} = require('express-validator');
@@ -27,20 +28,27 @@ admin_route.use(bodyparser.json());
 admin_route.use(bodyparser.urlencoded({extended:true}));
 
 
-//middleware
-const validation=require("../middleware/validation")
+
 
 //multer
 const multer=require('multer');
 const sharp=require('sharp');
 const path=require('path');
-const {uploadImages,resizeImages}=require('../util/imageUpload');
+const {uploadImages,resizeImages,uploadCategoryImage}=require('../util/imageUpload');
+const{uploadImage,resizeImage}=require('../util/CategoryImageUpload')
 
-
+const multerFilter=(req,file,cb)=>{
+    if(file.mimetype.startsWith('image')){
+        cb(null,true);
+    }
+    else{
+        cb('Please upload images !',false);
+    }
+};
 //upload category image to memory storage crop using sharp
 const storagecat=multer.memoryStorage();
 //const upload=multer({storage:storage});
-const uploadcat=multer({storage:storagecat});
+const uploadcat=multer({storage:storagecat,fileFilter:multerFilter});
 
 // //upload product image to memory storage for edit image
 // const storageProd=multer.memoryStorage();
@@ -49,17 +57,28 @@ const uploadcat=multer({storage:storagecat});
 admin_route.get('/login',adminController.loadAdminLogin);
 admin_route.post('/login',adminController.verifyAdminLogin);
 //load amin panel
-admin_route.get('/home',adminController.loadAdminHome);
+admin_route.get('/home',adminAuth.isLogin,adminController.loadAdminHome);
+
 //admin logout
 admin_route.get('/logout',adminController.adminLogout);
+
+//load dashboard
+admin_route.get('/dashboard',adminAuth.isLogin,adminController.loadAdminDashboard);
+
+//load chart
+
+admin_route.get('/getChartData',adminController.getChartData);
+
+
+
 //load userList
-admin_route.get('/userList',adminController.loadUserList);
+admin_route.get('/userList',adminAuth.isLogin,adminAuth.isLogin,adminController.loadUserList);
 //show user Address
-admin_route.get('/userAddress/:id',adminController.loadUserAddress);
+admin_route.get('/userAddress/:id',adminAuth.isLogin,adminController.loadUserAddress);
 //user Details
-admin_route.get('/userDetails/:id',adminController.loadUserDetails);
+admin_route.get('/userDetails/:id',adminAuth.isLogin,adminController.loadUserDetails);
 //block user
-admin_route.get('/blockUser/:id',adminController.blockUser);
+admin_route.get('/blockUser/:id',adminAuth.isLogin,adminController.blockUser);
 //unbloc user
 admin_route.get('/unblockUser/:id',adminController.unblockUser);
 //load add category
@@ -114,34 +133,15 @@ admin_route.get('/categoryList',adminController.loadCategoryList);
 admin_route.get('/editCategory/:id',adminController.loadEditCategory);
 
 //post method to edit category
-admin_route.post('/editCategory/:id',uploadcat.single('image'),
-async(req,res,next)=>{
- 
-try{
-    let fileName=req.file.originalname.replace(/\..+$/,'');
-     fileName=req.file.originalname.split(' ').join('-');
-    const imageUrl=`${fileName}-${Date.now()}.jpeg`;
-    //console.log(imageUrl);
-    const processedImageBuffer= await sharp(req.file.buffer)
-    .resize({width:250,height:225})
-    .toFormat('jpeg')
-    .toFile('./public/images/category/'+imageUrl);  
-     req.session.editfileName=imageUrl;
-   // console.log(req.session.fileName);
-   next();
-}catch(error){
-   // console.log(error); 
-   return res.status(500).send(error.message);
-}
+admin_route.post('/editCategory/:id', uploadImage,resizeImage,
 
-},
 [
-check('title').trim().notEmpty().withMessage(" category Name is required")
+    check('title').trim().notEmpty().withMessage(" category Name is required")
 ],
 async (req,res,next)=>{
    var errors=validationResult(req);
    const data = matchedData(req);
-   console.log(errors);
+  // console.log(errors);
    if (errors.isEmpty()) {
     return next();
    }
@@ -155,6 +155,8 @@ async (req,res,next)=>{
    }
 },
 
+
+
 adminController.updateEditCategory);
 
 admin_route.get('/deleteCategory/:id',adminController.deleteCategory);
@@ -165,7 +167,7 @@ admin_route.get('/product',adminController.loadProduct);
 //admin_route.post('/product',upload.single('image'),adminController.addProduct);
 //admin_route.post('/product',upload.array('image', 4),
 
-admin_route.post('/product', uploadImages,resizeImages,
+admin_route.post('/product',uploadImages,resizeImages,
 [
     check('title').trim().notEmpty().withMessage(" Product Name is required"),
     check('description').trim().notEmpty().withMessage(" Description is required"),
@@ -211,7 +213,7 @@ admin_route.post('/editProduct/:id',uploadImages,resizeImages,
     async (req,res,next)=>{
         var errors=validationResult(req); 
         const data = matchedData(req);
-        console.log(errors);
+      //  console.log(errors);
         if (errors.isEmpty()) {
          return next();
         }

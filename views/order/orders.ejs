@@ -29,7 +29,15 @@
                 <% orders.forEach(function(order){ %>
                <tr>
                 <td><%=order._id %></td>
-                <td><%= order.order_Date.toLocaleString() %></td>
+                <!-- <td><%= order.order_Date.toLocaleString() %></td> -->
+                <%var datavalue=order.order_Date 
+                var day = String(datavalue.getDate()).padStart(2, '0');
+                var month = String(datavalue.getMonth() + 1).padStart(2, '0');
+                var year = datavalue.getFullYear();
+                var formattedDate = day + '/' + month + '/' + year;
+                %>
+               
+                 <td><%= formattedDate %></td>
                 <td>Rs.<%=order.total_Amount %>.00&nbsp;</td>
                 <td><%=order.payment_Method %></td>
                 <td><%=order.order_Status %></td>

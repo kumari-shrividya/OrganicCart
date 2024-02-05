@@ -52,7 +52,15 @@
                 
                <tr>
                 <td><%=order._id %></td>
-                 <td><%= order.order_Date.toLocaleString() %></td>
+                <%var datavalue=order.order_Date 
+                var day = String(datavalue.getDate()).padStart(2, '0');
+                var month = String(datavalue.getMonth() + 1).padStart(2, '0');
+                var year = datavalue.getFullYear();
+                var formattedDate = day + '/' + month + '/' + year;
+                %>
+               
+                 <td><%= formattedDate %></td>
+                 <td>dateValue</td>
                 <td>₹<%=order.total_Amount %>.00</td>
                  <td><%=order.payment_Method %></td>
                 <td><%=order.order_Status %></td>
@@ -83,3 +91,15 @@
     $('#myTable').DataTable();
 } );
   </script>
+  <!-- <script>
+    function formatDate(date, format) {
+    const map = {
+        mm: date.getMonth() + 1,
+        dd: date.getDate(),
+        yy: date.getFullYear().toString().slice(-2),
+        yyyy: date.getFullYear()
+    }
+
+    return format.replace(/mm|dd|yy|yyy/gi, matched => map[matched])
+}
+  </script> -->

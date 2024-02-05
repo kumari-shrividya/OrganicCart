@@ -2,12 +2,16 @@ const Category = require('../models/categoryModel');
 const product = require('../models/productModel');
 const User = require('../models/userModel');
 const Order = require("../models/orderModel");
-const resizeImage=require('../util/resizeImage');
+
+
+// const resizeImage=require('../util/resizeImage');
 const puppeteer=require('puppeteer');
 const path=require('path');
 const exceljs=require('exceljs');
 
+//multer
 const {uploadImages,resizeImages}=require('../util/imageUpload');
+const{uploadImage,resizeImage}=require('../util/CategoryImageUpload')
 //for retrieving data  from admin collection (admin already existing in db)
 // const mongoose=require('mongoose');
 // const collection = mongoose.connection.collection('admin')
@@ -50,9 +54,13 @@ const verifyAdminLogin=async(req,res)=>{
            // console.log(process.env.ADMIN);
            // console.log(email)
              if(process.env.ADMIN==email && process.env.ADMINPASS==password){
-                 res.render('adminHome');
+                
                  req.session.admin=true;
-                 console.log(req.session.admin);
+                 res.redirect('/admin/dashboard');
+          //  res.render('adminHome');
+               
+              //   console.log(req.session.admin);
+           
                }
             else{
                 res.render('login',{message:"Invalid credentials!"});
@@ -170,8 +178,9 @@ const addCategory = async (req, res) => {
        // console.log(req.session.fileName);
            const category = Category({
             category: req.body.title,
-            // description: req.body.description
+            offer_Percentage: req.body.offer,
             image:req.session.fileName,//req.file.filename,
+            // image:req.body.image,
             unlisted:0
         });
 
@@ -188,7 +197,7 @@ const addCategory = async (req, res) => {
     }catch(error){
         
         if (error.name === 'MongoServerError' && error.code === 11000) {
-         res.send('category must be unique');
+         res.send('Category must be unique');
         }
         console.log(error);
        // res.json({ success: false, message: 'Category saved successfully' });
@@ -291,6 +300,7 @@ const addCategory = async (req, res) => {
             const products=await product.find({_id:id})
             .populate('category_id');
             req.session.product=products;
+        
             if(products){
               //  console.log(products);
                 res.render('editProduct',{categories:categories,products:products,errors:'',data:''});
@@ -301,24 +311,36 @@ const addCategory = async (req, res) => {
         }
     }
     //Edit  Category
-    const updateEditCategory=async(req,res)=>{
+ const updateEditCategory=async(req,res)=>{
 
         
        try{
 
         const id=(req.params.id);
-        const category= req.body.title;
+        const category= req.body.title.toLowerCase();
+        const offer=req.body.offer;
         //const image=req.file.filename;   
-       const image=req.session.editfileName;   
-          
-           await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,"image":image}});            
+      //  const image=req.session.editfileName;   
+    
+
+       if(!req.file){
+        await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,offer_Percentage:offer }}); 
+       }
+       else{
+        // uploadCategoryImage
+        uploadImage
+        resizeImage
+          // const  image=req.body.image
+          const  image=req.session.fileName
+        await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,"image":image, offer_Percentage:offer }}); 
+       }             
              const categories=await Category.find();
                if(categories){
                res.render('categoryList',{categories,isEdit:true});      
                }
            }catch(error){
             if (error.name === 'MongoServerError' && error.code === 11000) {     
-               return res.send('category must be unique');
+               return res.send('Category must be unique');
                }
                else{
                console.log(error.message)
@@ -337,55 +359,45 @@ const addCategory = async (req, res) => {
          const unit_price= req.body.unit_price;
          const Weight= req.body.weight;
          const quantity= req.body.quantity;
-        //  const files=req.files.map(file => file.filename);
-        //  const filenames=[];
-        //  if(files){
-        //     filenames=files;
-        //  }
-        //  else{
-        //     filenames[0]=req.body.image1;
-        //     filenames[1]=req.body.image2;
-        //     filenames[2]=req.body.image3;
-        //     filenames[3]=req.body.image4;
+        
+        try{ 
 
-        //  }
-        try{
-          // if(!req.body.chkimage){
-          //   await product.findOneAndUpdate({'_id':id},{$set:{"title": title,
-          //   "description":description,
-          //   "category_id":category_id,
-          //   "unit_price": unit_price,
-          //   "Weight":Weight,
-          //   "quantity":quantity
+            if(req.files.length==0){
+                await product.findOneAndUpdate({'_id':id},{$set:{"title": title,
+                "description":description,
+                "category_id":category_id,
+                "unit_price": unit_price,
+                "Weight":Weight,
+                "quantity":quantity
            
-          //   }}, 
-          //    );
-          // }
-          // else{
-            uploadImages,resizeImages
-            await product.findOneAndUpdate({'_id':id},{$set:{"title": title,
-            "description":description,
-            "category_id":category_id,
-            "unit_price": unit_price,
-            "Weight":Weight,
-            "quantity":quantity,
-            "images":req.body.image
             }}, 
              );
+          }
+        else{
+                uploadImages,resizeImages
+                await product.findOneAndUpdate({'_id':id},{$set:{"title": title,
+                "description":description,
+                "category_id":category_id,
+                "unit_price": unit_price,
+                "Weight":Weight,
+                "quantity":quantity,
+                "images":req.body.image
+                }}, 
+              );
           
-          // }
+           }
                const products=await product.find();
-
                 if(products){
                 res.render('productList',{products,isEditted:true});
                 }
-            }catch(error){
+        }catch(error){
                 console.log(error)
                 return res.status(500).send("Server Error");
                 }
     }
-    //edit product image
-    // load product form
+
+
+  //edit product image
     const editProductImage=async(req,res)=>{
       try{
         const id=(req.params.id);
@@ -453,14 +465,7 @@ const addCategory = async (req, res) => {
             });
             const prodData= await Product.save();
             if(prodData){
-                // const outputFolder='./public/images/product/'+prodData._id;
-                // console.log(outputFolder);
-                // console.log("New product added ");
-                // //   /util/resizeImage - calling resizeImage function using sharp
-                // resizeImage.resizeImagesInDirectory(
-                //     req.session.product_InFolder,
-                //     outputFolder,200,250)
-                //render product list
+             
                 const products=await product.find();
 
                 if(products){
@@ -474,11 +479,9 @@ const addCategory = async (req, res) => {
         }catch(error){
             if (error.name === 'MongoServerError' && error.code === 11000) {
              return  res.send('Product Name must be unique');
-            // return res.status(500).render('product', { previewImages:'',message:'' ,errors:'',data:'',categories:categories,isAdded:false,msgUnique:"Product Name must be unique"});
-               }
+              }
             console.log(error);
-           // return res.status(500).render('product', { previewImages:'',message:'' ,errors:'',data:'',categories:categories,isAdded:false,msg:"Server error"});
-           return res.status(500).send("Server Error",);
+        return res.status(500).send("Server Error",);
         }
 }  
   //load Sales report
@@ -581,7 +584,7 @@ try{
 
     }
  else{
-    res.send("No Data available");
+   return res.send("No Data available");
  }
  // if data available generate pdf
         if(result){
@@ -593,11 +596,11 @@ try{
   // Call a function to generate PDF using Puppeteer
           const pdfBuffer = await generatePDF(result,rpt_Date1);
           res.contentType('application/pdf');
-        res.send(pdfBuffer);
+       return res.send(pdfBuffer);
     }
 }catch(error){
     console.log(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+  return  res.status(500).json({ message: 'Internal Server Error' });
 }
 }
 
@@ -709,6 +712,79 @@ const loadCoupon=async(req,res)=>{
     return res.status(500).send("Server Error");
   }
 }
+
+
+//load dashboard
+
+const loadAdminDashboard=async(req,res)=>{
+  try {
+    const products = await product.find();
+    const orders = await Order.find({order_Status:"Delivered"});
+    const catogary=await Category.find()
+    const users= await User.find()
+
+    const latestOrders = await Order.find({order_Status:"Placed"}).sort({ orderDate: -1 }).limit(5);
+   
+    const productCount = products.length;
+    const orderCount = orders.length;
+    const catogaryCount=catogary.length
+  
+    const totalRevenue = orders.reduce((total, order) => total + order.total_Amount, 0);
+
+      return res.render('dashboard', { totalRevenue, orderCount, productCount,catogaryCount ,latestOrders});
+   // res.json(chartData);
+    }
+    catch (error) {
+        console.log('Error happened in admin controller at adminLoginPage function ', error);
+    }
+}
+
+const getChartData=async(req,res)=>{
+
+   // -------------------this is for the sales graph -----
+   const monthlySales = await Order.aggregate([
+    {
+        $match: {
+          order_Status: "Delivered", // Filter by status
+        },
+    }, 
+    {
+        $group: {
+            _id: {
+                $month: '$order_Date',
+            },
+            count: { $sum: 1 },
+        },
+    },
+    {
+        $sort: {
+            '_id': 1,
+        },
+    },
+]);
+
+
+const monthlySalesArray = Array.from({ length: 12 }, (_, index) => {
+    const monthData = monthlySales.find((item) => item._id === index + 1)
+    return monthData ? monthData.count : 0;
+});
+
+  const chartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    datasets: [{
+        label: 'Sales',
+        data: monthlySalesArray,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+    }]
+};
+
+res.json(chartData);
+}
+
+
+
 //exports
 module.exports = {
   //category
@@ -727,9 +803,12 @@ module.exports = {
     loadAdminLogin,
     adminLogout,
     loadAdminHome,
+    loadAdminDashboard,
+    getChartData,
+    
 
   //coupon 
-    loadCoupon,
+   loadCoupon,
 
     //user
     loadUserList,

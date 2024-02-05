@@ -187,6 +187,16 @@ user_route.post('/resetPassword',auth.isLogout,
 
 // load wallet history
 user_route.get('/walletHistory',auth.isLogin,userController.loadWalletHistory);
+
+//load user coupon list
+user_route.get('/userCoupon',auth.isLogin,userController.loadUserCouponList);
+
+//load send referral link
+user_route.get('/getReferralLink',auth.isLogin,userController.loadSendReferralLink);
+
+//load send referral link
+user_route.post('/sendReferralLink',auth.isLogin,userController.sendReferralLink);
+
 //load user product list
 user_route.post('/all_products',productController.getAllProducts);
 

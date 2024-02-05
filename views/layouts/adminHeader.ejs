@@ -25,6 +25,7 @@
    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
 
    <link rel="stylesheet" href="path/to/node_modules/sweetalert2/dist/sweetalert2.min.css">
+   
 </head>
 
 <body>
@@ -41,7 +42,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item">
-                        <a class="nav-link  " href="#">Dashboard</a>
+                        <a class="nav-link  " href="/admin/dashboard">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link  " href="/admin/salesReport">Report</a>
@@ -59,10 +60,11 @@
                         <a class="nav-link" href="/order/orders">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/coupon">Coupons</a> 
+                        <!-- <a class="nav-link" href="/product/addCoupon">Coupons</a>  -->
+                        <a class="nav-link" href="/product/couponList">Coupons</a> 
                     </li>
                     <li class="nav-item" style="float: right; width: 100%;">
-                        <a class="nav-link"  href="/admin/login"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                        <a class="nav-link"  href="/admin/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
                     </li>
                 </ul>
                

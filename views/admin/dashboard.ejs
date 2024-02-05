@@ -1,0 +1,203 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<div class="container text-center" style="margin-bottom: 15px;margin-top: 25px;">
+<div class="row ">
+    <div class="col-xl-8 col-lg-12">
+        <div class="card  mb-4">
+            <div class="card-header">
+                <h3 style="margin-bottom: 15px;margin-top: 15px;">Dashboard</h3><br>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Revenue</h6>
+                                    <span>₹<%= totalRevenue %></span><br>
+                                    <span class="text-sm">
+                                        Shipping fees are not included
+                                    </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Orders</h6> <span><%=orderCount%></span><br>
+                                    <span class="text-sm">
+                                        Excluding orders in transit
+                                    </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Products</h6> <span><%= productCount%></span>
+                                    <span class="text-sm">
+                                        In <%= catogaryCount %> Categories
+                                    </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col-xl-8 col-lg-12">
+                    <div class="card mb-4">
+
+
+
+
+
+                  <canvas id="myChart1" style="width:100%;max-width:800px"></canvas> 
+
+
+                  </div>
+                  </div></div></div>   
+                  <br><br>
+                  
+                  <div class="col-lg-7" style="margin-left: 20px;">
+                    <div class="card mb-4">
+                        <article class="card-body ">
+                            <h5 class="card-title">Recent activities</h5>
+                            <ul class="verti-timeline list-unstyled font-sm">
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                    </div>
+                                    <div class="media">
+                                        <div class="me-3">
+                                            <h6><span> <%= latestOrders[0].order_Date.toLocaleDateString() %></span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <div>
+                                                <%= latestOrders[0].order_Status %>:  -
+                                                <%= latestOrders[0].total_Amount %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="event-list active">
+                                    <div class="event-timeline-dot">
+                                        <i class="material-icons md-play_circle_outline font-xxl animation-fade-right"></i>
+                                    </div>
+                                    <div class="media">
+                                        <div class="me-3">
+                                            <h6><span><%= latestOrders[1].order_Date.toLocaleDateString() %></span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <div>
+                                                <%= latestOrders[1].order_Status %>:  -
+                                                <%= latestOrders[1].total_Amount %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                    </div>
+                                    <div class="media">
+                                        <div class="me-3">
+                                            <h6><span><%= latestOrders[2].order_Date.toLocaleDateString() %></span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <div>
+                                                <%= latestOrders[2].order_Status %>:  -
+                                                <%= latestOrders[2].total_Amount %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                    </div>
+                                    <div class="media">
+                                        <div class="me-3">
+                                            <h6><span><%= latestOrders[3].order_Date.toLocaleDateString() %></span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <div>
+                                                <%= latestOrders[3].order_Status %>:  -
+                                                <%= latestOrders[3].total_Amount %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                    </div>
+                                    <div class="media">
+                                        <div class="me-3">
+                                            <h6><span><%= latestOrders[4].order_Date.toLocaleDateString() %></span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <div>
+                                                <%= latestOrders[4].order_Status %>:  -
+                                                <%= latestOrders[4].total_Amount %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+                
+
+            </div>
+           </div>
+           
+           <div> 
+
+           </div>
+         <br><br>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    fetch('/admin/getChartData')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Data fetched, now render chart
+                            renderChart(data);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching chart data:', error);
+                        });
+                });
+        
+                function renderChart(data) {
+                  
+                    const ctx = document.getElementById('myChart1').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: data,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            </script>
+        
+            
+         

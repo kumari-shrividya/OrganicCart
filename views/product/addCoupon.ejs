@@ -1,0 +1,57 @@
+<%- include('../layouts/adminHeader.ejs') %>
+<section style=" padding-top: 5px;" >
+    <div class="category-form">
+        <form action="/product/addCoupon" method="post" >
+            <h2 class="text-center">Add Coupon</h2>
+
+            <div name="error" style="font-size:x-small; color:green; text-align: center;">
+                <% if(typeof message !=='undefined' ){ %>
+                    <h4>
+                        <%= message %>
+                    </h4>
+                <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Coupon Code" name="code" id="code"  text-center required="required" value="<%= data.code %>">
+                <% if( typeof errors !=='undefined' && errors.code ) { %>
+                    <span class="text-danger"><%= errors.code.msg %></span>
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Description" name="description" id="description"  text-center required="required" value="<%= data.description %>">
+                <% if( typeof errors !=='undefined' && errors.description ) { %>
+                    <span class="text-danger"><%= errors.description.msg %></span>
+                    <% } %>
+            </div>
+            
+            <div class="form-group">
+                <input type="number" class="form-control" placeholder="OfferPrice" name="offerPrice" id="offerPrice"  text-center required="required" value="<%= data.offerPrice %>">
+                <% if( typeof errors !=='undefined' && errors.offerPrice ) { %>
+                    <span class="text-danger"><%= errors.offerPrice.msg %></span>
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                <input type="number" class="form-control" placeholder="MinimumAmount" name="minimumAmount" id="minimumAmount"  text-center required="required" value="<%= data.minimumAmount %>">
+                <% if( typeof errors !=='undefined' && errors.minimumAmount ) { %>
+                    <span class="text-danger"><%= errors.minimumAmount.msg %></span>
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                &nbsp;&nbsp;&nbsp;&nbsp;<label>Expiry Date:</label>
+                <input type="date" class="form-control"  name="expiryDate" id="expiryDate"  text-center required="required" value="<%= data.expiryDate %>">
+                <% if( typeof errors !=='undefined' && errors.expiryDate ) { %>
+                    <span class="text-danger"><%= errors.expiryDate.msg %></span>
+                    <% } %>
+            </div>
+          
+            <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Add Coupon</button>
+            </div>
+        </form>
+
+    </div>
+</section>

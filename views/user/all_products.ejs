@@ -99,7 +99,10 @@
            </div> -->
            <a><img class="rounded-circle shadow-4-strong" src="/images/category/<%= c.image %>" style="padding:5px;width:150px;height:100px"></a>
          
-            <p class="uppercase tracking-wide text-sm font-bold text-gray-700  "><strong><%= c.category %></strong></p>
+            <p class="uppercase tracking-wide text-sm font-bold text-gray-700  ">
+              <a data-toggle="tooltip" data-placement="top" title="Search by category" href="#" style="color:#cdc22a;text-decoration:none;margin-left: 10px" > <strong><%= c.category %>
+              </strong></a>&nbsp;&nbsp;</p>
+             
    
         </div> 
      
@@ -218,7 +221,7 @@
             <!-- <h5 class="card-title" style="padding-left:5px;text-align: center;" ><%= p.title %></h5>
                  <div style="padding-left:5px;text-align: center;">&nbsp;₹&nbsp;<strong><%= p.unit_price %>.00 &nbsp;&nbsp;<small><%= p.Weight %></small></strong></div> -->
                  <div class="m-2 ">
-                  <p class="uppercase tracking-wide text-sm font-bold text-gray-700 " style="margin-left: 5px;"><strong><%= p.title %></strong>&nbsp;&nbsp;
+                  <p class="uppercase tracking-wide text-sm font-bold text-gray-700 " style="margin-left: 5px;font-size: small;"><strong><%= p.title %></strong>&nbsp;&nbsp;
                     <!-- <div class="parentDiv">wish
                       <div class="tooltip">Tooltip text</div>
                     </div> -->
@@ -228,8 +231,12 @@
                     <span class="fa fa-star checked "></span>
                     <span class="fa fa-star-half-stroke checked "></span></p>
                   <p class="text-3xl text-gray-900 " style="margin-left: 5px;">₹&nbsp;<strong><%= p.unit_price %>.00</strong>
+                   
+                    <span style="color:red">&nbsp;&nbsp;&nbsp;-<%=p.category_id.offer_Percentage %>%</span>
+                 
                     &nbsp;&nbsp; <%= p.Weight %> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist" href="/wishlist/add_To_Wishlist/<%= p._id %>"><i class="fa fa-heart" style=" color:lightblue"></i></a></p>
+                    <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist" href="/wishlist/add_To_Wishlist/<%= p._id %>">
+                      <i class="fa fa-heart" style=" color:lightblue"></i></a> </p>
                
                   <!-- <p class="text-gray-700 "></p> -->
               <!-- </div> -->

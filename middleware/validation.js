@@ -6,7 +6,7 @@ const {check , validationResult,matchedData} = require('express-validator');
 const addressValidationRules=()=>{
   return [
      check('FullName').trim().notEmpty().withMessage("FullName is required")
-     .isLength({min:2}).withMessage("HouseName must be at least 2 characters"),
+     .isLength({min:2}).withMessage("FullName must be at least 2 characters"),
      check('HouseName').trim().notEmpty().withMessage("HouseName is required")
       .isLength({min:2}).withMessage("HouseName must be at least 2 characters"),
       check('StreetName').trim().notEmpty().withMessage("StreetName is required")
@@ -66,8 +66,21 @@ const validateCategory=async(req,res,next)=>{
         
 }
 
+//coupon validation
+const couponValidationRules=()=>{
+  return [
+     check('code').trim().notEmpty().withMessage("Code is required")
+     .isLength({min:2}).withMessage("Code must be at least 2 characters"),
+     check('description').trim().notEmpty().withMessage("Description is required")
+      .isLength({min:2}).withMessage("Description must be at least 2 characters"),
+      check('offerPrice').trim().notEmpty().isFloat({min:1}).withMessage("offerPrice is required"),
+      check('minimumAmount').trim().notEmpty().isFloat({min:1}).withMessage("MinimumAmount is required"),
+      check('expiryDate').trim().notEmpty().withMessage("expiryDate is required")    
+    ]
+};
 module.exports={
-    validateCategory,
+   validateCategory,
   addressValidationRules,
+  couponValidationRules,
   HandleEditAddressValidationErrors
 }

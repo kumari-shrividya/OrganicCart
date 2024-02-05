@@ -5,11 +5,14 @@ const product = require("../models/productModel");
 const User = require("../models/userModel");
 const Order = require("../models/orderModel");
 const date = require("date-and-time");
+const Coupon = require('../models/couponModel');
+const Referral=require('../models/referralModel')
 
 const fs=require('fs');
 const path=require('path');
 //razorpay
 const Razorpay = require("razorpay"); 
+const { sendReferralLink } = require("./userController");
 //razorpay key
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;    
 //razorpay instance
@@ -18,9 +21,12 @@ var razorpayInstance = new Razorpay({
   key_secret: RAZORPAY_SECRET_KEY,
 }); 
 
+
 //date format
 const now = new Date();
-const dateValue = date.format(now, "YYYY/MM/DD HH:mm:ss");
+const dateValue = date.format(now, "DD/MM/YYYY HH:mm:ss");
+
+
 //add to wish list
 
 
@@ -324,7 +330,7 @@ const loadOrderSummary = async (req, res) => {
            req.session.bill_Adress = [];
 
         const length = Address.length;
-
+        req.session.discount=0;
         // var bill_Adress = [];
         for (i = 0; i < length; i++) {  
           if (Address[i].isDefault === true) {
@@ -353,6 +359,7 @@ const loadOrderSummary = async (req, res) => {
           bill_address: req.session.bill_Adress,
           cart: req.session.cart,
           total: total_Amt,
+          discount:0
         });
 
        
@@ -365,6 +372,7 @@ const loadOrderSummary = async (req, res) => {
         bill_address: req.session.bill_Adress,
         cart: req.session.cart,
         total: total_Amt,
+        discount:0
       });
 
       }
@@ -459,22 +467,72 @@ const placeOrder = async (req, res) => {
       const orderData = await order.save();
       //    console.log(orderData._id);
       if (orderData) {
-        const userData = await User.updateOne(
+        const updatedData = await User.updateOne(
           { _id: user_Id },
           { $set: { cart_Data: [] } }
         );
           req.session.order_Id=orderData._id;
 
-        if (userData) {
+        if (updatedData) {
           req.session.cart = [];
         }
-        //if wallet checked
+
+        // if first order check it is referral and if yes add 50 to wallet of both users
+        console.log(userData.isOrdered)
+        if(userData.isOrdered===0){
+
+            const refData=await Referral.findOne({referred_email:userData.email});
+
+            if(refData){
+              console.log(refData)
+            let  userId=refData.user_id;
+
+              let wallet = [];
+              wallet.push({
+                order_id: order._id,
+                returned_Amount:50,
+                reason:"Referral Offer",
+                updated_Date: Date(),
+              });
+              //if referral user  incriment user wallet_balance and push details into  wallet history array
+              await User.updateMany(
+                { _id: req.session.user_id },
+                {
+                  $push: { wallet_History: wallet },
+                  $inc: { wallet_Balance: 50 }, 
+                },
+                { new: true }
+              );
+
+              await User.updateMany(
+                { _id: userId },
+                {
+                  $push: { wallet_History: wallet },
+                  $inc: { wallet_Balance: 50 }, 
+                },
+                { new: true }
+              );
+
+           }
+
+           // update isOrdered to 1 in User
+
+           await User.updateMany(
+            { _id: req.session.user_id },
+            {$set:{isOrdered:1}},
+             
+            { new: true }
+          );
+
+        }
+
+        //if wallet checked for payment 
         if (req.body["chkwallet"] && wallet_Amt > 0) {
           let wallet = [];
           wallet.push({
             order_id: order._id,
             deducted_Amount: amount_From_Wallet,
-            reason:"paid order",
+            reason:"deducted for order",
             updated_Date: Date(),
           });
           //if wallet checked decriment user wallet_balance and push details into  wallet history array
@@ -675,6 +733,173 @@ let result= await easyinvoice.createInvoice(data, async function (result) {
 }
 
 }
+//apply promo code
+const  applyPromoCode=async (req,res)=>{
+
+  try{
+
+
+  const couponCode=req.body.promoCode;
+ 
+const userData=await  User.findOne({_id:req.session.user_id});
+
+const isExistCode=0;
+
+if ( Array.isArray( userData.coupon_Code) && userData.coupon_Code.length>0) {
+
+          for (i = 0; i < userData.coupon_Code.length; i++) {
+                if ( userData.coupon_Code[i].code === couponCode) {
+                   isExistCode=1;
+                     res.json("Coupon is already used");
+                     console.log("Code  is already used")
+                   break;
+                   }
+              }
+  
+                if(isExistCode==0){
+                          const couponData=Coupon.find({code:couponCode});
+                          const discount=couponData.discountPercentage;
+                          const expDate=couponData.expiryDate;
+                          const minAmt=couponData.minimumAmount;
+                          const currentDate = new Date();
+                            if(expDate>currentDate){
+                                const total=req.session.total;
+                                if(total>=minAmt){
+                                      let disc=parseInt(total)*parseInt(discount)/100;
+                                      req.session.discount=disc;
+
+                                      req.session.total=parseInt(total)-parseInt(disc);
+                                      // newData={
+                                      //   discount:disc,
+                                      //   total:total,
+                                      //   message:"Coupon Applied"
+                                      // }
+                                     // res.json(newData);
+                                     await User.updateOne(
+                                      { _id: req.session.user_id },
+                                      { $push: { coupon_Code: couponCode } }
+                                    );
+
+                                     res.render("checkoutAndPlace", {
+                                      user: userData,
+                                      bill_address: req.session.bill_Adress,
+                                      cart: req.session.cart,
+                                      total: total,
+                                      discount:disc
+                                    });
+                                      console.log("Coupon Applied")
+                                   }
+                  
+                                  else{
+                                    res.json("Total Amount is less");
+                                    console.log("Total Amount is less")
+                                  }
+                              }
+                          else{
+                            res.json("Coupon expired");
+                            console.log("Coupon expired")
+                          }
+                 }
+              else{
+                res.json("Coupon is already used");
+                console.log("Coupon is already used")
+              }
+
+        }
+        else{
+              console.log("first coupon");
+
+             const couponData=await Coupon.find({code:couponCode});
+                          const discount=couponData[0].offerPrice;
+                          const expDate=couponData[0].expiryDate;
+                          const minAmt=couponData[0].minimumAmount;
+                          const currentDate = new Date();
+                        if(expDate>currentDate){
+                             
+                              let total=req.session.total;
+                               
+                                if(total>=minAmt){
+                                      let disc=parseInt(total)*parseInt(discount)/100;
+                                      req.session.discount=disc;
+
+                                      req.session.total=parseInt(total)-parseInt(disc);
+
+                                      await User.updateOne(
+                                        { _id: req.session.user_id },
+                                        { $push: { coupon_Code: couponCode } }
+                                      );
+
+                                      // newData={
+                                      //   discount:disc,
+                                      //   total:total,
+                                      //   message:"Coupon Applied"
+                                      // }
+                                      // res.json(newData);
+                                      console.log("Coupon Applied")
+                                       res.render("checkoutAndPlace", {
+                                        user: userData,
+                                        bill_address: req.session.bill_Adress,
+                                        cart: req.session.cart,
+                                        total: total,
+                                        discount:disc
+                                      });
+                                   }
+                  
+                                  else{
+                                    res.json("Total Amount is less");
+                                  }
+                    }
+                else{
+                  res.json("Coupon expired");
+                //  console.log(expDate,currentDate);
+                  console.log("Coupon expired");
+                }
+
+        }
+
+}catch(error){
+  res.json(error.message);
+}
+}
+
+//select Billing address for checkout page
+const getBillingAddress=async(req,res)=>{
+  const userData = await User.findOne({ _id: req.session.user_id });
+  //console.log(req.session.user_id);
+     //if user data and address available
+  if (userData) {
+
+     if(Array.isArray(userData.address) && userData.address.length){
+     // console.log(userData.address);
+      //find default address
+      const Address = userData.address;
+
+       //  req.session.bill_Adress = [];
+
+      const length = Address.length;
+      console.log(req.params.id)
+      // var bill_Adress = [];
+      for (i = 0; i < length; i++) {  
+        if (Address[i]._id.toString() === req.params.id.toString()) {
+         
+         //bill_Adress = [...bill_Adress, Address[i]];
+         req.session.bill_Adress=[];
+          req.session.bill_Adress = [...req.session.bill_Adress, Address[i]];
+          break;
+        }
+      }
+      console.log(req.session.discount)
+      res.render("checkoutAndPlace", {
+        user: userData,
+        bill_address: req.session.bill_Adress,
+        cart: req.session.cart,
+        total: req.session.total,
+        discount:req.session.discount
+      });
+
+    }
+  }
+}
 //Exports
 module.exports = {
   add_To_Cart,
@@ -682,9 +907,12 @@ module.exports = {
   updateCart,
   clearCart,
   loadOrderSummary,
+  applyPromoCode,
+  getBillingAddress,
   loadPayment,
   placeOrder,
   onlinePayment,
   loadOrderSuccess,
-  loadGetInvoice
+  loadGetInvoice,
+ 
  };

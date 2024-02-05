@@ -18,7 +18,14 @@ const catgorySchema= new mongoose.Schema({
     // }
     category: { type: String, 
         required: true,
-         unique: true },
+       
+            unique: true,
+            lowercase: true, trim: true, //case insensitive unique
+            
+      
+         },
+         offer_Percentage:{type:Number,
+        default:0},
     image:{
         type:String,
         required:true
@@ -29,5 +36,6 @@ const catgorySchema= new mongoose.Schema({
         }
      
 });
+
 module.exports=mongoose.model('categories',catgorySchema)
 

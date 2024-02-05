@@ -12,18 +12,21 @@
                 <% } %>
             </div>
              <div class="form-group">
-             <input type="text" class="form-control" placeholder="title" name="title" id="title1" value="<%=categories[0].category%>" text-center required="required" >
+             <input type="text" class="form-control" placeholder="title" name="title" id="title1" value="<%=categories[0].category%>" text-center >
             
             <% if( errors && errors.title ) { %>
                 &nbsp;&nbsp;<span class="text-danger"><%= errors.title.msg %></span>
                 <% } %>
+
+                <input type="number" class="form-control" placeholder="offer percentage" name="offer" id="offer"  value="<%=categories[0].offer_Percentage%>" text-center >
             </div>
             <br>
             <div class="form-group">
                 <label class="form-label" class="form-control"  for="form3Example4c2" text-center>&nbsp;&nbsp;Add category Image</label>
                
-                 <input type="file" class="form-control" text-center name="image" id="image" required>
+                 <input type="file" class="form-control" text-center name="image" id="image" >
 
+               
             <div>
             <img style="width:100px;height: 100px;" id="img" src="/images/category/<%=categories[0].image%>" alt=" ">
           </div>
