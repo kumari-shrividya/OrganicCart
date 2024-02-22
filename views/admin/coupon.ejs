@@ -16,40 +16,57 @@
                 padding: 20px;
             }
         }
-    </style> 
 
+    
+.form-field input:focus{
+  outline:none;
+}
+.form-field.error input{
+  border-color:#dc3545;
+  
+}
 
+.form-field.success input{
+  border-color:#28a745;
+}
+.form-field small{
+  color:#dc3545;
+}
+
+</style> 
 
     <div class="container">
 
         <h2 class="mt-4 mb-4" style="text-align: center;">Add Coupons</h2>
 
-        <form>
-            <div class="form-group">
+        <form id="coupon_Form">
+            <div class="form-group form-field">
                 <label for="couponCode">Coupon Code</label>
                 <input type="text" class="form-control" id="couponCode" placeholder="Enter coupon code" required>
+                <small></small>
             </div>
-            <div class="form-group">
+            <div class="form-group form-field">
                 <label for="couponDescription">Coupon Description</label>
                 <textarea class="form-control" id="couponDescription" rows="3" placeholder="Enter coupon description" required></textarea>
+                <small></small>
             </div>
-            <div class="form-group">
+            <div class="form-group form-field">
                 <label for="expirationDate">Expiration Date</label>
                 <input type="date" class="form-control" id="expirationDate" required>
+                <small></small>
             </div>
-            <div class="form-group">
+            <div class="form-group form-field">
                 <label for="discountPercentage">Discount Percentage</label>
-                <input type="number" class="form-control" id="discountAmount" placeholder="Enter discount percentage" required>
+                <input type="number" class="form-control" id="discountPercent" placeholder="Enter discount percentage" required>
+                <small></small>
             </div>
             <button type="submit" class="btn btn-primary">Add Coupon</button>
         </form>
 
     </div>
 
-    <!-- Bootstrap JS and Popper.js (Optional) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/js/coupon.js"></script>
+
 
 </body>
 </html>

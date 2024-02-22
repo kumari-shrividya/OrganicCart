@@ -1,6 +1,7 @@
 const multer=require('multer');
 const sharp=require('sharp');
 const multerStorage=multer.memoryStorage();
+// const FileType = require('filetype');
 
 //validate file type
 const FILE_TYPE_MAP={ 
@@ -8,23 +9,68 @@ const FILE_TYPE_MAP={
     'image/jpeg':'jpeg',
     'image/jpg':'jpg'
 }
-const multerFilter=(req,file,cb)=>{
+const multerFilter=async(req,file,cb)=>{
     if(file.mimetype.startsWith('image')){
         cb(null,true);
     }
     else{
-        cb('Please upload images !',false);
-    }
+       cb(new Error('Invalid file type. Only JPEG and PNG files are allowed.'),false);
+
+        // cb('',false);
+    //      if(!file.mimetype.startsWith('image')){
+            
+    //     try{
+            
+    //       const categories=await Category.find({_id:id});
+
+    //       if(categories){
+    //       return  res.render('editCategory',{categories,errors:'',data:'',message:'Please upload images'});
+    //       }
+    //     }catch(error){
+    //   }
+    //  }
+
+  }
 };
 
+// const uploadcat=multer({
+//     storage:multerStorage,
+//     fileFilter:multerFilter
+// });
 const uploadcat=multer({
-    storage:multerStorage,
-    fileFilter:multerFilter
-});
+      storage:multerStorage,
+   fileFilter:multerFilter
+    });
+
 
 const uploadFile=uploadcat.single('image');
 
-uploadImage=(req,res,next)=>{
+uploadImage=async(req,res,next)=>{
+    // if(!req.file) return next();
+
+        // // Read the file and get its MIME type
+        // const buffer = req.file.buffer; // Assuming you're using memory storage with Multer
+        // const type = await FileType.fromBuffer(buffer);
+
+        // // Check if MIME type is allowed
+        // if (!type || (type.mime !== 'image/jpeg' && type.mime !== 'image/png')) {
+        // //   return res.status(400).send('Invalid file type');
+        // return res.render('editCategory',{message:'Invalid file type'});
+        // }
+//         if(req.file){
+//         if(!req.file.mimetype.startsWith('image')){
+//             const id=req.params.id;
+//             try{
+//              const categories=await Category.find({_id:id});
+     
+//              if(categories){
+//                return  res.render('editCategory',{categories,errors:'',data:'',message:'Invalid file type'});
+//              }
+//           }catch(error){
+//             // return res.render('editCategory',{message:'Invalid file type'});
+//         }
+//     }
+//  }
     uploadFile(req,res,(err)=>{
         if(err instanceof multer.MulterError){
             if(err.code==='LIMIT_UNEXPECTED_FILE'){
@@ -42,6 +88,13 @@ resizeImage=async(req,res,next)=>{
 
     try{
     if(!req.file) return next();
+
+    // if(req.file){
+    //     if(!req.file.mimetype.startsWith('image')){
+    //         return res.render('editCategory',{message:'Invalid file type'});
+    //     }
+    // }
+
     // req.body.image=[];
     // await Promise.all(
     //     req.files.map(async(file)=>{

@@ -1,47 +1,5 @@
 <%- include('../layouts/adminHeader.ejs') %>
 
-    <!-- <style>
-        .category-form {
-            width: 340px;
-            margin: 50px auto;
-            font-size: 15px;
-        }
-
-        .category-form form {
-            margin-bottom: 15px;
-            background: #f7f7f7;
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-        }
-
-        .category-form h2 {
-            margin: 0 0 15px;
-
-        }
-
-        .category-form input {
-            padding: 10px;
-            margin: 10px;
-            height: 15px;
-
-        }
-
-        .form-control,
-        .btn {
-            min-height: 38px;
-            border-radius: 2px;
-        }
-
-        .btn {
-            margin: 10px;
-            padding: 10px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body> -->
     <section style=" padding-top: 5px;" >
     <div class="category-form">
         <form action="/admin/category" method="post" id="categoryForm" enctype="multipart/form-data">
@@ -67,87 +25,18 @@
              <label class="form-label" class="form-control"  for="form3Example4c2" text-center>&nbsp;&nbsp;Add category Image</label>
             
               <input type="file" class="form-control" text-center name="image" id="image" required>
-            <!-- <label for="width">Width:</label>
-            <input type="range" name="width" min="1" max="650" step="10" value="100"
-            oninput="resizeImage()">
-            <span id="width-value">100</span>px
-            <label for="Height">Height:</label>
-            <input type="range" name="height" min="1" max="650" step="10" value="100"
-            oninput="resizeImage()">
-            <span id="height-value">100</span>px --> 
-            <!-- <h2>Preview</h2>
-            <img id="resized-image" src="#" alt=""
-           style= "max-width:100%;display:block"> 
-           </div> -->
-
+            
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Add Category</button>
             </div>
 
         </form>
-       <!-- modal -->
-  <!-- <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <p id="modalMessage"></p>
-    </div>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script>
-    $(document).ready(function () {
-       
-      $('#categoryForm').submit(function (e) {
-        e.preventDefault();
-
-        $.ajax({
-          type: 'POST',
-          url: '/admin/category',
-          dataType: "json",
-          timeout: 15000,
-          data: $(this).serialize(),
-          success: function (response) {
-            // Check if the product was saved successfully
-            if (response.success) {
-              // Display the success message in the modal
-              $('#modalMessage').text(response.message);
-              $('#myModal').show();
-            } else {
-              // Handle the case where the save operation failed
-              console.error('Category save failed.');
-            }
-          },
-          error: function (error) {
-           // console.error('Error:', error);
-          }
-        });
-      });
-
-      // Close the modal when the close button is clicked
-      $('.close').click(function () {
-        $('#myModal').hide();
-      });
-    });
-  </script> -->
+     
 
     </div>
 </section>
 
-<!-- <script>
-    const widthInput=document.querySelector('[name="width"]');
-    const heightInput=document.querySelector('[name="height"]');
-    const widthValue=document.getElementById('width-value');
-    const heightValue=document.getElementById('height-value');
 
-    function resizeImage(){
-        widthValue.textContent=widthInput.value;
-        heightValue.textContent=heightInput.value;
-        const formData=new formData();
-        formData.append("width",widthInput.value);
-        formData.append("height",heightInput.value);
-        formData.append("image",document.querySelector('[name="image"]')).files[0];
-       }
- </script> -->
 </body>
 
 

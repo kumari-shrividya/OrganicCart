@@ -4,6 +4,7 @@ const app=express();
 // const session=require('express-session');
 // app.use(session({secret:config.sessionSecret,resave:false, saveUninitialized: true}))
 require('dotenv').config();
+const cors = require('cors');
 
 //db connection
 var mongourl=process.env.MONGO_URL;
@@ -20,6 +21,16 @@ const connectDb=async()=>{
 };
 
 connectDb();
+
+//cors
+app.use(cors());
+
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,Content-Type, Accept");
+//     next();
+// });
+
 
 // static path public
 const path = require('path') 

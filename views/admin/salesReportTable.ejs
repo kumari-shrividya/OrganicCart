@@ -1,0 +1,113 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+<section style=" padding-top: 5px;" >
+    <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
+    <div class="container">
+          
+          <h4 style="text-align: center;margin-top: 20px;">Productwise Sales</h4>
+            <div>
+                <% if(typeof message!='undefined'){%>
+
+               
+            
+                    <h6><%=message%>&nbsp;<br>Report Date:&nbsp;&nbsp;<%=rpt_Date1%></h6>
+            <% } %>
+            </div>
+
+        <div class="col-sm-8 mt-3" >
+            <button type="button" class="btn" style="color: white;background-color: #012970;"
+              onclick="return ExportToExcel()"><i class="material-icons">Export to Excel</i> </button>
+            <button type="button" class="btn" style="color: white;background-color: #012970;"
+              onclick="return printTable()"><i class="material-icons">Print</i> </button>
+          </div>
+          <br>
+          <a  href="/admin/salesReport"  style="color:  #012970;">
+          Back </a>
+          <% if( typeof result !=='undefined' && result.length>0) {%>
+          <table  id="myTable" style="border-right: 1px; border-spacing:10px; border-collapse: separate;" class="table mt-5 ">
+
+            <thead style="padding:5px; margin:5px">
+             <tr>
+                  <th scope="col" style="font-size: small; text-align: left;font-weight: bold;"; >Title</th>
+                  <th scope="col" style="font-size: small; text-align: left; font-weight: bold;"; >Total Sales</th>
+                  <th scope="col"style="font-size:  small; text-align: left; font-weight: bold;"; >Total Quantity</th>
+            </tr>
+              </thead>
+            <tbody>
+               
+                    <% result.forEach(function(data){ %>
+                     <tr>
+                     <td  style=" text-align: left;";"><strong><%=data._id %></strong></td>
+                    <td  style=" text-align: left;";>₹&nbsp;<strong><%=data.totalSales %>.00</td>
+                    <td  style=" text-align: left; font-weight: bold;";><%=data.totalQuantity %></td>
+                    </tr>
+                <% }) %>
+               
+            </tbody>
+          </table>
+          <% }   else{ %>
+        
+            <h5>No Data Available</h5>
+            <%    } %>
+   </div>
+   <br>
+   <br>
+</section>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable({
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
+    },
+    // "bPaginate": false,
+
+  });
+} );
+  </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<script>
+function ExportToExcel(type, fn, dl) {
+  var elt = document.getElementById("myTable");
+  var ws = XLSX.utils.table_to_sheet(elt);
+  
+  // Set column widths
+  ws["!cols"] = [];
+  var colCount = elt.rows[0].cells.length;
+  for (var i = 0; i < colCount; i++) {
+    ws["!cols"].push({ wpx: 100 });
+  }
+  
+  // Set row heights
+  ws["!rows"] = [];
+  var rowCount = elt.rows.length;
+  for (var i = 0; i < rowCount; i++) {
+    ws["!rows"].push({ hpt: 20 });
+  }
+  
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+  return dl ?
+    XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+    XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+}
+
+
+    function printTable() {
+      var table = document.getElementById("myTable");
+      var newWin = window.open('', 'Print-Window');
+      newWin.document.open();
+      newWin.document.write('<html><body onload="window.print()">' + table.outerHTML + '</html>');
+      newWin.document.close();
+      setTimeout(function () { newWin.close(); }, 10);
+    }
+  </script>

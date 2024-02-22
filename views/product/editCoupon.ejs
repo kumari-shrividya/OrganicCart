@@ -1,0 +1,78 @@
+<%- include('../layouts/adminHeader.ejs') %>
+<style>
+    .form-field input:focus{
+      outline:none;
+    }
+    .form-field.error input{
+      border-color:#dc3545;
+      
+    }
+    
+    .form-field.success input{
+      border-color:#28a745;
+    }
+    .form-field small{
+      color:#dc3545;
+    }
+    
+    </style>
+
+                     
+                        <section style=" padding-top: 5px;" >
+                            <div class="category-form">
+                           
+                                    <h2 class="text-center">Edit Coupon</h2>
+                        
+                                    <form  id="coupon_Form" >
+                                    <div name="msg"  style="font-size:x-small; color:green; text-align: center;">
+                                        <% if(typeof message !=='undefined' ){ %>
+                                            <h4 id="message">
+                                                <%= message %>
+                                            </h4>
+                                        <% } %>
+                                    </div>
+                                  
+                                    <div class="form-group  form-field">
+                                        <input type="hidden" name="id" id="code_id" value="<%=Coupon[0]._id%>">
+                                        <input type="text" class="form-control" placeholder="Coupon Code" name="code" id="couponCode"  text-center  value="<%=Coupon[0].code%>">
+                                        <small></small>
+                                       
+                                    </div>
+                        
+                                    <div class="form-group  form-field">
+                                        <!-- &nbsp;&nbsp;<label>CouponDescription</label> -->
+                                        <input type="text" class="form-control" placeholder="Description" name="description" id="couponDescription" style="padding:0px;" text-center  value="<%=Coupon[0].description%>">
+                                        <small></small>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group  form-field">
+                                        <input type="number" class="form-control" placeholder="OfferPercentage" name="offerPrice" id="discountPercent"  text-center  value="<%=Coupon[0].offerPrice%>">
+                                        <small></small>
+                                     
+                                    </div>
+                        
+                                    <div class="form-group  form-field">
+                                        <input type="number" class="form-control" placeholder="MinimumAmount" name="minimumAmount" id="minimumAmount"  text-center  value="<%=Coupon[0].minimumAmount%>">
+                                        <small></small>
+                                        
+                                    </div>
+                                    
+                                     <% var newDate=new Date(Coupon[0].expiryDate).toISOString().slice(0, 10) %>
+                                     
+                                    <div class="form-group  form-field">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<label>Expiry Date:</label>
+                                        <input type="date" class="form-control"  name="expiryDate" id="expirationDate"  text-center value="<%=newDate %>">
+                                        <small></small>
+                                    </div>
+                                  
+                                    <div class="form-group">
+                                    <button type="submit"  class="btn btn-primary btn-block">Edit Coupon</button>
+                                    </div>
+                                </form>
+                        
+                            </div>
+                        </section>
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        <script src="/js/editcoupon.js"></script>
+                 

@@ -49,6 +49,25 @@
    <br>
    <br>
 </section>
+<!--pagination-->
+<% if (totalpages) { %>
+  <div class="pagination">
+    <% if (currentpage > 1) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
+    <% } %>
+
+    <% for (let i = 1; i <= totalpages; i++) { %> <!-- Change the loop to start from 1 and go up to totalpages -->
+      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
+    <% } %>
+
+    <% if (currentpage < totalpages) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
+    <% } %>
+  </div>
+<% } %>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <% if(typeof isEditted!=='undefined' && isEditted===true) { %>
 <script>
@@ -65,7 +84,8 @@ Swal.fire("Product Editted");
       language: {
         search: "_INPUT_",
         searchPlaceholder: "Search..."
-    }
+    },
+    "bPaginate": false,
 
   });
 } );

@@ -26,7 +26,7 @@
 
         <% if( typeof user !=='undefined' ) { %>
            
-            <% if( typeof wishlist !=='undefined' ) { %>
+            <% if( typeof wishlist !=='undefined' &&  wishlist.length>0) { %>
                 <div class="container">
                    
                   <table class="table mt-5 " style="vertical-align: middle;">
@@ -38,43 +38,65 @@
                           <th scope="col">Unit Price</th>
                             <th></th>
                           <!-- <th scope="col"></th> -->
-                          <th scope="col">Quantity</th> 
+                          <th scope="col">Action</th> 
                           <th scope="col" >SubTotal</th>
                         </tr>
                       </thead>
                     <tbody>
                         <% let total=parseFloat(0)  %>
-                        <% wishlist.forEach(function(product){ %>
-                        <% let sub = (parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+
+                     
+                          <%   for(let i=0; i<wishlist.length;  i++){ %>
+
+                        <% let sub = parseFloat(wishlist[i].quantity) *  parseFloat(wishlist[i].price).toFixed(2) %>
                         <% total += parseFloat(+sub) %>
                         <!-- +sub -->
                        <tr>
-                        <td><img style="width:100px;height: 100px;"; src="/images/product/<%= product.image %>" alt=" "><a href="/wishlist/add_To_Cart/<%=product.product_Id %>"><strong> Add</strong><i class="fa fa-shopping-cart"></i></a></td>&nbsp;
-                        <td><%= product.name %></td>
-                        <td><%=product.price %></td>
+
+                        <td><img style="width:100px;height: 100px;"; src="/images/product/<%= wishlist[i].image %>" alt=" ">
+                          <a href="/wishlist/add_To_Cart/<%=wishlist[i].product_Id %>">
+                          <strong> Add</strong><i class="fa fa-shopping-cart"></i></a>
+                        </td>&nbsp;
+
+                        <td><%=wishlist[i].name %></td>
+                        <td><%=wishlist[i].price %></td>
                         <td></td>
-                        <!-- <td><%=product.quantity %></td> -->
+                   
                         <td>
-                          <a  href="/wishlist/updateWishlist/<%=product.product_Id %>?action=remove" style="text-decoration: none;font-size: x-large;color:red"><strong>-</strong>&nbsp;</a>&nbsp;
-                          <strong> <%=product.quantity %></strong>
-                          <a   href="/wishlist/updateWishlist/<%=product.product_Id %>?action=add" style="text-decoration: none; font-size:x-large;color:red">&nbsp;&nbsp;<strong>+</strong></a>&nbsp;
+                          <strong> <span id="quantity<%= i %>" style="color:white"><%=wishlist[i].quantity %></span></strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                          <a  href="#" onclick="decriment('<%=wishlist[i].product_Id %>','<%= i %>')" style="text-decoration: none;">
+                            <strong>remove</strong>&nbsp;
+                          </a>&nbsp;
+
                          
+
+                          <!-- <a   href="#" onclick="incriment('<%=wishlist[i].product_Id %>','<%= i %>')" style="text-decoration: none; font-size:x-large;color:red">
+                            &nbsp;&nbsp;<strong>+</strong></a>&nbsp;
+                          -->
                        
-                        <a href="/wishlist/updateWishlist/<%=product.product_Id %>?action=clear" style="text-decoration: none;font-size: large; color:blue">&nbsp;clear</a></td>
-                        <td>Rs.<%= sub %></td>
+                        <!-- <a href="#" onclick="removeItem('<%=wishlist[i].product_Id %>')" style="text-decoration: none;font-size: large; color:blue"> -->
+                          <!-- &nbsp;remove</a>-->
+                          </td> 
+
+                        <td><span id="subTotal<%= i %>"><%=sub %></span></td>
                         </tr>
-                        <% }) %>
+                        <% } %>
                         
                         <tr>
-                          <td colspan="6" align="right">Total: Rs.&nbsp;<b><span name="total"><%= parseFloat(total).toFixed(2) %></span></b></td>
+                          <td colspan="6" align="right">Total: Rs.&nbsp;<b><span id="grandTotal" name="grandTot">
+                            <%= parseFloat(total).toFixed(2) %></span></b>
+                          </td>
                         </tr>
+
                         <% if( wishlist.length>0 ) { %>
                         <tr>
-                     <td colspan="6" align="left"> <a class="btn btn-secondary" style="border-radius: 10px;font-size: small;"  href="/wishlist/clearWishlist"  onclick="return confirm ('do you want to clear the wishlist ?')">
-                        Clear Wishlist</a> </td> 
-                        
-                         
+                          <td colspan="6" align="left"> <a class="btn btn-secondary" style="border-radius: 10px;font-size: small;"  
+                           href="/wishlist/clearWishlist"  onclick="return confirm ('do you want to clear the wishlist ?')">
+                         Clear Wishlist</a> 
+                        </td>                   
                         </tr>
+
                         <% } %>
                     </tbody>
                   </table>
@@ -82,13 +104,15 @@
            </div>
                
                  <% } else { %>
-                    <h3 class="text-center"> Your Wishlist is empty</h3>
+                  <br>
+                    <h4 class="text-center"> Your Wishlist is empty</h4>
                
                  <% } %>
               
          <% } %>       
          <br><br>
          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
  <% if(typeof isAddedToCart!=='undefined' && isAddedToCart===true) { %>
  <script>
 Swal.fire("Added to Cart");
@@ -97,4 +121,125 @@ Swal.fire("Added to Cart");
 
         
 
-    
+    <script>
+
+function incriment(PId,index){
+
+    $.ajax({
+      url:`/wishlist/incriment/${PId}`,
+      type:'post',
+      contentType:'application/json',
+       dataType:'json',
+       success:function(res){
+          console.log(res);
+          if(res.PId== PId){
+            // let num= parseInt(document.getElementById(`quantity${index}`).innerHTML)
+              document.getElementById(`quantity${index}`).innerHTML =res.quantity;
+            // let Aprice = parseInt(price)
+            // let totalAmount = parseInt(document.getElementById("totalAountSub").innerHTML)
+            document.getElementById(`subTotal${index}`).innerHTML = res.subTotal+" .00";
+            document.getElementById(`grandTotal`).innerHTML ="Rs. " + res.grandTotal +" .00";
+            console.log(res.grandTotal);
+           
+          }else{
+      //       new swal({  
+      // title: " Oops!",  
+      // text: res.message, 
+      // icon: "error",  
+      // button: "oh no!",  
+      if(res.message!='' || res.message!='undefined')
+      alert(res.message)
+      // }); 
+          }
+       },
+        error: function(err) {
+          console.error('Error', err);
+        }
+  })
+}
+//======================================================================
+
+function decriment(PId,index){
+
+$.ajax({
+    url:`/wishlist/decriment/${PId}`,
+    type:'post',
+    contentType:'application/json',
+     dataType:'json',
+     success:function(res){
+        // console.log(res);
+        if(res.PId== PId){
+          if(res.quantity==0){
+            window.location.reload()
+          }else{
+            document.getElementById(`quantity${index}`).innerHTML =res.quantity;
+            document.getElementById(`subTotal${index}`).innerHTML = res.subTotal  +" .00";
+            document.getElementById(`grandTotal`).innerHTML ="Rs. " + res.grandTotal +" .00";
+          // console.log(res.grandTotal);
+
+          }
+
+        }else{
+    //       new swal({  
+    // title: " Oops!",  
+    // text: res.message, 
+    // icon: "error",  
+    // button: "oh no!",  
+    if(res.message!='' || res.message!='undefined')
+    alert(res.message)
+    // }); 
+        }
+     },
+      error: function(err) {
+        console.error('Error', err);
+      }
+})
+}
+//===============================================================
+
+//=============================== remove item =============================================================
+
+function removeItem(PId){
+
+$.ajax({
+    url:`/wishlist/removeItem/${PId}`,
+    type:'post',
+    contentType:'application/json',
+     dataType:'json',
+     success:function(res){
+        console.log(res);
+        if(res.PId== PId){
+          // let num= parseInt(document.getElementById(`quantity${index}`).innerHTML)
+          if(res.quantity==0){
+            window.location.reload()
+          // }else{
+          //   document.getElementById(`quantity${index}`).innerHTML =res.quantity;
+          // // let Aprice = parseInt(price)
+          // // let totalAmount = parseInt(document.getElementById("totalAountSub").innerHTML)
+          // document.getElementById(`subTotal${index}`).innerHTML = res.subTotal;
+          // document.getElementById(`grandTotal`).innerHTML ="Rs. " + res.grandTotal +" .00";
+          // // console.log(res.grandTotal);
+
+           }
+           
+         
+        }else{
+            //       new swal({  
+            // title: " Oops!",  
+            // text: res.message, 
+            // icon: "error",  
+            // button: "oh no!",  
+            if(res.message!='' || res.message!='undefined')
+            alert(res.message)
+            // }); 
+        }
+     },
+      error: function(err) {
+        console.error('Error', err);
+      }
+})
+}
+
+//=================================================================
+
+    </script>

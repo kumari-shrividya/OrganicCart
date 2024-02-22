@@ -2,13 +2,16 @@
 <section style=" padding-top: 5px;" >
     <div class="category-form">
         <form action="/admin/editCategory/<%=categories[0]._id %>" method="post"  enctype="multipart/form-data" >
+
+
             <h2 class="text-center">Edit Category</h2>
 
-            <div name="error" style="font-size:x-small; color:green; text-align: center;">
+            <div name="error" style="font-size:x-small; color:red; text-align: center;">
+                
                 <% if(typeof message !=='undefined' ){ %>
-                    <h4>
+                 <h6>
                         <%= message %>
-                    </h4>
+                 </h6>
                 <% } %>
             </div>
              <div class="form-group">
@@ -24,18 +27,13 @@
             <div class="form-group">
                 <label class="form-label" class="form-control"  for="form3Example4c2" text-center>&nbsp;&nbsp;Add category Image</label>
                
-                 <input type="file" class="form-control" text-center name="image" id="image" >
+                 <input type="file" class="form-control"  text-center name="image" onchange="validateFileType()" id="imgInput" >
 
                
             <div>
             <img style="width:100px;height: 100px;" id="img" src="/images/category/<%=categories[0].image%>" alt=" ">
           </div>
-            <!-- <div class="form-group">
-             <label class="form-label" class="form-control  for="form3Example4c2" text-center>&nbsp;&nbsp;Edit category Image</label>
-            
-            <input type="file"  class="form-control" onChange="viewImage(event)" name="image"  required>
-           </div> -->
-
+           
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Edit Category</button>
             </div>
@@ -44,13 +42,55 @@
 
     </div>
 </section>
+
+ <!--=========================== Modal ======================-->
+
+                      
+ <div class="modal fade" id="catModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <span id="msg"></span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   <!--================================ Modal ends========================= -->
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function validateFileType() {
+       var selectedFile = document.getElementById('imgInput').files[0];
+       var allowedTypes = ['image/jpeg', 'image/png'];
+
+       if (!allowedTypes.includes(selectedFile.type)) {
+            swal.fire({
+            title:'Invalid file type. Please upload a JPEG, PNG file.',
+            showConfirmButton:false,
+            showCloseButton:true
+        })
+        // $("#catModal").modal("show");
+          document.getElementById('fileInput').value = '';
+       }
+    }
+
+ 
+ </script>
 <script>
     function viewImage(event){
         document.getElementById('img').src=URL.createObjectURL(event.target.files[0])
     }
 </script>
-
-
 </body>
-
 </html>

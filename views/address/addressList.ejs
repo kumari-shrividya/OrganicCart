@@ -1,10 +1,28 @@
 <%- include('../layouts/header.ejs') %>
 
+<style>
+  .swal2-button-confirm {
+    padding: 10px 20px; /* Adjust padding to change button size */
+      font-size: 16px; /* Adjust font size */
+  }
+   
+.swal2-button{
+  
+    border: 1px dashed #333;
+    height: 20px;
+  }
+  .swal2-popup .swal2-actions .swal2-confirm,
+  .swal2-popup .swal2-actions .swal2-cancel {
+      padding: 15px 24px; /* Adjust padding to change button size */
+      font-size: 16px; /* Adjust font size */
+  }
+  
+      </style>
 <section style=" padding-top: 5px; margin-right: 40px; " >
 
-  <div class="row  mt-4  col-1">
+  <!-- <div class="row  mt-4  col-1">
     <a class="btn btn-primary m-5" style="width: 200px;border-radius: 10px;";  href="/address/addAddress">Add Address</a>
-    </div>
+    </div> -->
     <h4 style=" padding-top: 15px; text-align: center; margin-top: 20px;">Address List</h4>
      <div class="col-md-6 col-lg-12 col-xl-12 order-2 order-lg-1">  
            
@@ -70,25 +88,42 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <% if(typeof isAdrAdded!=='undefined' && isAdrAdded===true) { %>
   <script>
-   Swal.fire("Address added successfully");
+  //  Swal.fire("Address added successfully");
+           swal.fire({  title:'Address added successfully',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
    
 
 </script>
 <% } %>
 <% if(typeof isAdrDeleted!=='undefined' && isAdrDeleted===true) { %>
   <script>
-   Swal.fire("Address deleted successfully"); 
+  //  Swal.fire("Address deleted successfully"); 
+  swal.fire({  title:'Address deleted successfully',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
+   
 </script>
 <% } %>
 
 <% if(typeof isAdrEditted!=='undefined' && isAdrEditted===true) { %>
   <script>
-   Swal.fire("Address editted successfully"); 
+  //  Swal.fire("Address editted successfully"); 
+  swal.fire({  title:'Address editted successfully',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
 </script>
 <% } %>
 <% if(typeof isDefault!=='undefined' && isDefault===true) { %>
   <script>
-   Swal.fire("Default address set successfully"); 
+  //  Swal.fire("Default address set successfully"); 
+  swal.fire({  title:'Default address set successfully',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
 </script>
 <% } %>
 

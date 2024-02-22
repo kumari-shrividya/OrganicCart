@@ -55,6 +55,26 @@
    </div>
    
 </section>
+<!--pagination-->
+<% if (totalpages) { %>
+  <div class="pagination">
+    <% if (currentpage > 1) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
+    <% } %>
+
+    <% for (let i = 1; i <= totalpages; i++) { %> <!-- Change the loop to start from 1 and go up to totalpages -->
+      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
+    <% } %>
+
+    <% if (currentpage < totalpages) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
+    <% } %>
+  </div>
+<% } %>
+
+
+
+
 <br><br>
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -68,7 +88,8 @@
       language: {
         search: "_INPUT_",
         searchPlaceholder: "Search..."
-    }
+    },
+    "bPaginate": false,
   });
    
 } );

@@ -3,6 +3,9 @@ const product = require('../models/productModel');
 const User = require('../models/userModel');
 const Order = require("../models/orderModel");
 
+const multer=require('multer');
+const sharp=require('sharp');
+const multerStorage=multer.memoryStorage();
 
 // const resizeImage=require('../util/resizeImage');
 const puppeteer=require('puppeteer');
@@ -11,7 +14,8 @@ const exceljs=require('exceljs');
 
 //multer
 const {uploadImages,resizeImages}=require('../util/imageUpload');
-const{uploadImage,resizeImage}=require('../util/CategoryImageUpload')
+// const{uploadImage,resizeImage}=require('../util/CategoryImageUpload')
+const {uploadImage,resizeImage}=require('../util/CategoryMulter')
 //for retrieving data  from admin collection (admin already existing in db)
 // const mongoose=require('mongoose');
 // const collection = mongoose.connection.collection('admin')
@@ -76,7 +80,14 @@ const loadUserList=async(req,res)=>{
     try{
         const users=await User.find({});
       if(users){
-            res.render('userList',{users});
+        const itemsperpage = 8;
+        const currentpage = parseInt(req.query.page) || 1;
+        const startindex = (currentpage - 1) * itemsperpage;
+        const endindex = startindex + itemsperpage;
+        const totalpages = Math.ceil(users.length / 8)
+        let currentCoupon = users.slice(startindex,endindex);
+        
+        res.render('userList',{users:currentCoupon,totalpages,currentpage});
         }
      }catch(error){
       console.log(error)
@@ -190,8 +201,15 @@ const addCategory = async (req, res) => {
            // res.json({ success: true, message: 'Category saved successfully' });
 
             const categories=await Category.find({});
+            const itemsperpage = 8;
+            const currentpage = parseInt(req.query.page) || 1;
+            const startindex = (currentpage - 1) * itemsperpage;
+            const endindex = startindex + itemsperpage;
+            const totalpages = Math.ceil(categories.length / 8);
+            let currentcategories = categories.slice(startindex,endindex);
+
             if(categories){
-                  res.render('categoryList',{categories}); 
+                  res.render('categoryList',{categories:currentcategories,totalpages,currentpage}); 
               }
         }
     }catch(error){
@@ -209,7 +227,13 @@ const addCategory = async (req, res) => {
     try{
         const categories=await Category.find({});
       if(categories){
-            res.render('categoryList',{categories});
+        const itemsperpage = 8;
+        const currentpage = parseInt(req.query.page) || 1;
+        const startindex = (currentpage - 1) * itemsperpage;
+        const endindex = startindex + itemsperpage;
+        const totalpages = Math.ceil(categories.length / 8);
+        let currentcategories = categories.slice(startindex,endindex);
+           res.render('categoryList',{categories:currentcategories,totalpages,currentpage});
         }
      }catch(error){
       console.log(error)
@@ -281,10 +305,24 @@ const addCategory = async (req, res) => {
     //load product list
     const loadProductList=async(req,res)=>{
         try{
-            
-            const products=await product.find({});
+             let page = 1;
+            const limit = 6;  
+
+            const products=await product.find({})
+            .sort({ title: 1 })
+            // .limit(limit * 1)
+            // .skip((page - 1) * limit)
+            // .exec();
+
           if(products){
-                res.render('productList',{products});
+           const itemsperpage = 6;
+          const currentpage = parseInt(req.query.page) || 1;
+          const startindex = (currentpage - 1) * itemsperpage;
+          const endindex = startindex + itemsperpage;
+          const totalpages = Math.ceil(products.length / 6);
+          let currentproducts = products.slice(startindex,endindex);
+
+               res.render('productList',{products:currentproducts,totalpages,currentpage});
             }
          }catch(error){
           console.log(error)
@@ -315,36 +353,55 @@ const addCategory = async (req, res) => {
 
         
        try{
-
+              
         const id=(req.params.id);
         const category= req.body.title.toLowerCase();
         const offer=req.body.offer;
-        //const image=req.file.filename;   
-      //  const image=req.session.editfileName;   
-    
-
-       if(!req.file){
+       
+        if(!req.file){
         await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,offer_Percentage:offer }}); 
        }
-       else{
-        // uploadCategoryImage
-        uploadImage
-        resizeImage
+       else{         
+        const uploadcat=multer({
+    
+         storage:multerStorage,
+        });
+          const uploadFile= uploadcat.single('image')
+          uploadFile
+          resizeImage
           // const  image=req.body.image
           const  image=req.session.fileName
-        await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,"image":image, offer_Percentage:offer }}); 
+          await Category.findOneAndUpdate({'_id':id},{$set:{"category": category,"image":image, offer_Percentage:offer }}); 
        }             
              const categories=await Category.find();
                if(categories){
-               res.render('categoryList',{categories,isEdit:true});      
+                const itemsperpage = 6;
+                const currentpage = parseInt(req.query.page) || 1;
+                const startindex = (currentpage - 1) * itemsperpage;
+                const endindex = startindex + itemsperpage;
+                const totalpages = Math.ceil(categories.length / 6);
+                let currentData = categories.slice(startindex,endindex);
+      
+
+               res.render('categoryList',{categories:currentData,isEdit:true,totalpages,currentpage});      
                }
-           }catch(error){
+       }catch(error){
             if (error.name === 'MongoServerError' && error.code === 11000) {     
-               return res.send('Category must be unique');
-               }
+            //  return res.send('Category must be unique');
+            const result=await Category.find({"category":req.body.title.toLowerCase()});
+            // console.log(result)
+              if(result){
+             return  res.render('editCategory',{categories:result,errors:'',data:'',message:'Category must be unique!'});
+              }
+
+             
+          }
                else{
                console.log(error.message)
-              return res.status(500).send(error.message)
+
+
+            
+
                }
                }
    }
@@ -488,30 +545,212 @@ const addCategory = async (req, res) => {
   const loadSalesReport=async(req,res)=>{
    
      try{
-      
-        res.render('salesReport');
+      const products=await product.find({});
+      if(products){
+        res.render('salesReport',{message:'',products});
+      }
     
      }catch(error){
       console.log(error)
       return res.status(500).send("Server Error");
     }
 }
+// // productwise total sales 
+// const totalSales=async(req,res)=>{
+    
+
+//          const rpt_Type=req.body["rpt_type"];
+//         const rpt_Date1=req.body.report_Date1;
+//         const rpt_Date2=req.body.report_Date2;
+       
+
+//         const d=new Date(rpt_Date1);
+//       //  console.log(rpt_Date1,rpt_Date2);
+//         const year=d.getFullYear();
+//         let month=d.getMonth();
+//         let day=d.getDate()
+//         console.log(month);
+
+//         const monthNames = ["January", "February", "March", "April", "May", "June",
+//         "July", "August", "September", "October", "November", "December"
+//       ];
+
+//         let monthName=monthNames[month]
+       
+
+//        // console.log(month);
+//      let  result,message='';
+
+// try{
+   
+//    if(rpt_Type=="Monthly"){
+//     // message=`${year}-${month}-01  to  ${year}-${month+1}-01`
+//     // order_Date: { $gte: new Date(`${year}-${month}-${day}`), $lte: new Date(`${year}-${month}-${endDay}`) },
+//     // $gte: new Date(`${year}-${month+1}-01`), $lte: new Date(`${year}-${month}-31`)
+//  month=month+1
+//    let day=1
+//  let endDay=31;
+//     message= `${monthName} ${year}`
+//     let sdate=`${year}-${month}-${day}`
+//     let edate=`${year}-${month}-${endDay}`
+//     console.log(sdate)
+//     console.log(edate)
+//     result=await Order.aggregate([
+//     {
+//       $match: {
+//         $expr: {
+//             $eq: [{ $month: "$order_Date" }, `${month+1}`]
+//         }
+//     }
+//       },
+//       { $unwind: "$products" },
+//       {
+//         $group: {
+//           _id:   { $dateToString: { format: "%Y-%m-%d", date: "$order_Date" } },
+//           totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+//           totalOrders: { $sum: 1 }
+         
+//         },
+//       },
+     
+//     ])
+//     }
+//     else if(rpt_Type=="Yearly" ){
+        
+//       message=` Year:${year}`
+//         //==============
+//         result=await Order.aggregate([
+//             {
+//                 $match: {
+//                   order_Date: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) },
+//                 },
+//               },
+//               { $unwind: "$products" },
+//               {
+//                 $group: {
+//                   _id: "$products.name",
+//                   totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+//                  totalQuantity: { $sum: '$products.quantity' }
+                 
+//                 },
+//               },
+//             ]);
+
+//     }
+//     else if(rpt_Type==="Daily"){
+
+//       var today = new Date();
+
+//       var start = new Date(rpt_Date1);
+//      start.setHours(0,0,0,0);
+
+//       var end = new Date(rpt_Date1);
+//       end.setHours(23,59,59,999);
+
+//       console.log(start);
+//       console.log(end)
+
+
+//       let starDate=new Date(rpt_Date1);
+//       let endDate=new Date(rpt_Date2);
+//       console.log(starDate)
+//       console.log(endDate)
+
+
+//       if(starDate>endDate){
+//         return   res.render('salesReport',{message:' Start Date must be greater than End Date'});
+//       }
+//       // { $match: { "order_Date": { $gte: new Date(rpt_Date1)} } },
+//    //productwise sales 
+//    message='Daily'
+//      result=await Order.aggregate([
+//     { $match: { "order_Date": { $gte: starDate, $lt: endDate} } },
+//     { $unwind: "$products" },
+//     { $group: { _id: "$products.name", totalSales: 
+//     { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} ,  
+//      totalQuantity: { $sum: '$products.quantity' }
+//     }}
+//     ])
+
+//     }
+//     else if(rpt_Type==="EndDate"){
+     
+//       if(rpt_Date1>rpt_Date2){
+//         return   res.render('salesReport',{message:' Ending Date shold be greater than Starting Date'});
+//       }
+//           message=`Report between Dates ${rpt_Date1} and ${rpt_Date2}`
+//           result=await Order.aggregate([
+//             {
+//                 $match: {
+//                   order_Date: { $gte: new Date(rpt_Date1), $lte: new Date(rpt_Date2) },
+//                 },
+//               },
+//               { $unwind: "$products" },
+//               {
+//                 $group: {
+//                   _id: "$products.name",
+//                   totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+//                 totalQuantity: { $sum: '$products.quantity' }
+                
+//                 },
+//               },
+//              ]);
+
+//         }
+//     else{
+//       message='No Data available'
+//   //  return res.send("No Data available");
+//   res.render('salesReportTable',{rpt_Date1,rpt_Date2,message});
+//  }
+//  // if data available generate pdf
+//         if(result){
+         
+          
+//           console.log(result);
+        
+          
+//           res.render('salesReportTable',{result,rpt_Date1,rpt_Date2,message:message});
+//         //  exportToExcel(result,req,res);
+
+//   //       if (result.length === 0) {
+//   //           return res.status(404).json({ message: 'No sales data found' });
+//   //         }
+//   // // Call a function to generate PDF using Puppeteer
+//   //         const pdfBuffer = await generatePDF(result,rpt_Date1);
+//   //         res.contentType('application/pdf');
+//   //      return res.send(pdfBuffer);
+//     }
+// }catch(error){
+//     console.log(error);
+//   return  res.status(500).json({ message: 'Internal Server Error' });
+// }
+// }
+
+
 // productwise total sales 
 const totalSales=async(req,res)=>{
 
-         const rpt_Type=req.body["rpt_type"];
+
+        const rpt_Type=req.body["rpt_type"];
+        const isappliedFilter=req.body["chkProduct"];
+        const productId=req.body.productId;
         const rpt_Date1=req.body.report_Date1;
         const rpt_Date2=req.body.report_Date2;
+
+           
         const d=new Date(rpt_Date1);
-       console.log(rpt_Date1,rpt_Date2);
+      //  console.log(rpt_Date1,rpt_Date2);
         const year=d.getFullYear();
         const month=d.getMonth();
        // console.log(month);
-     let  result;
+     let  result,message='';
+
 try{
    
    if(rpt_Type=="Monthly"){
-    
+    message='Monthly Report'
+
+    if(isappliedFilter && productId!='' && productId!='undefined'){
     result=await Order.aggregate([
     {
         $match: {
@@ -519,6 +758,7 @@ try{
         },
       },
       { $unwind: "$products" },
+      { $match: { "products.product_Id": productId } },
       {
         $group: {
           _id: "$products.name",
@@ -529,17 +769,43 @@ try{
       },
      
     ])
+  }
+  else{
+    result=await Order.aggregate([
+      {
+          $match: {
+            order_Date: { $gte: new Date(`${year}-${month}-01`), $lte: new Date(`${year}-${month+1}-01`) },
+          },
+        },
+        { $unwind: "$products" },
+        
+        {
+          $group: {
+            _id: "$products.name",
+            totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+           totalQuantity: { $sum: '$products.quantity' }
+           
+          },
+        },
+       
+      ])
+  }
     }
     else if(rpt_Type=="Yearly" ){
         
+      message='Yearly Report'
         //==============
-        result=await Order.aggregate([
+
+          if(isappliedFilter && productId!='' && productId!='undefined'){
+       
+           result=await Order.aggregate([
             {
                 $match: {
                   order_Date: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) },
                 },
               },
               { $unwind: "$products" },
+              { $match: { "products.product_Id": productId } },
               {
                 $group: {
                   _id: "$products.name",
@@ -550,10 +816,36 @@ try{
               },
             ]);
 
+
+          }else{
+            result=await Order.aggregate([
+              {
+                  $match: {
+                    order_Date: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) },
+                  },
+                },
+                { $unwind: "$products" },
+           
+                {
+                  $group: {
+                    _id: "$products.name",
+                    totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+                   totalQuantity: { $sum: '$products.quantity' }
+                   
+                  },
+                },
+              ]);
+
+          }
+           
     }
     else if(rpt_Type==="Daily"){
+
+
    //productwise sales 
-  
+   message='Daily '
+
+   if(isappliedFilter){
      result=await Order.aggregate([
     { $match: { "order_Date": { $gte: new Date(rpt_Date1)} } },
     { $unwind: "$products" },
@@ -562,9 +854,54 @@ try{
      totalQuantity: { $sum: '$products.quantity' }
     }}
     ])
+  }
+  else{
+    result=await Order.aggregate([
+      { $match: { "order_Date": { $gte: new Date(rpt_Date1)} } },
+      { $unwind: "$products" },
+      { $group: { _id: "$products.name", totalSales: 
+      { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} ,  
+       totalQuantity: { $sum: '$products.quantity' }
+      }}
+      ])
 
+  }
     }
     else if(rpt_Type==="EndDate"){
+
+      // today=new Date();
+      // if(rpt_Date2===null){
+      //   return  res.render('salesReport',{message:' Please select End Date'});
+      // }
+      // if(rpt_Date1>rpt_Date2){
+
+      //   return  res.render('salesReport',{message:' End Date must be greater than Start Date'});
+      // }
+      message='Report between Dates'
+      if(isappliedFilter && productId!='' && productId!='undefined'){
+
+        result=await Order.aggregate([
+          {
+              $match: {
+                order_Date: { $gte: new Date(rpt_Date1), $lte: new Date(rpt_Date2) },
+              },
+            },
+            { $unwind: "$products" },
+            { $match: { "products.product_Id": productId } },
+            {
+              $group: {
+                _id: "$products.name",
+               totalSales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }},
+               totalQuantity: { $sum: '$products.quantity' }
+               
+              },
+            },
+          ]);
+        
+      }
+      else{
+
+ 
       result=await Order.aggregate([
         {
             $match: {
@@ -581,28 +918,45 @@ try{
             },
           },
         ]);
-
+      }
     }
  else{
-   return res.send("No Data available");
+  return  res.render('salesReport',{message:'Please select a report type.'});
  }
  // if data available generate pdf
         if(result){
-            console.log(result);
-            exportToExcel(result,req,res);
-        if (result.length === 0) {
-            return res.status(404).json({ message: 'No sales data found' });
-          }
-  // Call a function to generate PDF using Puppeteer
-          const pdfBuffer = await generatePDF(result,rpt_Date1);
-          res.contentType('application/pdf');
-       return res.send(pdfBuffer);
+         
+        //   const itemsperpage = 8;
+        // const currentpage = parseInt(req.query.page) || 1;
+        // const startindex = (currentpage - 1) * itemsperpage;
+        // const endindex = startindex + itemsperpage;
+        // const totalpages = Math.ceil(result.length / 8);
+        // let currentData = result.slice(startindex,endindex);
+          // console.log(result);
+        
+          
+       return   res.render('salesReportTable',{result:result,rpt_Date1,rpt_Date2,message:message});
+        //  exportToExcel(result,req,res);
+
+  //       if (result.length === 0) {
+  //           return res.status(404).json({ message: 'No sales data found' });
+  //         }
+  // // Call a function to generate PDF using Puppeteer
+  //         const pdfBuffer = await generatePDF(result,rpt_Date1);
+  //         res.contentType('application/pdf');
+  //      return res.send(pdfBuffer);
     }
+    // {
+    //  return res.render('salesReport',{result,rpt_Date1,rpt_Date2,message:'No Data Available'});
+
+    // }
 }catch(error){
     console.log(error);
   return  res.status(500).json({ message: 'Internal Server Error' });
 }
 }
+
+
 
 //function to generate pdf
  generatePDF=async(result,rpt_Date1)=>{
@@ -719,11 +1073,14 @@ const loadCoupon=async(req,res)=>{
 const loadAdminDashboard=async(req,res)=>{
   try {
     const products = await product.find();
-    const orders = await Order.find({order_Status:"Delivered"});
+    // const orders = await Order.find({order_Status:"Delivered"});
+    const orders = await Order.find({});
     const catogary=await Category.find()
     const users= await User.find()
 
-    const latestOrders = await Order.find({order_Status:"Placed"}).sort({ orderDate: -1 }).limit(5);
+   const latestOrders = await Order.find( {order_Status:"Delivered"}).sort({ order_Date: -1 }).limit(5);
+ 
+    // console.log(latestOrders);
    
     const productCount = products.length;
     const orderCount = orders.length;
@@ -772,7 +1129,7 @@ const monthlySalesArray = Array.from({ length: 12 }, (_, index) => {
   const chartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [{
-        label: 'Sales',
+        label: 'Orders Delivered',
         data: monthlySalesArray,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -783,7 +1140,13 @@ const monthlySalesArray = Array.from({ length: 12 }, (_, index) => {
 res.json(chartData);
 }
 
+//
+const loadAboutus=(req,res)=>{
 
+ 
+    res.render('AboutUs');
+ 
+}
 
 //exports
 module.exports = {
@@ -805,6 +1168,7 @@ module.exports = {
     loadAdminHome,
     loadAdminDashboard,
     getChartData,
+    loadAboutus,
     
 
   //coupon 

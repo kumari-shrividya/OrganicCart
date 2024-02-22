@@ -16,11 +16,11 @@
               <th scope="col" style="font-size: x-small; text-align: center;vertical-align: middle";>Offer%</th> 
               <th scope="col" style="font-size: x-small; text-align: center;vertical-align: middle";>Minimum Amount</th> 
 
-              <th scope="col"  style=" font-size: x-small; text-align: center;vertical-align: middle";>CreatedOn</th>
+              <th scope="col"  style=" font-size: x-small; text-align: left;vertical-align: middle";>CreatedOn</th>
               <th scope="col"  style=" font-size: x-small; text-align: center;vertical-align: middle";>ExpiryDate</th>
            
-              <!-- <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>Edit</th>
-              <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle";>Delete</th> -->
+              <th scope="col"  style="font-size: x-small; text-align: left;vertical-align: middle ; width:40px";>Edit</th>
+              <th scope="col"  style="font-size: x-small; text-align: center;vertical-align: middle;  width:60px" ;>Delete</th>
             </tr>
           </thead>
         <tbody>
@@ -36,10 +36,12 @@
             <td  style=" text-align: center;vertical-align: middle";><%=coupon.createdOn.toLocaleDateString()%></td>
             <td  style=" text-align: center;vertical-align: middle";><%=coupon.expiryDate.toLocaleDateString()%></td>
 
-            <!-- <td  style=" text-align: center;vertical-align: middle";>
-                <a href="#" style="border-radius: 10px; font-size: small;width:50px;" class="btn btn-primary">Edit</a></td>
+             <td  style=" text-align: center;vertical-align: middle";>
+                <a href="/product/editCoupon/<%=coupon._id%>" style="border-radius: 10px; font-size: small;width:50px;"  class="btn btn-primary">Edit</a></td>
                 <td  style=" text-align: center;vertical-align: middle";>
-                  <a href="#" style="border-radius: 10px; font-size: small;width:50px;" class="btn btn-primary">Delete</a></td> -->
+                  
+                  <a href="/product/deleteCoupon/<%=coupon._id%>"  onclick="return confirm ('do you want to delete the coupon : <%=coupon.code %> ?')" 
+                    style="border-radius: 10px; font-size: small;width:60px;" class="btn btn-primary">Delete</a></td> 
           
           </tr>
           <% }); %>
@@ -48,7 +50,6 @@
 
      
 </div>
-
 <!--pagination-->
 <% if (totalpages) { %>
   <div class="pagination">
@@ -65,6 +66,9 @@
     <% } %>
   </div>
 <% } %>
+
+
+
 </section>
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -76,7 +80,8 @@
       language: {
         search: "_INPUT_",
         searchPlaceholder: "Search..."
-    }
+    },
+    "bPaginate": false,
   }
 
     );
@@ -86,12 +91,22 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <% if(typeof isAdded!=='undefined' && isAdded===true) { %>
  <script>
-Swal.fire("coupon Added");
+      // Swal.fire("coupon Added");
+      swal.fire({
+                        title:'Coupon Added',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
 </script>
 <% } %>
-  <% if(typeof isEdit!=='undefined' && isEdit===true) { %>
+  <% if(typeof isDelete!=='undefined' && isDelete===true) { %>
     <script>
-     Swal.fire("coupon editted");
+    //  Swal.fire("Coupon deleted");
+           swal.fire({  title:'Coupon deleted',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
+
   </script>
  <% } %>
 

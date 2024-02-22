@@ -13,7 +13,24 @@
 
 
     <style>
- 
+
+.form-field input:focus{
+  outline:none;
+}
+.form-field.error input{
+  border-color:#dc3545;
+  
+}
+
+.form-field.success input{
+  border-color:#28a745;
+}
+.form-field small{
+  color:#dc3545;
+}
+
+
+
 
  .address-card {
     border: 1px solid #ccc;
@@ -58,11 +75,13 @@
 
 
     </style>
-<div class="container mt-3">
+<!-- <div class="container mt-3"> -->
   <h2>Check out</h2><br>
 
-    <div class="container" style="display:flex;">
+    <div class="container"  >
+      <div class="subcontainer" style="display:flex;">
       <!-- <div class="col">     -->
+       
       <% if(typeof user!=='undefined' && Array.isArray( user.address) && user.address.length>0 ) { %>
       
         <% user.address.forEach(function(addr){ %>
@@ -80,16 +99,30 @@
         <% })%>
         <% }%>
       </div>
+    </div>
       <hr>
       <!-- </div> -->
-      </div>
+
+   <!-- </div>  container mt-3-->
+
+
       <div class="row m-5">
-        <span><small style="color:red"></small></span><h4> Shipping Address </h4>
-                  <small style="color:red ;">*You can change the default Shipping address by selecting/ entering a new </small>
-                                 
+       
+         
+        <span><small style="color:red"></small></span><h4> Shipping Address  </h4>
+        
+                  
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addressModal">
+                      Add New Address
+                    </button><br>
+                  </div>
+                    <small style="color:red ;">*You can also change the default Shipping address by selecting/by entering a temporary address below </small>
+
                     <!-- <label for="firstName">Full Name</label> -->
-                    <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0) { %>
-                      <div class="col">    
+                    <% if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length>0 ) { %>
+                      <div class="col">  
+                       
                      <form method="post" action="/cart/payment" >
 
                     <input type="text" style="font-weight:bold" class="form-control mt-2" id="Full Name" name="Name" placeholder="Full Name" value="<%=bill_address[0].FullName%>" required >
@@ -97,15 +130,10 @@
                 
                     <!-- <label for="HouseName">House Name</label> -->
                     <input type="text" class="form-control  mt-2" id="HouseName" name="HouseName" placeholder="HouseName" value="<%=bill_address[0].HouseName%>" required >
-                   
-               
-
-                
+                                            
                   <!-- <label for="StreetName">StreetName</label> -->
                   <input type="text" class="form-control  mt-2" id="StreetName" name="StreetName" placeholder="StreetName" value="<%=bill_address[0].StreetName%>" required >
-                 
-             
-             
+                      
                 <!-- <label for="City">City</label> -->
                 <input type="text" class="form-control  mt-2" id="City" name="City" placeholder="City" value="<%=bill_address[0].City%>" required >
                
@@ -127,11 +155,11 @@
 
                 </form>
                </div>
-                <% } else if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length==0) {%>
+                <% } else if( typeof user!=='undefined' && Array.isArray( bill_address) && bill_address.length==0 || typeof bill_address==='undefined') {%>
                   <div class="col">
                    <form method="post" action="/cart/payment" >
                       
-                    <input type="text" class="form-control mt-2" id="Full Name" name="Name" placeholder="Full Name" value="" required >
+                    <input type="text" class="form-control mt-2" id="FullName" name="FullName" placeholder="Full Name" value="" required >
                     
                 
                     <!-- <label for="HouseName">House Name</label> -->
@@ -169,13 +197,13 @@
 
                  <% }  %>
     
-          
-     
+             
             <div class="col mt-3">
      
               <% if( typeof cart !=='undefined' ) { %>
                 <% var count=parseFloat(0) %>
                 <% let total=parseFloat(0)  %>
+                
                <% var amt_Payable=parseFloat(0)%>
                
               <ul class="list-group mb-3">
@@ -183,12 +211,24 @@
                   <span class="text-muted">Your cart</span>
                   <span  style="color:red"></span>
                 </h4>
+                <% var categoryOffer=parseInt(0) %>
                 <% cart.forEach(function(product){ %>   
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                   <div >
                     <% let sub =(parseFloat(product.quantity) *  parseFloat(product.price)).toFixed(2) %>
+
                     <% total += parseFloat(+sub) %>
-                    
+
+
+                    <% if( typeof offer!=='undefined' && offer.length>0 ){%>
+
+                    <% categoryOffer= parseInt(sub) * parseInt(offer[count])/parseInt(100)%>
+
+                    <% total -= parseInt(categoryOffer) %>
+
+                    <% } %>
+
+                                   
                     <%  amt_Payable=parseInt(total)-parseInt(discount)%>
                     <h6 class="my-0"><%=product.name %> <span ><%=product.quantity %>&nbsp; Nos.</span></h6>
                    
@@ -204,8 +244,9 @@
                   <div>
                     <h6 class="my-0"></h6>
                    </div>
-                   <span>SubTotal: &nbsp; </span>
-                   <span>₹&nbsp;<%=parseFloat(total)  %>.00</span>
+                   <span>SubTotal:(After offer) &nbsp; </span> 
+                  <span >₹&nbsp;<%=parseInt(total) %>.00</span>
+                  
                   </li>
 
                    <li class="list-group-item d-flex justify-content-between">
@@ -216,31 +257,34 @@
                    <span>₹&nbsp;0.00</span>
                   
                   </li>
+
+                  
                   <li class="list-group-item d-flex justify-content-between">
                     <div>
 
                     </div>
                    <span>Discount: &nbsp; </span>
-                   <span id="discount"><%=discount%>.00</span>
+                   <span id="discount"><%=discount%></span>
                   
                   </li>
+                  
                   <li class="list-group-item d-flex justify-content-between">
                     <div></div>
                    <span>Amount Payable:(<strong><%=count%></strong>  &nbsp;Item/s )&nbsp; </span>
-                   <span id="total"><strong>₹&nbsp;<%=amt_Payable %>.00</strong></span>
+                  <strong>₹&nbsp; <span id="subtotal"><%=amt_Payable %></span>.00</strong>
                   
                   </li>
                 <% } %>
                 <div class="col ">
-                  <form class="card p-2" id="promoForm" method="post" action="/cart/apply_promoCode">
+                  <!-- <form class="card p-2" id="promoForm"> -->
                     <div class="input-group">
-                      <input type="text" class="form-control"  name="promoCode" id="promoCode" placeholder="Promo code">
+                      <input type="text" class="form-control"  name="promoCode" id="promoCode" placeholder="Enter Promo Code">
                       <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">Redeem</button>
+                        <button type="button" onclick="applyPromoCode()" id="applyCode" class="btn btn-secondary">Apply Coupon</button>
                        
                       </div>
                     </div>
-                  </form>
+                  <!-- </form> -->
                   <div id="message"></div>
                 </div>
              
@@ -252,58 +296,458 @@
     </div>
 </div>
 
-<!-- <script>
-  document.getElementById("promoForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-     
-      applyPromoCode(document.getElementById("promoCode").value);
-  });
 
-  function applyPromoCode(promoCode) {
-      fetch("/cart/apply_promoCode", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ promoCode: promoCode })
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error("Network response was not ok");
-          }
-          return response.json();
-      })
-      .then(data => {
-          // Handle response from server
-          document.getElementById("message").textContent = data.message;
-          document.getElementById("discount").textContent = data.discount;
-          document.getElementById("total").textContent = data.total;
-      })
-      .catch(error => {
-          console.error('There was a problem with the fetch operation:', error);
-      });
-  }
-</script>
- -->
+   <!-- ---------------------------------------    Modal------------------------------------------------ -->
+
+<div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+        <!-- <form id="addAddressForm"> -->
+          <h2 class="text-center">Add Address</h2>
+
+          <div name="error" style="font-size:x-small; color:green; text-align: center;" >
+              <% if(typeof message !=='undefined' ){ %>
+                  <h4>
+                      <%= message %>
+                  </h4>
+              <% } %>
+          </div>
+
+          <div class="form-group form-field">
+              <input type="text" class="form-control" placeholder="FullName" name="FullName" id="newFullName"  text-center  >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.FullName ) { %>
+                  <span class="text-danger"><%= errors.FullName.msg %></span>
+                  <% } %>
+          </div>
+
+          <div class="form-group form-field">
+              <input type="text" class="form-control" placeholder="Apt/HouseName" name="HouseName" id="newHouseName"  text-center >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.HouseName ) { %>
+                  <span class="text-danger"><%= errors.HouseName.msg %></span>
+                  <% } %>
+          </div>
+          
+          <div class="form-group form-field">
+              <input type="text" class="form-control" placeholder="StreetName" name="StreetName" id="newStreetName"  text-center >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.StreetName ) { %>
+                  <span class="text-danger"><%= errors.StreetName.msg %></span>
+                  <% } %>
+          </div>
+
+          <div class="form-group form-field">
+              <input type="text" class="form-control" placeholder="City" name="City" id="newCity"  text-center  >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.City ) { %>
+                  <span class="text-danger"><%= errors.City.msg %></span>
+                  <% } %>
+          </div>
+
+          <div class="form-group form-field">
+              <input type="text" class="form-control" placeholder="State" name="State" id="newState"  text-center >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.State ) { %>
+                  <span class="text-danger"><%= errors.State.msg %></span>
+                  <% } %>
+          </div>
+          <div class="form-group form-field">
+              <input type="number" class="form-control" placeholder="Pincode" name="Pincode" id="newPincode"  text-center  >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.Pincode ) { %>
+                  <span class="text-danger"><%= errors.Pincode.msg %></span>
+                  <% } %>
+          </div>
+          <div class="form-group form-field">
+              <input type="number" class="form-control" placeholder="ContactNumber" name="ContactNumber" id="newContactNumber"  text-center >
+              <small></small>
+              <% if( typeof errors !=='undefined' && errors.ContactNumber ) { %>
+                  <span class="text-danger"><%= errors.ContactNumber.msg %></span>
+                  <% } %>
+          </div> 
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button"  id="submitAddressBtn" class="btn btn-primary">Save changes</button>
+          </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+   <!-- ----------------------------------Modal Ends-------------------------------------------------------------- -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 
-<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-function getAddress(addressId){
-  $.ajax({
-        url: '/getCheckoutAddress',  // Replace with the actual server endpoint
-        method: 'POST',
-        data: { addressId: addressId },
-        success: function (response) {
-            // Update the selectedAddress div with the received data
-            // $('#selectedAddress').html(response);
-            $('#FullName').val=response.FullName;
-        },
-        error: function (error) {
-            console.error('Error:', error);
+
+
+
+
+   <!-- ======================================Script add new shipping address ==================== -->
+
+  <script>
+ const button = document.querySelector('#submitAddressBtn');
+
+ button.addEventListener("click", function (e) {
+
+     // prevent the form from submitting
+    e.preventDefault();
+ 
+const FullNameEl = document.querySelector('#newFullName');
+const HouseNameEl=document.querySelector('#newHouseName');
+const StreetNameEl = document.querySelector('#newStreetName');
+const  CityEl=  document.querySelector("#newCity");
+const StateEl = document.querySelector('#newState');
+const PincodeEl = document.querySelector('#newPincode');
+const PhoneEl = document.querySelector('#newContactNumber');
+
+
+const checkFullName = () => {
+
+    let valid = false;
+
+    const min = 3,
+        max = 25;
+
+    const FullName = FullNameEl.value.trim();
+
+    if (!isRequired(FullName)) {
+        showError(FullNameEl, 'FullName cannot be blank.');
+    } else if (!isBetween(FullName.length, min, max)) {
+        showError(FullNameEl, `FullName must be between ${min} and ${max} characters.`)
+    }
+     else if(!isUserNameValid(FullName))
+    {
+        showError(FullNameEl, `Username is not valid.`)
+    }
+    else {
+        showSuccess(FullNameEl);
+        valid = true;
+    }
+    return valid;
+};
+const isUserNameValid = (name) => {
+    //const re = '/^[a-zA-Z]/i'
+    const re = new RegExp("^[A-Za-z]\\w{2,25}");
+    return re.test(name);
+};
+
+const checkHouseName = () => {
+
+    let valid = false;
+
+    const min = 3,
+        max = 25;
+
+    const HouseName = HouseNameEl.value.trim();
+
+    if (!isRequired(HouseName)) {
+        showError(HouseNameEl, 'HouseName cannot be blank.');
+    } else if (!isBetween(HouseName.length, min, max)) {
+        showError(HouseNameEl, `HouseName must be between ${min} and ${max} characters.`)
+    }
+    //  else if(!isFullNameValid(HouseName))
+    // {
+    //     showError(FullNameEl, `HouseName is not valid.`)
+    // }
+    else {
+        showSuccess(HouseNameEl);
+        valid = true;
+    }
+    return valid;
+};
+
+const checkStreetName = () => {
+
+    let valid = false;
+
+    const min = 3,
+        max = 35;
+
+    const StreetName = StreetNameEl.value.trim();
+
+    if (!isRequired(StreetName)) {
+        showError(StreetNameEl, 'StreetName cannot be blank.');
+    } else if (!isBetween(StreetName.length, min, max)) {
+        showError(StreetNameEl, `StreetName must be between ${min} and ${max} characters.`)
+    }
+    //  else if(!isFullNameValid(HouseName))
+    // {
+    //     showError(FullNameEl, `HouseName is not valid.`)
+    // }
+    else {
+        showSuccess(StreetNameEl);
+        valid = true;
+    }
+    return valid;
+};
+const checkCity = () => {
+
+    let valid = false;
+
+    const min = 3,
+        max = 35;
+
+    const City =CityEl.value.trim();
+
+    if (!isRequired(City)) {
+        showError(CityEl, 'City cannot be blank.');
+    } else if (!isBetween(City.length, min, max)) {
+        showError(CityEl, `City must be between ${min} and ${max} characters.`)
+    }
+    
+    else {
+        showSuccess(StreetNameEl);
+        valid = true;
+    }
+    return valid;
+};
+
+const checkState= () => {
+
+    let valid = false;
+
+    const min = 3,
+        max = 35;
+
+    const State =StateEl.value.trim();
+
+    if (!isRequired(State)) {
+        showError(StateEl, 'State cannot be blank.');
+    } else if (!isBetween(State.length, min, max)) {
+        showError(StateEl, `State must be between ${min} and ${max} characters.`)
+    }
+   
+    else {
+        showSuccess(StateEl);
+        valid = true;
+    }
+    return valid;
+};
+
+const checkPincode= () => {
+
+    let valid = false;
+
+    
+    const Pincode =PincodeEl.value.trim();
+
+    if (!isRequired(Pincode)) {
+        showError(PincodeEl, 'Pincode cannot be blank.');
+    } else if (!Pincode.length>10) {
+        showError(PincodeEl, `Pincode  is invalid`)
+    }
+   
+    else {
+        showSuccess(PincodeEl);
+        valid = true;
+    }
+    return valid;
+};
+const checkPhone=()=>{
+    let valid = false;
+
+ const phone=PhoneEl.value.trim();
+
+       if(!isRequired(phone)){
+        showError(PhoneEl, 'Phone Number  cannot be blank.');
+       }
+       else if(phone.length!=10){
+        showError(PhoneEl, 'Phone Number must contain 10 digits.');
+       }
+        else{
+            showSuccess(PhoneEl);
+         valid = true;
         }
-    });
-} 
+        return valid;
 
-</script>-->
+}
+
+
+const isRequired = value => value === '' ? false : true;
+const isBetween = (length, min, max) => length < min || length > max ? false : true;
+
+const showError = (input, message) => {
+    // get the form-field element
+    const formField = input.parentElement;
+    // add the error class
+    formField.classList.remove('success');
+    formField.classList.add('error');
+
+    // show the error message
+    const error = formField.querySelector('small');
+    error.textContent = message;
+};
+const showSuccess = (input) => {
+    // get the form-field element
+    const formField = input.parentElement;
+
+    // remove the error class
+    formField.classList.remove('error');
+    formField.classList.add('success');
+
+    // hide the error message
+    const error = formField.querySelector('small');
+    error.textContent = '';
+}
+
+// const button = document.querySelector('#signup');
+
+// button.addEventListener("click", function (e) {
+
+//     // prevent the form from submitting
+//     e.preventDefault();
+
+ // validate fields
+ var isFullNameValid = checkFullName(),
+ isHouseNameValid=checkHouseName(),
+ isStreetNamelValid = checkStreetName(),
+ isCityValid = checkCity(),
+ isStateValid = checkState(),
+ isPincodeValid = checkPincode(),
+ isPhonevalid=checkPhone()
+
+ 
+
+var isdataValid = isFullNameValid &&
+isHouseNameValid && 
+isStreetNamelValid &&
+isCityValid &&
+isStateValid &&
+isPincodeValid &&
+isPhonevalid
+
+if(isdataValid){
+    addAddress();
+}
+
+ })
+
+
+
+function addAddress(){
+   $(document).ready(function () {
+
+                          var FullName=$('#newFullName').val()
+                          var HouseName=$('#newHouseName').val()
+                          var StreetName=$('#newStreetName').val()
+                          var City=$('#newCity').val()
+                          var State=$('#newState').val()
+                          var Pincode=$('#newPincode').val()
+                          var ContactNumber=$('#newContactNumber').val()
+
+                          $.ajax({
+                        url: '/address/addAddress',
+                        method: 'POST',
+                        data:{FullName:FullName,
+                          HouseName:HouseName,
+                          StreetName:StreetName,
+                          City:City,
+                          State:State,
+                          Pincode:Pincode,
+                          ContactNumber:ContactNumber
+                  
+                        },
+                        success: function (data) {
+                          if(data.success){
+                    //         swal.fire({  title:'Address Added',
+                    //     showConfirmButton:false,
+                    //     showCloseButton:true
+                    // })
+
+                    // $("#addressModal").dialog("close");
+
+                               // Render addresses inside the container
+                                         const addressesContainer = document.querySelector('.subcontainer');
+                                        //  addressesContainer.empty();
+                                        // const addressesContainer=document.getElementById('#addressContainer')
+                                        const lastAddress = data.addresses.pop();
+                                        // data.addresses.forEach(function(addr) {
+                                            const addressCard = `
+                                                <div class="address-cards">          
+                                                    <div class="address-card">
+                                                        <p class="address-title">${lastAddress.FullName}</p>
+                                                        <p class="address-details">${lastAddress.HouseName}, ${lastAddress.StreetName},</p>
+                                                        <p>${lastAddress.City}, ${lastAddress.Pincode},&nbsp;Mob: ${lastAddress.ContactNumber}</p>
+                                                        <a style="font-size:small;border-radius: 10px;height:20px" href="/cart/selectBillingAddress/${lastAddress._id}" class="btn btn-secondary">Select Shipping  Address</a>
+                                                    </div>
+                                                </div>
+                                                &nbsp;&nbsp; &nbsp;&nbsp;
+                                            `;
+                                            addressesContainer.insertAdjacentHTML('beforeend', addressCard);
+                                           
+                                        // });
+                                        
+                                          // $('#addressModal').css('display', 'none');
+                                        
+                          }
+
+                        },
+                        error: function(err) {
+                   console.error('Error fetching addresses:', err);
+                    }
+                        
+              })
+            })
+      //  })
+  // })
+
+ }
+</script>
+
+<script>
+  function applyPromoCode(){
+
+      $(document).ready(function(){
+        var promoCode=$('#promoCode').val()
+
+        // var total=$('#subtotal').val()
+        // console.log(total);
+        //  $('.promoForm').submit(function(e){
+        //   e.preventDefault();
+        //   var formData=$(this).serialize();
+       
+          $.ajax({
+            // 
+            // url: '/cart/apply_promoCode/'+ promoCode + '?total=' + total,
+            url:`/cart/apply_promoCode/${promoCode}`,
+            type:'POST',
+               success:function(res){
+                if(res.success){ 
+                  // console.log(res)
+                //  $('#discount').innerHTML=res.disc;
+                //  $('total').innerHTML=res.total
+                document.getElementById('discount').innerHTML=res.discount;
+               // var final_amt=parseInt(total)-parseInt(res.discount)
+              
+                document.getElementById('subtotal').innerHTML=res.total
+
+                       
+                }
+                else{
+                  // Swal.fire(res.message);
+                  swal.fire({
+            title:res.message,
+            showConfirmButton:false,
+            showCloseButton:true
+        })
+                }
+             }
+           })
+        })
+    //  })
+   }
+</script>

@@ -1,6 +1,6 @@
 <%- include('../layouts/header.ejs') %>
 <section style=" padding-top: 5px;" >
-    <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
+  
     <div class="container">
        
       <h4 style="text-align: center;margin-top: 10px;">Coupon List</h4>
@@ -41,21 +41,7 @@
       </table>
 
 </div>
-<% if (totalpages) { %>
-  <div class="pagination">
-    <% if (currentpage > 1) { %>
-      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
-    <% } %>
 
-    <% for (let i = 1; i <= totalpages; i++) { %> <!-- Change the loop to start from 1 and go up to totalpages -->
-      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
-    <% } %>
-
-    <% if (currentpage < totalpages) { %>
-      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
-    <% } %>
-  </div>
-<% } %>
 </section>
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>

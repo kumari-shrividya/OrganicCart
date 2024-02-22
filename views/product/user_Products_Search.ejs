@@ -1,12 +1,5 @@
 <%- include('../layouts/header.ejs') %>
-<!-- <% if(typeof message !=='undefined'){
-%>
 
-<p style="color:black;"><%= message %></p>
-
-<%
-}
-%> -->
 <br><br>
 
 <br>
@@ -24,25 +17,10 @@
       <label><input type="checkbox" class="icheck" name="category" id="chkOils" value="Oils"> Oils</label><br><br>
       <label><input type="checkbox" class="icheck" name="category" id="chkGroceries" value="Groceries" > Groceries</label><br><br>
 
-     
-      <!-- <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          Sort by <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li>Name</li>
-          <li>Price</li>
-          </ul>
-          </div> -->
-         
-         
-            <!-- <label><input type="checkbox" class="icheck" name="category" id="chkAll" value="All"> All</label><br><br> -->
-            <!-- <input class="px-2 search" type="text" name="search" id="search" placeholder="Search" aria-label="Search"> -->
-            <button class="btn btn-outline-success  "  style="border-radius: 10px;width:100px;background-color: yellow;"
-             value="Filter" type="submit">Filter<i style="width:50%" class="fa-solid fa fa-filter">
-            </i></button>
-              <!-- <a href="/product/user_Products_FilterSearch"></a> -->
-        </form>
+      <button class="btn btn-outline-success  "  style="border-radius: 10px;width:100px;background-color: yellow;"
+       value="Filter" type="submit">Filter<i style="width:50%" class="fa-solid fa fa-filter">
+       </i></button>
+      </form>
       <!-- </div> -->
           <hr>
     </h6>
@@ -60,19 +38,35 @@
     </div>
         <% if (products.length) {%> 
       
-          <% products.forEach(function(p){ %>
+        
+           <%   for(let i=0; i<products.length;  i++){ %>
           <div class="col-md-3" style="padding:10px">
             <div class="product">
                <div class="text-center" >
-                <a > <img class="image" src="/images/product/<%= p.images[0] %>" style="width:100%" class="card-img-top" alt="">
+                <a   href="/product/details/<%= products[i]._id %>"> <img class="image" src="/images/product/<%=products[i].images[0] %>" style="width:100%" class="card-img-top" alt="">
                 </a>
                </div>
-              <h6><%= p.title %></h6>
-                 <div>Price: <strong>Rs.<%= p.unit_price %>.00</strong></div>
-                <div class="my-2"> <a href="/product/details/<%= p._id %>" style="color:yellowgreen">View Details</a>&nbsp;&nbsp;<a href="/cart/add_To_Cart/<%= p._id %>"  style="height:15px; font-size: small; font-weight: bold;">Add To Cart</a></div>
+
+                  <h6><%= products[i].title %></h6>
+                 <div>Price: <strong>Rs.<%=products[i].unit_price %>.00</strong>&nbsp;&nbsp;
+               
+                  <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist"  href="#" 
+                     onclick="addToWishList('<%=products[i]._id %>','<%i%>')">
+                     <span  > <i class="fa fa-heart"  style=" color:#add8e6"></i></span>
+                     <small  id="wishlistIcon<%=products[i]._id %>" style="color:red;text-decoration: none;"></small>
+                    </a>
+                   
+                </div>
+
+                <div class="my-2"> 
+                  <a href="/product/details/<%=products[i]._id %>" style="color:yellowgreen">
+                  View Details</a>&nbsp;&nbsp;<a href="/cart/add_To_Cart/<%=products[i]._id %>"  
+                    style="height:15px; font-size: small; font-weight: bold;">Add To Cart
+                  </a>
+                </div>
             </div>
           </div>
-          <% }) %>
+          <% } %>
         </div>
      <% }else {%>
       
@@ -102,20 +96,80 @@
 </div>
 </div>
 </div>
+<!--=========================== Modal ======================-->
 
+                      
+<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Wishlist</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <span id="msg"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!--================================ Modal ends========================= -->
   <%- include('../layouts/footer.ejs') %>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script> -->
 
 
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script>
-          $(document).ready(function () {
-              $('.dropdown-toggle').dropdown();
-          });
-      </script> -->
-<!-- </body>
-</html> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip;
+  });
+</script>
+
+
+
+<script>
+
+function addToWishList(PId,index){
+  var wishlistbtn= document.querySelector(`#wishlistIcon${PId}`)
+   var Pid=PId;
+  $.ajax({ 
+          url:`/wishlist/add_To_Wishlist/${PId}`,
+          type:'post',
+          contentType:'application/json',
+           dataType:'json',
+           success:function(res){
+                        
+              if(res.success){
+              
+              
+              $("#wishlistModal").modal("show")
+               $("#msg").html(res.message).show();
+              
+               
+   
+              }else{
+                 
+            if(res.message!='' || res.message!='undefined')
+             alert(res.message)
+        
+              }
+           },
+            error: function(err) {
+              console.error('Error', err);
+            }
+      })
+
+}
+
+
+</script>
+ 

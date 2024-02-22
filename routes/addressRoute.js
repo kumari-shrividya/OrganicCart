@@ -32,14 +32,16 @@ address_route.get('/addAddress',auth.isLogin,
 addressController.loadAdd_Address);
 
 //post - save Address with validation check
-address_route.post('/addAddress',validation.addressValidationRules(),(req,res,next)=>{
-    var errors=validationResult(req);
-    const data = matchedData(req);
-    //console.log(errors);
-   // req.session.addresserrors=errors;
-    if (errors.isEmpty()) {return next(); } 
-    if(!errors.isEmpty()){return res.render('addAddress',{errors:errors.mapped(),data:data});}}
-,addressController.add_Address);
+// address_route.post('/addAddress',validation.addressValidationRules(),(req,res,next)=>{
+//     var errors=validationResult(req);
+//     const data = matchedData(req);
+//     //console.log(errors);
+//    // req.session.addresserrors=errors;
+//     if (errors.isEmpty()) {return next(); } 
+//     if(!errors.isEmpty()){return res.render('addAddress',{errors:errors.mapped(),data:data});}}
+// ,addressController.add_Address);
+
+ address_route.post('/addAddress',addressController.add_Address);
 
   //load address list
   address_route.get('/addressList',auth.isLogin,addressController.loadAddressList);

@@ -2,35 +2,113 @@
 <%- include('../layouts/adminHeader.ejs') %>
 
 <section style=" padding-top: 5px;" >
-    
-
-    <form action="/admin/salesReport" method="post">
-       
-        <h4 style="text-align: center;margin-top: 50px;margin-bottom: 10px;">Generate and Download Sales Report (pdf/xls)</h4> <br><br>
-        <hr style="margin-bottom: 30px;">
-    
-     <div >
-        <div style="margin-left: 40px;">
-        Start Date: &nbsp;&nbsp;&nbsp; <input type="date" name="report_Date1" id="report_Date" placeholder="Select a date"> 
-       <label>&nbsp;&nbsp;<input type="radio" name="rpt_type" value="EndDate">&nbsp;EndDate:&nbsp;&nbsp;&nbsp;<input type="date" name="report_Date2" id="report_Date" placeholder="Select a date"> </label>&nbsp;&nbsp; &nbsp;&nbsp;<br><br>
-       </div>
+ 
+  <div class="row">
+    <div class="col-md-12" >
+  <form action='/admin/salesReport' method="post" id="sales_Report">
      
-        <div  style="margin-left: 40px;">
-         <label>Select Report Type&nbsp;&nbsp;</label><br><br>
-        <label style="padding-bottom: 10px;" ><input type="radio" name="rpt_type" value="Daily"> &nbsp;Daily</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-        <label  style="padding-bottom: 10px;"><input type="radio" name="rpt_type" value="Monthly">&nbsp;&nbsp;Monthly</label>&nbsp;&nbsp; &nbsp;&nbsp;<br>
-        <label><input type="radio" name="rpt_type" value="Yearly"> &nbsp;Yearly</label>&nbsp;&nbsp; &nbsp;&nbsp;<br>
+      <h4 style="text-align: center;margin-top: 50px;margin-bottom: 10px;">Generate and Download Sales Report (pdf/xls)</h4> <br><br>
+      <hr style="margin-bottom: 30px;">
        
-    </div>
-       <hr>
+   <div >
+      <div style="margin-left: 40px;">
+       <label style="font-weight: bold;">Select a  Date: &nbsp;&nbsp;&nbsp;</label> 
+       <input type="date" name="report_Date1" id="report_Date1" placeholder="Select a date"> 
+       <br><br>
+       <% if(typeof message!='undefined'){%>
+        <small style="color:red" id="error"><%=message%></small>&nbsp;
+    <% } %><br>
+      <label style="font-weight: bold;">Select Report Type&nbsp;&nbsp;</label><br><br>
+      
+     </div>
+     
+     <!-- <br><br> -->
+      <div style="margin-left: 40px;">
         
-        <div style="margin-left: 30px;">
-           <input type="submit" style="font-weight: bolder;width:350px" class="btn btn-primary"  value="Sales Report">
-        </div>
-     </div> 
+       
+     <div style="width:30% ;">
+      
+       <!-- <label class="form-label" >Select Product</label> -->
+      <label><input type="checkbox" style="font-size: medium;" name="chkProduct">&nbsp;Filter By Product:&nbsp;&nbsp; 
+      </label>
+       <select name="productId" id="" class="form-control" style="color:blue">
+        <% 
+        if(typeof products !=='undefined' && products.length>0){
+     %>
+         <option value="">Select a product</option>
+         <% for(let product of products) { %>
+           <option value="<%= product._id %>"><%=product.title%>
+           </option>
+         <% } %>
+         <% } %>
+       </select>
+      </div>
+     <br>
+      <!-- <label style="padding-bottom: 10px;" ><input type="radio" id="daily" name="rpt_type" value="Daily" > &nbsp;Daily</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br> -->
+      <input type="radio" name="rpt_type" id="endDate" value="EndDate" >&nbsp; To End Date:&nbsp;&nbsp;&nbsp;
+      <input type="date" name="report_Date2" id="report_Date2" onblur="checkvalid()" placeholder="Select a date"><br>
+      <label  style="padding-bottom: 10px;"><input type="radio" id="Monthly" name="rpt_type" value="Monthly" checked>&nbsp;&nbsp;Monthly</label>&nbsp;&nbsp; &nbsp;&nbsp;<br>
+      <label><input type="radio" name="rpt_type"   id="Yearly" value="Yearly"> &nbsp;Yearly</label>&nbsp;&nbsp; &nbsp;&nbsp;<br>
+     
+  </div>
+     <hr>
+      
+      <div style="margin-left: 30px;">
+         <input type="submit" style="font-weight: bolder;width:350px" class="btn btn-primary"   value="Sales Report">
+      </div>
+   </div> 
 </form>
 <br>
+</div>
+</div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.getElementById("report_Date1").valueAsDate = new Date();
+  document.getElementById("report_Date2").valueAsDate =new Date() ;
+</script>
+<script>
+  function checkvalid(){
+    const input1=document.getElementById("report_Date1").value;
+    const input2= document.getElementById("report_Date2").value;
+    // const type=document.getElementById('endDate')
+    const msg=document.querySelector("#error");
+    msg.innerHTML='';
+
+    if(input1!='' && input2!='' ){
+
+        if(document.getElementById('endDate').checked){
+
+      var date1=new Date(input1);
+      var date2=new Date(input2);
+      if(date1>date2){
+      // swal.fire({
+      //       title:'End Date must be greater than start date',
+      //       showConfirmButton:false,
+      //       showCloseButton:true
+      //   })
+      //msg.innerHTML="End Date must be greater than start date";
+    // alert('End Date must be greater than start date');
+    swal.fire({
+            title:'End Date must be greater than start date',
+            showConfirmButton:false,
+            showCloseButton:true
+        })
+       return
+
+    }
+    else{
+      msg.innerHTML='';
+    }
+
+  }
+    }
+//     since.addEventListener('blur', compareDates);
+// until.addEventListener('blur', compareDates);
+
+  }
+</script>
+
 <!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     
@@ -40,7 +118,50 @@
     dateFormat: "Y-m-d",
     })
 </script> -->
+<script>
+  function sales_Report(){
 
+      $(document).ready(function(){
+        // var rpt_Date1=$('#report_Date1').val()
+        // var report_Date2=$('#report_Date2').val()
+
+        // var type1=$('#Monthly').val()
+
+        // var type2=$('#Yearly').val()
+
+        // var type3=$('#EndDate').val()
+
+
+        // var total=$('#subtotal').val()
+        // console.log(total);
+        //  $('.promoForm').submit(function(e){
+        //   e.preventDefault();
+        //   var formData=$(this).serialize();
+       
+          $.ajax({
+            // 
+            // url: '/cart/apply_promoCode/'+ promoCode + '?total=' + total,
+            url:'/admin/salesReport',
+            type:'POST',
+               success:function(res){
+                if(res.success){ 
+                  console.log(res)
+               
+               
+                document.getElementById('error').innerHTML='';
+              
+
+                       
+                }
+                else{
+                  Swal.fire(res.message);
+                }
+             }
+           })
+        })
+    //  })
+   }
+</script>
 
 </body>
 </html>

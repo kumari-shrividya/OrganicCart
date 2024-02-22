@@ -54,24 +54,36 @@ product_route.post('/filterProductsByCategory',productController.filterProductsB
  //load add coupon
  product_route.get('/addCoupon',couponController.loadCoupon);
  //post add coupon
- product_route.post('/addCoupon',validation.couponValidationRules(), async (req,res,next)=>{
-    var errors=validationResult(req);
-    const data = matchedData(req);
-    console.log(errors);
-    if (errors.isEmpty()) {  return next();    }
-    if(!errors.isEmpty()){
-        try{
+//  product_route.post('/addCoupon',validation.couponValidationRules(), async (req,res,next)=>{
+//     var errors=validationResult(req);
+//     const data = matchedData(req);
+//     console.log(errors);
+//     if (errors.isEmpty()) {  return next();    }
+//     if(!errors.isEmpty()){
+//         try{
             
-            return res.render('product',{addCoupon,errors:errors.mapped(),data:data});
-        }catch(error){
-            console.log(error);
-        }
-    }
-}
- ,couponController.addCoupon);
+//             return res.render('product',{addCoupon,errors:errors.mapped(),data:data});
+//         }catch(error){
+//             console.log(error);
+//         }
+//     }
+// }
+//  ,couponController.addCoupon);
+
+product_route.post('/addCoupon',couponController.addCoupon);
 
 //load coupon list
 product_route.get('/couponList',couponController.loadCouponList);
+
+//load edit coupon
+product_route.get('/editCoupon/:id',couponController.loadEditCoupon);
+
+//edit coupon
+product_route.put('/editCoupon/:id',couponController.editCoupon);
+
+//delete coupon
+product_route.get('/deleteCoupon/:id',couponController.deleteCoupon);
+
 
 
 //edit product image

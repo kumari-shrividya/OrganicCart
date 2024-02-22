@@ -14,7 +14,8 @@ const productController=require('../controllers/productController');
 //express validator
 const {check , validationResult,matchedData} = require('express-validator');
 
-const auth=require("../middleware/auth")
+const auth=require("../middleware/auth");
+const validation=require("../middleware/validation");
 
 user_route.set('view engine','ejs');
 user_route.set('views','./views/user');
@@ -25,24 +26,6 @@ user_route.use(bodyparser.json());
 
 const multer=require('multer');
 const path=require('path');
-
-// checking for file type
-// const MIME_TYPES = {
-//     'imgs/jpg': 'jpg',
-//     'imgs/jpeg': 'jpeg',
-//     'imgs/png': 'png'
-// }
-// const storage=multer.diskStorage({
-
-//         destination:function(req,file,cb){
-//             cb(null,path.join(__dirname,'../public/images/user'));
-// },
-//       filename:function(req,file,cb){
-//                 const name=Date.now()+'_'+file.originalname;
-//           cb(null,name);
-// }
-// }); 
-// const upload=multer({storage:storage});
 
 //auth.isLogout
 user_route.get('/register',userController.loadRegister);
@@ -56,7 +39,14 @@ user_route.post('/register',
     const existingUser = await User.findOne({email:value});
     if (existingUser) {
       // Will use the below as the error message
-      throw new Error('A user already exists with this e-mail address');
+      // throw new Error('A user already exists with this e-mail address');
+      const existingUser = await User.findOne({email:req.body.email});
+  
+      if (existingUser) {
+               // throw new Error('A user already exists with this e-mail address');
+         return res.json({success:false,
+                message:'Email must be unique'})
+      }
     }}),
   check('phone').trim().isLength({min:10}).withMessage("Phone no must be 10 digits"),
   check('password').trim().escape().notEmpty().withMessage("password  is required")
@@ -76,7 +66,7 @@ user_route.post('/register',
     ],(req,res,next)=>{
      var errors=validationResult(req);
      const data = matchedData(req);
-     console.log(errors);
+    // console.log(errors);
      req.session.regerrors=errors;
      if (errors.isEmpty()) {
       return next();
@@ -105,13 +95,46 @@ user_route.get('/logout',userController.userLogout);
 user_route.get('/myProfile',userController.loadMyProfile);
 
 //edit profile
-user_route.post('/myProfile',userController.editMyProfile);
+user_route.post('/myProfile',[
+//   check('name').trim().notEmpty().withMessage("Name is required")
+// .isLength({min:2}).withMessage("Name must be at least 2 characters"),
+// check('phone').trim().notEmpty().withMessage("Phone is required")
+// .isLength({min:10}).withMessage("Phone no must be 10 digits")
+//
+ ],
+async(req,res,next)=>{
+  var errors=validationResult(req);
+  const data = matchedData(req);
+ // console.log(errors);
+  req.session.regerrors=errors;
+  if(!errors.isEmpty()){
+    const userData = await User.findOne({ _id: req.session.user_id });
+    if (userData) {
+  res.render("myProfile", {
+        user: userData,
+        cart: req.session.cart,
+        wishlist: req.session.wishlist,errors:errors.mapped(),data:data
+      });
+    }
+//   //  return res.render('myProfile',{errors:errors.mapped(),data:data});
+  }
+  if (errors.isEmpty()) {
+   return next();
+  }
+  
+},
+
+userController.editMyProfile);
+
+//edit profile
+// user_route.post('/myProfile', userController.editMyProfile);
 
 //load change password
 user_route.get('/changePassword',auth.isLogin,userController.loadchangePassword); 
 
 //post  change password
 user_route.post('/changePassword',auth.isLogin,[
+  check('oldPassword').trim().escape().notEmpty().withMessage(" Old Password  is required"),
  check('password').trim().escape().notEmpty().withMessage("password  is required")
 .isLength({min:5,max:16}).withMessage("Password must be between 5 to 16 characters")
 .matches('[0-9]').withMessage('Password Must Contain a Number')
@@ -129,7 +152,7 @@ check('cPassword').trim().escape().notEmpty().withMessage("password  is required
   ],(req,res,next)=>{
    var errors=validationResult(req);
    const data = matchedData(req);
-   console.log(errors);
+  // console.log(errors);
    //req.session.regerrors=errors;
    if (errors.isEmpty()) {
     return next();
@@ -174,7 +197,7 @@ user_route.post('/resetPassword',auth.isLogout,
    ],(req,res,next)=>{
     var errors=validationResult(req);
     const data = matchedData(req);
-    console.log(errors);
+   // console.log(errors);
     //req.session.regerrors=errors;
     if (errors.isEmpty()) {
      return next();

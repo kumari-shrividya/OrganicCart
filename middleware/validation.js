@@ -78,9 +78,28 @@ const couponValidationRules=()=>{
       check('expiryDate').trim().notEmpty().withMessage("expiryDate is required")    
     ]
 };
+
+//edit profile validation rules
+
+//coupon validation
+const editProfileValidationRules=()=>{
+  return [
+    check('name').trim().notEmpty().withMessage("Name is required")
+  .isLength({min:2}).withMessage("Name must be at least 2 characters"),
+  check('email').trim().isEmail().withMessage("Invalid Email")
+  .custom(async value => {
+    const existingUser = await User.findOne({email:value});
+    if (existingUser) {
+      // Will use the below as the error message
+      throw new Error('A user already exists with this e-mail address');
+    }}),
+  check('phone').trim().isLength({min:10}).withMessage("Phone no must be 10 digits")
+  ]
+};
 module.exports={
    validateCategory,
   addressValidationRules,
   couponValidationRules,
-  HandleEditAddressValidationErrors
+  HandleEditAddressValidationErrors,
+  editProfileValidationRules
 }

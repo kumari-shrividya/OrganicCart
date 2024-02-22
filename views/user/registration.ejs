@@ -1,5 +1,23 @@
 <%- include('../layouts/header.ejs') %>
 
+<style>
+.form-field input:focus{
+  outline:none;
+}
+.form-field.error input{
+  border-color:#dc3545;
+  
+}
+
+.form-field.success input{
+  border-color:#28a745;
+}
+.form-field small{
+  color:#dc3545;
+}
+
+
+</style>
 <section class="main">
   <div class="container py-5">
       <div class="row py-4">
@@ -15,8 +33,6 @@
 <section  style="background-color: #eee; padding-top: 5px;">
   
 <br>
-
-
 
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -40,57 +56,63 @@
                   
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Create Account  </p>
                   
-                  <form class="mx-1 mx-md-4" method="post"  >
+                  <form class="mx-1 mx-md-4" method="post" id="signup" >
   
-                    <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="d-flex flex-row align-items-center mb-4 ">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
+                      <div class="form-outline flex-fill mb-0 form-field">
                         <label class="form-label" for="form3Example1c">Your Name<sup><span style="color:red;font-size: medium;">*</span></sup></label>
-                        <input type="text"  name="name"  id="form3Example1c" class="form-control" value="<%= data.name %>" />
+                        <input type="text"  name="name"  id="name" class="form-control" value="<%= data.name %>" />
+                        <small></small>
                         <% if( errors &&  errors.name  ) { %>
                           <span class="text-danger"><%= errors.name.msg %></span>
                           <% } %>
                       </div>
                     </div>
   
-                    <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="d-flex flex-row align-items-center mb-4 ">
                       <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
+                      <div class="form-outline flex-fill mb-0 form-field">
                         <label class="form-label" for="form3Example3c">Your Email<sup><span style="color:red;font-size: medium;">*</span></sup></label>
-                        <input type="email"  name="email" id="form3Example3c" class="form-control" value="<%= data.email %>" />         
+                        <input type="email"  name="email" id="email" class="form-control" value="<%= data.email %>" />         
+                        <small></small>
                         <% if( errors && errors.email ) { %>
                           <span class="text-danger"><%= errors.email.msg %></span>
                           <% } %>
                       </div>
                     </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
+                  
+                    <div class="d-flex flex-row align-items-center mb-4 ">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                      <div class="form-outline flex-fill mb-0">
-                        <label class="form-label" for="form3Example4c">Password<sup><span style="color:red;font-size: medium;">*</span></sup></label>
-                        <input type="password" name="password" id="form3Example4c" class="form-control" value="<%= data.password %>"/> 
+                      <div class="form-outline flex-fill mb-0 form-field">
+                        <label class="form-label" for="form3Example4c">Password<sup><span style="color:red;font-size: medium;">*
+                           </span></sup></label>
+                        <input type="password" name="password" id="password" class="form-control" value="<%= data.password %>"/> 
+                        <small></small>
                         <% if( errors && errors.password ) { %>
                           <span class="text-danger"><%= errors.password.msg %></span>
                           <% } %>
                       </div>
                     </div>
 
-                    <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="d-flex flex-row align-items-center mb-4 ">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
+                    <div class="form-outline flex-fill mb-0 form-field">
                       <label class="form-label" for="form3Example4c">Confirm Password<sup><span style="color:red;font-size: medium;">*</span></sup></label>
-                      <input type="password" name="confirmPassword" id="form3Example4c" class="form-control" value="<%= data.confirmPassword %>"/> 
+                      <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" value="<%= data.confirmPassword %>"/> 
+                      <small></small>
                       <% if( errors && errors.confirmPassword ) { %>
                         <span class="text-danger"><%= errors.confirmPassword.msg %></span>
                         <% } %>
                     </div>
                   </div>
 
-                    <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="d-flex flex-row align-items-center mb-4 ">
                         <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
+                        <div class="form-outline flex-fill mb-0 form-field">
                           <label class="form-label" for="form3Example4c1">Phone No<sup><span style="color:red;font-size: medium;">*</span></sup></label>
-                          <input type="text" name="phone" id="form3Example4c1" class="form-control" value="<%= data.phone %>" />            
+                          <input type="text" name="phone" id="phone" class="form-control" value="<%= data.phone %>" />            
+                          <small></small>
                           <% if( errors && errors.phone) { %>
                             <span class="text-danger"><%= errors.phone.msg %></span>
                             <% } %>
@@ -100,7 +122,7 @@
                     <input type="file" name="image" required> -->
 
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                      <button type="submit" class="btn btn-primary btn-lg" style="border-radius:20px;width:150px;">Register</button>
+                      <button type="submit" id="submit" class="btn btn-warning btn-lg" style="border-radius:20px;width:150px;">Register</button>
                     </div>
 
                     </form>
@@ -126,6 +148,7 @@
       </div>
     </div> 
     <br><br>
+    <script src="/js/signup.js"></script>
   </section>
 
 

@@ -13,6 +13,8 @@ const dotenv = require("dotenv");
 const { resolveContent } = require("nodemailer/lib/shared");
 dotenv.config();
 
+
+
 //generate OTP
 const generateOTP = () => {
   const OTP = otpGenerator.generate(4, {
@@ -29,8 +31,13 @@ const securePassword = async (password) => {
     return passwordHash;
   } catch (error) {
     console.log(error.message);
+    return res.status(500).send(error.message);
   }
 };
+
+//decrypt password
+
+
 //method to send  OTP by mail
 const sendOTPByMail = async (email, otp, req, res) => {
   try {
@@ -79,121 +86,178 @@ const loadRegister = async (req, res) => {
     return res.status(500).send("Server error");
   }
 };
-//method to load /veryfyOtp
-const loadverifyOtp = async (req, res) => {
-  try {
-    res.render("verifyOtp");
-  } catch (error) {
-    console.log(error.message);
-    return res.status(500).send("Server error");
-  }
-};
-//method to register  user
-const insertUser = async (req, res) => {
-  try {
-    const secPassword = await securePassword(req.body.password);
-    const user = User({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      // image: req.file.filename,
-      password: secPassword,
-    });
-    const userData = await user.save();
-    if (userData) {
-      var id = userData._id;
-      req.session.OTPuser_id = userData._id;
-      req.session.email = userData.email;
 
-      console.log(req.session.OTPuser_id + req.session.email);
-      //generate otp
-      const otp = generateOTP();
-      console.log(otp);
-      //save otp in db
-      const userOTP = await new UserOTPVerification({
-        user: userData._id,
-        otp: otp,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + 3600000,
-      });
-      //save otp record
-      await userOTP.save();
-      console.log("otp saved");
-      //sending otp by mail
-      sendOTPByMail(req.body.email, otp, req, res);
-      res.redirect("/verifyOtp");
-    } else {
-      res.render("registration", {
-        message: "Your registration has been failed",
-      });
-    }
-  } catch (error) {
-    if (error.name === "MongoServerError" && error.code === 11000) {
-      res.send("Email must be unique");
-    }
-    console.log(error.message);
-  }
-};
-//verification of otp from user side
-const verifyOtpFromUserMail = async (req, res) => {
-  const user_id = req.session.OTPuser_id;
-  const otpinp1 = req.body.inp1;
-  const otpinp2 = req.body.inp2;
-  const otpinp3 = req.body.inp3;
-  const otpinp4 = req.body.inp4;
-  var otp = otpinp1 + otpinp2 + otpinp3 + otpinp4;
-  console.log(user_id + otp);
+
+//================method to load /veryfyOtp======================
+
+const loadverifyOtp = async (req, res) => {
+
   try {
-    if (!user_id || !otp) {
-      res.render("verifyOtp", { message: "Invalid Otp.Please request again" });
-      //  throw Error("Empty otp details are not allowed");
-    } else {
-      var userOTPVerificationRecords = await UserOTPVerification.find({
-        user: user_id,
-      });
-      // console.log(userOTPVerificationRecords.length)
-    }
-    if (userOTPVerificationRecords.length <= 0) {
-      //no record found
-      // throw new Error("Account doesnot exist or has been verified already.Please Sign up or login.")
-      res.render("verifyOtp", {
-        message: "OTP has expired.Please request again",
-      });
-    } else {
-      //user otp exists
-      const { expiresAt } = userOTPVerificationRecords[0];
-      const dbOtp = userOTPVerificationRecords[0].otp;
-      if (expiresAt < Date.now()) {
-        //user otp record has expired
-        await UserOTPVerification.deleteMany({ user_id });
-        // throw new Error("Code has expired.Please request again.")
-        res.render("verifyOtp", {
-          message: "OTP has expired.Please request again",
-        });
-      } else {
-        if (dbOtp != otp) {
-          //supplied otp is wrong
-          //throw new Error("Invalid code.Check ur mail..")
-          res.render("verifyOtp", { message: "OTP is incorrect" });
-        } else {
-          //success
-          await User.updateOne({ _id: user_id }, { is_verified: 1 });
-          await UserOTPVerification.deleteMany({ user: user_id });
-          res.render("login", { isOtpVerified: true });
-        }
-      }
-    }
+
+    res.render("verifyOtp");
+
   } catch (error) {
-    // res.json({
-    //     status: "FAILED",
-    //     message: error.message
-    // })
-    console.log(error);
+
+    console.log(error.message);
     return res.status(500).send("Server error");
+
   }
 };
-//method to post resend OTP
+
+
+
+//========= register  user================
+
+const insertUser = async (req, res) => {
+
+    try {
+   
+     
+         const secPassword = await securePassword(req.body.password);
+        
+          const user = User({
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            // image: req.file.filename,
+            password: secPassword,
+          });
+
+        const userData = await user.save();
+
+        if(userData) {
+
+              var id = userData._id;
+              req.session.OTPuser_id = userData._id;
+              req.session.email = userData.email;
+
+            //  console.log(req.session.OTPuser_id + req.session.email);
+
+                //generate otp
+                const otp = generateOTP();
+                console.log(otp);
+
+
+              //save otp in db
+              const userOTP =  new UserOTPVerification({
+
+                user: userData._id,
+                otp: otp,
+                createdAt: Date.now(),
+                expiresAt: Date.now() + 3600000,
+
+              });
+
+                //save otp record
+                await userOTP.save();
+                // console.log("otp saved");
+
+               //sending otp by mail
+               sendOTPByMail(req.body.email, otp, req, res);
+
+
+                // res.redirect("/verifyOtp");
+              return  res.json({success:true})
+
+
+            } else {
+
+                    // res.render("registration", {
+                    //   message: "Your registration has been failed",
+                    // });
+                    return  res.json({success:false})
+                 }
+                          
+            } catch (error) {
+
+                if (error.name === "MongoServerError" && error.code === 11000) {
+                  // res.send("Email must be unique");
+                return res.json({success:false,
+                    message:'Email must be unique'})
+                }
+              console.log(error.message);
+            }
+
+};
+
+
+//========================   verification of otp from user  =================
+
+const verifyOtpFromUserMail = async (req, res) => {
+
+            const user_id = req.session.OTPuser_id;
+            const otpinp1 = req.body.inp1;
+            const otpinp2 = req.body.inp2;
+            const otpinp3 = req.body.inp3;
+            const otpinp4 = req.body.inp4;
+            var otp = otpinp1 + otpinp2 + otpinp3 + otpinp4;
+
+            console.log(user_id + otp);
+
+          try {
+
+                  if (!user_id || !otp) {
+                    res.render("verifyOtp", { message: "Invalid Otp.Please request again" });
+                    //  throw Error("Empty otp details are not allowed");
+                  } else {
+                    var userOTPVerificationRecords = await UserOTPVerification.find({
+                      user: user_id,
+                    });
+                    // console.log(userOTPVerificationRecords.length)
+                  }
+
+              if (userOTPVerificationRecords.length <= 0) {
+
+                //no record found
+                // throw new Error("Account doesnot exist or has been verified already.Please Sign up or login.")
+                res.render("verifyOtp", { message: "OTP has expired.Please request again",  });
+
+              } else {
+
+                    //user otp exists
+                    const { expiresAt } = userOTPVerificationRecords[0];
+                    const dbOtp = userOTPVerificationRecords[0].otp;
+
+
+                    if (expiresAt < Date.now()) {
+                      //user otp record has expired
+                      await UserOTPVerification.deleteMany({ user_id });
+                      // throw new Error("Code has expired.Please request again.")
+                      res.render("verifyOtp", {
+                        message: "OTP has expired.Please request again",
+                      });
+
+                     } else {
+
+                            if (dbOtp != otp) {
+                              //supplied otp is wrong
+                              //throw new Error("Invalid code.Check ur mail..")
+                              res.render("verifyOtp", { message: "OTP is incorrect" });
+                            } else {
+                              //success
+                              await User.updateOne({ _id: user_id }, { is_verified: 1 });
+                              await UserOTPVerification.deleteMany({ user: user_id });
+                              res.render("login", { isOtpVerified: true });
+                            }
+                      }
+                 }
+
+
+                } catch (error) {
+                  // res.json({
+                  //     status: "FAILED",
+                  //     message: error.message
+                  // })
+                  console.log(error);
+                  return res.status(500).send("Server error");
+                }
+  };
+
+
+//===================method to post resend OTP=================
+
 const resendOtp = async (req, res) => {
+
   try {
     user_id = req.session.OTPuser_id;
     email = req.session.email;
@@ -210,7 +274,7 @@ const resendOtp = async (req, res) => {
     });
     //save otp record
     await userOTP.save();
-    console.log("otp saved");
+    // console.log("otp saved");
     //sending otp by mail
     sendOTPByMail(email, otp, req, res);
     //  res.render('verifyOtp',{message:'Otp resent.Please check your mail.'})
@@ -226,6 +290,10 @@ const userLogout = async (req, res) => {
     delete req.session.user_id;
     delete req.session.cart;
     delete req.session.wishlist;
+    delete req.session.bill_Adress;
+    delete req.session.total;
+    delete req.session.order_Id
+
     res.redirect("/login");
   } catch (error) {
     console.log(error);
@@ -335,7 +403,7 @@ const loadMyProfile = async (req, res) => {
       res.render("myProfile", {
         user: userData,
         cart: req.session.cart,
-        wishlist: req.session.wishlist,message:''
+        wishlist: req.session.wishlist,errors:'',data:'',message:''
       });
     }
   } catch (error) {
@@ -356,27 +424,27 @@ const loadchangePassword = async (req, res) => {
   }
 };
 
-//save reset password
+//save edit profile
 const editMyProfile = async (req, res) => {
   try {
     const name = req.body.name;
-    const email = req.body.email;
+   // const email = req.body.email;
     const phoneno = req.body.phoneno;
 
     const updatedData = await User.updateOne(
       { _id: req.session.user_id },
-      { $set: { name: name, email: email, phone: phoneno } }
+      { $set: { name: name,  phone: phoneno } }
     );
     if (updatedData) {
-    //   const userData = await User.findOne({ _id: req.session.user_id });
-    // if (userData) {
-    //  res.render("myProfile", {
-    //     user: userData,
-    //     cart: req.session.cart,
-    //     wishlist: req.session.wishlist,message:'Profile Updated'
-    //   });
-    // }
-      return res.send("Your profile data  has been updated successfully");
+      const userData = await User.findOne({ _id: req.session.user_id });
+    if (userData) {
+     res.render("myProfile", {
+        user: userData,
+        cart: req.session.cart,
+        wishlist: req.session.wishlist,message:'Your profile data  has been updated successfully',errors:'',data:''
+      });
+    }
+     // return res.send("Your profile data  has been updated successfully");
     }
   } catch (error) {
     console.log(error);
@@ -388,24 +456,37 @@ const editMyProfile = async (req, res) => {
 const saveChangePassword = async (req, res) => {
   const id = req.session.user_id;
   try {
-    const secPassword = await securePassword(req.body.password);
 
-    if (secPassword) {
-      const data = await User.findOneAndUpdate(
-        { _id: id },
-        { $set: { password: secPassword } }
-      );
+      const userData=await User.findOne({_id:req.session.user_id});
+      if(userData){
+              const dbPassword=userData.password;
+              const oldPassword=req.body.oldPassword;
+              let passMatch=await bcrypt.compare(oldPassword,dbPassword);
+              console.log(passMatch);
+              if(passMatch){
+               const secNewPassword = await securePassword(req.body.password);
+                  const data = await User.findOneAndUpdate(
+                    { _id: id },
+                    { $set: { password: secNewPassword } }
+                  );
 
-      if (data) {
-        res.send("password has been changed successfully");
-      } else {
-        res.send("Failed.Not updated..");
-      }
+                  if (data) {
+                   res.render("changePassword", { user: userData, errors: "", data: "",message:'Password has been changed successfully' });
+                  } else {
+                    res.send("Failed.Not updated..");
+                  }
+            }
+            else{
+     
+                  res.render("changePassword", { user: userData, errors: "", data: "",message:'Old Password is not correct.Try again.' });
+                }
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).send("Server error");
   }
 };
+
 //forgot password
 const loadForgotPassword = async (req, res) => {
   try {
@@ -577,15 +658,15 @@ const loadWalletHistory = async (req, res) => {
     const userData = await User.findOne({ _id: req.session.user_id });
       const coupons=await coupon.find({});
     if(coupons){
-      const itemsperpage = 3;
-        const currentpage = parseInt(req.query.page) || 1;
-        const startindex = (currentpage - 1) * itemsperpage;
-        const endindex = startindex + itemsperpage;
-        const totalpages = Math.ceil(coupons.length / 3);
-        let currentCoupon = coupons.slice(startindex,endindex);
+      // const itemsperpage = 3;
+      //   const currentpage = parseInt(req.query.page) || 1;
+      //   const startindex = (currentpage - 1) * itemsperpage;
+      //   const endindex = startindex + itemsperpage;
+      //   const totalpages = Math.ceil(coupons.length / 3);
+      //   let currentCoupon = coupons.slice(startindex,endindex);
           res.render('userCoupon',{ user: userData,
             cart: req.session.cart,
-            wishlist: req.session.wishlist,coupons:currentCoupon,totalpages,currentpage});
+            wishlist: req.session.wishlist,coupons:coupons});
 
       }
    }catch(error){
@@ -710,6 +791,7 @@ module.exports = {
   //change password
   loadchangePassword,
   saveChangePassword,
+  
   loadForgotPassword,
   verifyForgotPassword,
   loadResetPassword,

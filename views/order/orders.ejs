@@ -15,7 +15,7 @@
 
             <thead>
              <tr>
-                  <th scope="col">Order Id</th>
+                  <th scope="col">SlNo</th>
                   <th scope="col">Order Date</th>
                   <th scope="col">Amount&nbsp;</th>
                   <th scope="col">Mehod</th>
@@ -26,9 +26,11 @@
                 </tr>
               </thead>
             <tbody>
+              <% var id=parseInt(1) %>
                 <% orders.forEach(function(order){ %>
                <tr>
-                <td><%=order._id %></td>
+                <!-- <td><%=order._id %></td> -->
+                <td><%=id%></td>
                 <!-- <td><%= order.order_Date.toLocaleString() %></td> -->
                 <%var datavalue=order.order_Date 
                 var day = String(datavalue.getDate()).padStart(2, '0');
@@ -67,6 +69,7 @@
                       <td><a href="/order/adminOrderDetails/<%=order._id%>" class="btn btn-primary"style="font-size:small;width:100px"
                         >View Details</a></td>
               </tr> 
+              <% id+=1%>
               <% }); %>
             </tbody>
           </table>
@@ -78,6 +81,25 @@
    </div>
    <br><br>
 </section>
+
+<!--pagination-->
+<% if (totalpages) { %>
+  <div class="pagination">
+    <% if (currentpage > 1) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
+    <% } %>
+
+    <% for (let i = 1; i <= totalpages; i++) { %> 
+      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
+    <% } %>
+
+    <% if (currentpage < totalpages) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
+    <% } %>
+  </div>
+<% } %>
+
+
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -87,8 +109,9 @@
     $('#myTable').DataTable({
       language: {
         search: "_INPUT_",
-        searchPlaceholder: "Search..."
-    }
+        searchPlaceholder: "Search ...",  
+    },
+    "bPaginate": false,
   });
 } );
   </script>

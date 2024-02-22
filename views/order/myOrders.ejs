@@ -12,66 +12,55 @@
 
 <section style=" padding-top: 5px;" >
 
-  <!-- Toast message for success
-  <% if (typeof success!=='undefined'){ %>
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
-        <div class="toast-header">
-            <strong class="mr-auto">Success</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-           Order cancelled successfully ! 
-        </div>
-    </div>
-    <%}%> -->
-   
+    
     <div class="container">
-           <div class="row  mt-4  col-1">
-          <!-- <a class="btn btn-success" style="width: 100px;"  href="/admin/product">Add Product</a> -->
           
-        </div>
           <% if( typeof orders !=='undefined' ) { %>
             <h5 style="text-align: center;">My Orders</h5>
-          <table id="myTable" class="table mt-5 " style=" text-align: center;vertical-align: middle">
+          <table id="myTable" class="table mt-5 " style="text-align: center;vertical-align: middle">
 
             <thead>
              <tr>
-                  <th scope="col">OrderId</th>
+                  <th scope="col" >SlNo</th>
                   <th scope="col">OrderDate</th>
                   <th scope="col">Total</th>
                   <th scope="col">Payment</th>
                   <th scope="col">Status</th>
-                  <th></th>
-                  <th>Action</th>
+                 <!-- <th scope="col"></th> -->
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
             <tbody>
+              <% var id=parseInt(1)%>
                 <% orders.forEach(function(order){ %>
                 
                <tr>
-                <td><%=order._id %></td>
+                <!-- <td><%=order._id %></td> -->
+                
                 <%var datavalue=order.order_Date 
                 var day = String(datavalue.getDate()).padStart(2, '0');
                 var month = String(datavalue.getMonth() + 1).padStart(2, '0');
                 var year = datavalue.getFullYear();
                 var formattedDate = day + '/' + month + '/' + year;
                 %>
-               
+               <td><%=id %></td>
                  <td><%= formattedDate %></td>
-                 <td>dateValue</td>
+                 <!-- <td>dateValue</td> -->
                 <td>₹<%=order.total_Amount %>.00</td>
                  <td><%=order.payment_Method %></td>
                 <td><%=order.order_Status %></td>
-                <%  if(order.order_Status ==='Pending' || order.order_Status ==='Placed'||order.order_Status ==='pending' || order.order_Status ==='placed' )  {   %>       
-                     <td ><a href="/order/cancelMyOrder/<%=order._id%>?" class="btn btn-success"
-                      style="font-size:small ;border-radius: 10px;">Cancel Order</a></td>
+               
+                <%  if(order.order_Status ==='Pending' || order.order_Status ==='Placed'||order.order_Status ==='pending'
+                 || order.order_Status ==='placed' )  {   %>       
+                  <td ><a href="/order/cancelMyOrder/<%=order._id%>?" class="btn btn-danger"
+                      style="font-size:small ;border-radius: 10px;">Cancel Order</a>
                   <% } %>
-                      <td><a href="/order/orderDetails/<%=order._id%>" class="btn btn-primary"style="font-size:small;border-radius: 10px;"
-                        >View Details</a></td>
-                        <td></td>
+                  <td><a href="/order/orderDetails/<%=order._id%>" class="btn btn-secondary" style="font-size:small;border-radius: 10px;"
+                    >Details</a></td>
+                    
+                        <!-- <td></td> -->
               </tr> 
+              <% id +=1 %>
               <% }); %>
             </tbody>
           </table>
@@ -82,24 +71,61 @@
           <% } %>
           <!-- </div> -->
    </div>
-
-   <!-- <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script> -->
-   
+  
 </section>
+  <!--=========================== Modal ======================-->
+
+                      
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">My Orders</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <span id="msg">Order Cancelled succssfully</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!--================================ Modal ends========================= -->
+<!--pagination-->
+<% if (totalpages) { %>
+  <div class="pagination">
+    <% if (currentpage > 1) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
+    <% } %>
+
+    <% for (let i = 1; i <= totalpages; i++) { %> 
+      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
+    <% } %>
+
+    <% if (currentpage < totalpages) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
+    <% } %>
+  </div>
+<% } %>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<% if(typeof isCancel!=='undefined' && isCancel===true) { %>
+<script>
+
+$('#orderModal').modal('show');
+
+</script>
+<% }%>
 <script>
   $(document).ready( function () {
     $('#myTable').DataTable();
 } );
   </script>
-  <!-- <script>
-    function formatDate(date, format) {
-    const map = {
-        mm: date.getMonth() + 1,
-        dd: date.getDate(),
-        yy: date.getFullYear().toString().slice(-2),
-        yyyy: date.getFullYear()
-    }
-
-    return format.replace(/mm|dd|yy|yyy/gi, matched => map[matched])
-}
-  </script> -->
+ 

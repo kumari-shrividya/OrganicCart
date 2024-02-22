@@ -22,6 +22,7 @@ const loadAdd_Address = async (req, res) => {
 //add new address
 const add_Address = async (req, res) => {
     try {
+        // console.log("addAddress")
          let Address =[];
          Address.push({
             FullName:req.body.FullName,
@@ -35,16 +36,21 @@ const add_Address = async (req, res) => {
         });
        const  addData= await User.updateOne({_id:req.session.user_id},
             {$push:{'address':Address}},{"returnDocument":"after"});
+            console.log(addData)
 
             const userData = await User.findOne({ _id: req.session.user_id });
         if(userData){
           //  console.log("Address Added"); 
          //  res.send("Address added"); 
-        return res.render('addressList',{user_Id:req.session.user_id,addressList:userData.address,user:userData,cart:req.session.cart,isAdrAdded:true,wishlist:req.session.wishlist});
-         }
+        // return res.render('addressList',{user_Id:req.session.user_id,addressList:userData.address,user:userData,cart:req.session.cart,isAdrAdded:true,wishlist:req.session.wishlist});
+        res.json({success:true,addresses:userData.address})
+
+         } 
     }catch(error){
         console.log(error);   
-        return res.status(500).send("Server Error");
+        // return res.status(500).send("Server Error");
+        return res.json({success:false,message:error.message})
+
     }
 }
  //load address List

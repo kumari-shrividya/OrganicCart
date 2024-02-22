@@ -1,5 +1,5 @@
 <%- include('../layouts/adminHeader.ejs') %>
- <section style=" padding-top: 5px;" >
+<section style=" padding-top: 5px;" >
   <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1" > 
    
     <div class="product-form"  >
@@ -10,7 +10,7 @@
     </div> 
       <div>
                 <!-- enctype="multipart/form-data" -->
-                  <form class="mx-1 mx-md-4" action="/admin/editProduct/<%=products[0]._id %>" method="post" enctype="multipart/form-data" >
+            <form class="mx-1 mx-md-4" action="/admin/editProduct/<%=products[0]._id %>" method="post" enctype="multipart/form-data" >
                     <input type="hidden" name="id" value="<%=products[0]._id%>">
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -88,12 +88,11 @@
                       <td>
                        
                       <hr>
-                                           <br>
+                     <br>
                     </td>
                       <label class="form-label" for="form3Example4c2"><h6>select product Images </h6></label>
                       <input type="file" id="imgInp" multiple accept="image/*" name="image" ><br><br>
-                      <!-- <label><h6><input type="checkbox" name="chkimage">&nbsp;edit product images</h6></label> -->
-                      <!-- <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4"> -->
+                     
                       <button type="submit" class="btn btn-primary btn-lg">Update Product</button>
                     <!-- </div> -->
                     </form>
@@ -125,24 +124,11 @@
                   </div>
                   <br><br> <br><br>
                   
-                  </form>
+                </form>
                   </div>
                   </div>
                  
-
-                 
-                  <!-- <script>
-                    imgInp.onchange = evt => {
-                   const [file] = imgInp.files
-                   if (file) {
-                     image1.src = URL.createObjectURL(imgInp.files[0])
-                     image2.src = URL.createObjectURL(imgInp.files[1])
-                     image3.src = URL.createObjectURL(imgInp.files[2])
-                     image4.src = URL.createObjectURL(imgInp.files[3])
-                   }
-                 }
-                  
-                   </script> -->
-                  </section>
+              
+</section>
                  
                  

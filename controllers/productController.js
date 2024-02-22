@@ -31,7 +31,7 @@ const getAllProducts = async (req, res) => {
     let search = "";
 
     let page = 1;
-    const limit = 4;
+    const limit = 8;
     search = req.body.search;
 
     if (search) {
@@ -49,11 +49,11 @@ const getAllProducts = async (req, res) => {
         .exec();
       
       if (products) {
-        const itemsperpage = 4;
+        const itemsperpage = 8;
         const currentpage = parseInt(req.query.page) || 1;
         const startindex = (currentpage - 1) * itemsperpage;
         const endindex = startindex + itemsperpage;
-        const totalpages = Math.ceil(products.length / 4);
+        const totalpages = Math.ceil(products.length /8);
         let currentproduct = products.slice(startindex, endindex);
         return res.render("user_Products_Search", {
           products: currentproduct,
@@ -276,11 +276,11 @@ const loadUser_Product_Search = async (req, res) => {
       req.session.cart = "undefined";
 
       if (products) {
-        const itemsperpage = 4;
+        const itemsperpage = 8;
         const currentpage = parseInt(req.query.page) || 1;
         const startindex = (currentpage - 1) * itemsperpage;
         const endindex = startindex + itemsperpage;
-        const totalpages = Math.ceil(products.length / 4);
+        const totalpages = Math.ceil(products.length / 8);
         let currentproduct = products.slice(startindex, endindex);
         return res.render("user_Products_Search", {
           products: currentproduct,
@@ -291,11 +291,11 @@ const loadUser_Product_Search = async (req, res) => {
     }
 
     if (products) {
-      const itemsperpage = 4;
+      const itemsperpage = 8;
       const currentpage = parseInt(req.query.page) || 1;
       const startindex = (currentpage - 1) * itemsperpage;
       const endindex = startindex + itemsperpage;
-      const totalpages = Math.ceil(products.length / 4);
+      const totalpages = Math.ceil(products.length / 8);
       let currentproduct = products.slice(startindex, endindex);
       res.render("user_Products_Search", {
         products: currentproduct,
@@ -329,7 +329,7 @@ const filterProductsByCategory = async (req, res) => {
         // console.log(selectedCategories);
         if(selectedCategories==="All"){
 
-        product.find({unlisted:0})
+         product.find({unlisted:0})
         .then((products)=>{
           if(products){
           // console.log(products);
@@ -383,27 +383,34 @@ const filterProductsByCategory = async (req, res) => {
          
         }
      
-
-          Category.find({ category: { $in: lowerArray } })
+              // let limit=8
+              // const page=1
+          Category.find({ category: { $in: lowerArray } }) //find  categories that  match category name array
             .then((category) => {
               if (category) {
                   let categoryId = category
-                  .filter((ct) => ct.unlisted == 0)
-                  .map((c) => c._id);
+                  .filter((ct) => ct.unlisted == 0) //filter unlisted categories
+                  .map((c) => c._id); //then return only category id to array
               // console.log(categoryId);
                 //use this ID to find products in this category
                 product
                   .find({ category_id: { $in: categoryId } }).sort({ title: -1 })
+                  
+                  // .sort({ title: -1 })
+                  // .limit(limit * 1)
+                  // .skip((page - 1) * limit)
+                  // .exec();
+                  //find product with selected category id's array
                   // .limit(limit * 1)
                   // .skip((page - 1) * limit)
                   .then((products) => {
                   //  console.log(products);
                 // Products=products
-                const itemsperpage = 4;
+                const itemsperpage = 8;
                 const currentpage = parseInt(req.query.page) || 1;
                 const startindex = (currentpage - 1) * itemsperpage;
                 const endindex = startindex + itemsperpage;
-                const totalpages = Math.ceil(products.length / 4);
+                const totalpages = Math.ceil(products.length / 8);
                 let currentproduct = products.slice(startindex, endindex);
                 return res.render("user_Products_Search", {
                   products: currentproduct,

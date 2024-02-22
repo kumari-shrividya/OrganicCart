@@ -57,7 +57,7 @@
     <% } %>
    
 
-    <section style="padding-top: 5px;" > 
+    <!-- <section style="padding-top: 5px;" > 
       <br><br>
       <% if( typeof orders!=='undefined' ) { %>
        
@@ -74,5 +74,47 @@
       </div>           
       <% } %>
       <br>
-     </section>
+     </section> -->
   </div>
+
+
+  <section style=" padding-top: 5px;" > 
+
+           
+    <% if( typeof orders!=='undefined' ) { %>
+     
+    <div class="row">
+      <div class="col" style="background-color:lightgray;padding:10px;margin: 10px;">
+      
+      <div >  
+      <h6>Shipping Address:</h6><small>
+       Customer:&nbsp; &nbsp;  <%=orders.delivery_Address[0].FullName%>,<br>
+        House Name:&nbsp; &nbsp; <%=orders.delivery_Address[0].HouseName%>,<br>
+        Street Name:&nbsp; &nbsp; <%=orders.delivery_Address[0].StreetName%>,<br>
+        City:&nbsp; &nbsp; <%=orders.delivery_Address[0].City%>,<br>
+        Mob:&nbsp; &nbsp; <%=orders.delivery_Address[0].ContactNumber%><br>
+      
+      </small>
+      
+   </div>
+  </div>
+  <div class="col"  style="background-color: lightgray; text-align: right; margin: 10px;">
+    <h6 ><strong style="text-align: left;">Order Information</strong> <br><br>
+     Order No:&nbsp;  <small > <%=orders._id%></small><br>
+      
+       Order Status:&nbsp;<small> <%=orders.order_Status%><small><br>
+        <small style="font-size: medium;"> Total:&nbsp;&nbsp;</small> <small><strong>Rs.<%=orders.total_Amount%>.00</strong></small><br>
+        
+        Placed on:&nbsp;<small ><%=orders.order_Date.toLocaleString() %></small> <br>
+        
+        Delivery Date:&nbsp;<small ><%=orders.delivery_Date.toLocaleString() %></small>
+      </h6>
+        <!-- <a href="/cart/getInvoice/?id=<%=orders._id%>" class="btn btn-secondary">Download Invoice</a> -->
+      </div>
+        
+
+    </div>           
+    <% } %>
+   </section>
+   <br>
+   <br>

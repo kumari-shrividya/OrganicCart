@@ -199,66 +199,57 @@
 
         <hr style="box-sizing: border-box; margin-bottom:10px ;margin-top:10px;">
 
-           <% products.forEach(function(p){ %>
+         <%   for(let i=0; i<products.length;  i++){ %>
+
           <div class="col-md-3" style="padding:10px;">
             <div  class="card border-1px   mb-2">
              
-               <!-- <div class="text-center" style="padding-left:5px;" > -->
-               
-                <!-- <a > <img class="image" src="/images/product/<%= p.images[0] %>" style="width:50%;padding-top:15px;" class="card-img-top" alt="">
-                </a> -->
-                
-               <!--  </div class="class=bg-white shadow-xl rounded-lg overflow-hidden" > -->
-               <!-- <div class="container"> -->
-               <div class="  bg-cover bg-center h:56 p-4  emboss-effect" 
-               style="background-image: url('/images/product/<%= p.images[0] %>');width: 250px; 
+             <a  href="/product/details/<%= products[i]._id %>"><div class="  bg-cover bg-center h:56 p-4  emboss-effect" 
+               style="background-image: url('/images/product/<%= products[i].images[0] %>');width: 250px; 
                height:250px; background-repeat: no-repeat; display:inline-block ">
-              </div>
-          <!-- </div>  -->
-
-           
-
-            <!-- <h5 class="card-title" style="padding-left:5px;text-align: center;" ><%= p.title %></h5>
-                 <div style="padding-left:5px;text-align: center;">&nbsp;₹&nbsp;<strong><%= p.unit_price %>.00 &nbsp;&nbsp;<small><%= p.Weight %></small></strong></div> -->
-                 <div class="m-2 ">
-                  <p class="uppercase tracking-wide text-sm font-bold text-gray-700 " style="margin-left: 5px;font-size: small;"><strong><%= p.title %></strong>&nbsp;&nbsp;
-                    <!-- <div class="parentDiv">wish
-                      <div class="tooltip">Tooltip text</div>
-                    </div> -->
+              </div></a> 
+                           
+                <div class="m-2 ">
+                  <p class="uppercase tracking-wide text-sm font-bold text-gray-700 "
+                   style="margin-left: 5px;font-size: small;"><strong><%= products[i].title %></strong>&nbsp;&nbsp;
+                   
                     <span  class="fa fa-star checked"></span>
                     <span class="fa fa-star checked "></span>
                     <span class="fa fa-star checked "></span>
                     <span class="fa fa-star checked "></span>
                     <span class="fa fa-star-half-stroke checked "></span></p>
-                  <p class="text-3xl text-gray-900 " style="margin-left: 5px;">₹&nbsp;<strong><%= p.unit_price %>.00</strong>
+                  <p class="text-3xl text-gray-900 " style="margin-left: 5px;">₹&nbsp;<strong><%= products[i].unit_price %>.00</strong>
                    
-                    <span style="color:red">&nbsp;&nbsp;&nbsp;-<%=p.category_id.offer_Percentage %>%</span>
+                    <!-- <span style="color:red">&nbsp;&nbsp;&nbsp;-<%=products[i].category_id.offer_Percentage %>%</span> -->
                  
-                    &nbsp;&nbsp; <%= p.Weight %> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist" href="/wishlist/add_To_Wishlist/<%= p._id %>">
-                      <i class="fa fa-heart" style=" color:lightblue"></i></a> </p>
-               
-                  <!-- <p class="text-gray-700 "></p> -->
-              <!-- </div> -->
-                
-                 <!-- <div style=" text-align: center;"> -->
-                  
-
-             </div> 
+                    &nbsp;&nbsp; <%= products[i].Weight %> &nbsp;&nbsp;&nbsp;&nbsp;
+                   
+                    <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist"  href="#" 
+                     onclick="addToWishList('<%= products[i]._id %>','<%i%>')">
+                     <span  > <i class="fa fa-heart"  style=" color:#add8e6"></i></span>
+                     <small  id="wishlistIcon<%=products[i]._id %>" style="color:red;text-decoration: none;"></small>
+                    </a> </p> 
+                 </div> 
                 <div class="my-2" style="padding-left:5px;;"> 
                  
-                  <a data-toggle="tooltip" data-placement="top" title="Product Details" href="/product/details/<%= p._id %>" style="color:#cdc22a;text-decoration:none;margin-left: 10px" >View Details</a>&nbsp;&nbsp;
-                  <a data-toggle="tooltip" data-placement="top" title="Add to Cart" href="/cart/add_To_Cart/<%= p._id %>" style="height:5px;text-decoration:none;border-radius: 40px; font-size: smaller; margin-left: 5px"><strong>Add To Cart</strong></a></div>
+                  <a data-toggle="tooltip" data-placement="top" title="Product Details" href="/product/details/<%= products[i]._id %>"
+                     style="color:#cdc22a;text-decoration:none;margin-left: 10px" >
+                     View Details
+                  </a>&nbsp;&nbsp;
+
+                  <a data-toggle="tooltip" data-placement="top" title="Add to Cart" href="/cart/add_To_Cart/<%=products[i]._id %>"
+                     style="height:5px;text-decoration:none;border-radius: 40px; font-size: smaller; margin-left: 5px">
+                    <strong>Add To Cart</strong>
+                  </a></div>
                 
             </div>
       
           </div>
           
-          <% }) %>
+          <% } %>
          
         </div>
-
-       
+      
        
      <% }else {%>
       
@@ -272,9 +263,6 @@
 </div>
 <hr style="margin-top: 15px; margin-bottom: 0px;  border: solid 3px #8ebf42">
 <br>
-
-<!-- <hr style="margin-top: 15px;  border: solid 3px #8ebf42">
-<br> -->
 
 <section>
    <div class="container d-flex justify-content-center align-items-center mb-2 ">
@@ -361,26 +349,82 @@
   </div>
 </section>
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script> -->
-<script>
-  $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-  });
-</script>
 
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script>
-          $(document).ready(function () {
-              $('.dropdown-toggle').dropdown();
-          });
-      </script> -->
+  <!--=========================== Modal ======================-->
+
+                      
+<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Wishlist</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <span id="msg"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!--================================ Modal ends========================= -->
 <br><br><br>
 <hr style="border: solid 3px #8ebf42">
 
-      <%- include('../layouts/footer.ejs') %> 
+      <%- include('../layouts/footer.ejs') %>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip;
+  });
+</script>
+
+
+
+<script>
+
+function addToWishList(PId,index){
+  var wishlistbtn= document.querySelector(`#wishlistIcon${PId}`)
+   var Pid=PId;
+  $.ajax({ 
+          url:`/wishlist/add_To_Wishlist/${PId}`,
+          type:'post',
+          contentType:'application/json',
+           dataType:'json',
+           success:function(res){
+                        
+              if(res.success){
+              
+              
+              $("#wishlistModal").modal("show")
+               $("#msg").html(res.message).show();
+              
+               
+   
+              }else{
+                 
+            if(res.message!='' || res.message!='undefined')
+             alert(res.message)
+        
+              }
+           },
+            error: function(err) {
+              console.error('Error', err);
+            }
+      })
+
+}
+
+
+</script>
+ 
+     
 </body>
 </html>

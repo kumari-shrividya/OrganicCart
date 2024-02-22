@@ -1,57 +1,73 @@
 <%- include('../layouts/adminHeader.ejs') %>
+<style>
+.form-field input:focus{
+  outline:none;
+}
+.form-field.error input{
+  border-color:#dc3545;
+  
+}
+
+.form-field.success input{
+  border-color:#28a745;
+}
+.form-field small{
+  color:#dc3545;
+}
+
+</style>
 <section style=" padding-top: 5px;" >
     <div class="category-form">
-        <form action="/product/addCoupon" method="post" >
+   
             <h2 class="text-center">Add Coupon</h2>
 
-            <div name="error" style="font-size:x-small; color:green; text-align: center;">
+            <form  id="coupon_Form" >
+            <div name="msg"  style="font-size:x-small; color:green; text-align: center;">
                 <% if(typeof message !=='undefined' ){ %>
-                    <h4>
+                    <h4 id="message">
                         <%= message %>
                     </h4>
                 <% } %>
             </div>
-
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Coupon Code" name="code" id="code"  text-center required="required" value="<%= data.code %>">
-                <% if( typeof errors !=='undefined' && errors.code ) { %>
-                    <span class="text-danger"><%= errors.code.msg %></span>
-                    <% } %>
+          
+            <div class="form-group  form-field">
+                <input type="text" class="form-control" placeholder="Coupon Code" name="code" id="couponCode"  text-center >
+                <small></small>
+               
             </div>
 
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Description" name="description" id="description"  text-center required="required" value="<%= data.description %>">
-                <% if( typeof errors !=='undefined' && errors.description ) { %>
-                    <span class="text-danger"><%= errors.description.msg %></span>
-                    <% } %>
+            <div class="form-group  form-field">
+                <!-- &nbsp;&nbsp;<label>CouponDescription</label> -->
+                <input type="text" class="form-control" placeholder="Description" name="description" id="couponDescription" style="padding:0px;" text-center >
+                <small></small>
+                
             </div>
             
-            <div class="form-group">
-                <input type="number" class="form-control" placeholder="OfferPrice" name="offerPrice" id="offerPrice"  text-center required="required" value="<%= data.offerPrice %>">
-                <% if( typeof errors !=='undefined' && errors.offerPrice ) { %>
-                    <span class="text-danger"><%= errors.offerPrice.msg %></span>
-                    <% } %>
+            <div class="form-group  form-field">
+                <input type="number" class="form-control" placeholder="OfferPercentage" name="offerPrice" id="discountPercent"  text-center >
+                <small></small>
+             
             </div>
 
-            <div class="form-group">
-                <input type="number" class="form-control" placeholder="MinimumAmount" name="minimumAmount" id="minimumAmount"  text-center required="required" value="<%= data.minimumAmount %>">
-                <% if( typeof errors !=='undefined' && errors.minimumAmount ) { %>
-                    <span class="text-danger"><%= errors.minimumAmount.msg %></span>
-                    <% } %>
+            <div class="form-group  form-field">
+                <input type="number" class="form-control" placeholder="MinimumAmount" name="minimumAmount" id="minimumAmount"  text-center >
+                <small></small>
+                
             </div>
 
-            <div class="form-group">
+            <div class="form-group  form-field">
                 &nbsp;&nbsp;&nbsp;&nbsp;<label>Expiry Date:</label>
-                <input type="date" class="form-control"  name="expiryDate" id="expiryDate"  text-center required="required" value="<%= data.expiryDate %>">
-                <% if( typeof errors !=='undefined' && errors.expiryDate ) { %>
-                    <span class="text-danger"><%= errors.expiryDate.msg %></span>
-                    <% } %>
+                <input type="date" class="form-control"  name="expiryDate" id="expirationDate"  text-center>
+                <small></small>
+                
             </div>
           
             <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Add Coupon</button>
+            <button type="submit"  class="btn btn-primary btn-block">Add Coupon</button>
             </div>
         </form>
 
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/coupon.js"></script>

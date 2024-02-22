@@ -37,18 +37,26 @@ const path=require('path');
 const {uploadImages,resizeImages,uploadCategoryImage}=require('../util/imageUpload');
 const{uploadImage,resizeImage}=require('../util/CategoryImageUpload')
 
+
+
+
 const multerFilter=(req,file,cb)=>{
     if(file.mimetype.startsWith('image')){
+
         cb(null,true);
     }
     else{
-        cb('Please upload images !',false);
+       cb('Please upload images !',false);
+
+           
     }
 };
 //upload category image to memory storage crop using sharp
 const storagecat=multer.memoryStorage();
 //const upload=multer({storage:storage});
-const uploadcat=multer({storage:storagecat,fileFilter:multerFilter});
+// const uploadcat=multer({storage:storagecat,fileFilter:multerFilter});
+const uploadcat=multer({storage:storagecat});
+
 
 // //upload product image to memory storage for edit image
 // const storageProd=multer.memoryStorage();
@@ -72,7 +80,7 @@ admin_route.get('/getChartData',adminController.getChartData);
 
 
 //load userList
-admin_route.get('/userList',adminAuth.isLogin,adminAuth.isLogin,adminController.loadUserList);
+admin_route.get('/userList',adminAuth.isLogin,adminController.loadUserList);
 //show user Address
 admin_route.get('/userAddress/:id',adminAuth.isLogin,adminController.loadUserAddress);
 //user Details
@@ -80,15 +88,21 @@ admin_route.get('/userDetails/:id',adminAuth.isLogin,adminController.loadUserDet
 //block user
 admin_route.get('/blockUser/:id',adminAuth.isLogin,adminController.blockUser);
 //unbloc user
-admin_route.get('/unblockUser/:id',adminController.unblockUser);
+admin_route.get('/unblockUser/:id',adminAuth.isLogin,adminController.unblockUser);
 //load add category
-admin_route.get('/category',adminController.loadCategory);
+admin_route.get('/category',adminAuth.isLogin,adminController.loadCategory);
 
 //post category ,multer to upload ,sharp to resize, and express-validator 
 admin_route.post('/category',uploadcat.single('image'),
 async(req,res,next)=>{
- 
-try{
+ try{
+    // if(!file.mimetype.startsWith('image')){
+
+
+
+    // }
+
+
     let fileName=req.file.originalname.replace(/\..+$/,'');
      fileName=req.file.originalname.split(' ').join('-');
     const imageUrl=`${fileName}-${Date.now()}.jpeg`;
@@ -102,7 +116,7 @@ try{
    next();
 }catch(error){
    // console.log(error); 
-   return res.status(500).send("error");
+   return res.status(500).send(error);
 }
 
 },
@@ -133,12 +147,14 @@ admin_route.get('/categoryList',adminController.loadCategoryList);
 admin_route.get('/editCategory/:id',adminController.loadEditCategory);
 
 //post method to edit category
-admin_route.post('/editCategory/:id', uploadImage,resizeImage,
+admin_route.post('/editCategory/:id', uploadImage,
+resizeImage,
 
 [
     check('title').trim().notEmpty().withMessage(" category Name is required")
 ],
 async (req,res,next)=>{
+
    var errors=validationResult(req);
    const data = matchedData(req);
   // console.log(errors);
@@ -178,7 +194,7 @@ admin_route.post('/product',uploadImages,resizeImages,
     async (req,res,next)=>{
         var errors=validationResult(req);
         const data = matchedData(req);
-        console.log(errors);
+       // console.log(errors);
         if (errors.isEmpty()) {
          return next();
         }
@@ -187,7 +203,7 @@ admin_route.post('/product',uploadImages,resizeImages,
                  const categories= await Category.find({});
                 if(categories){
                 return res.render('product',{categories,errors:errors.mapped(),data:data});
-                return
+               
                 }
             }catch(error){
                 console.log(error);
@@ -245,6 +261,8 @@ admin_route.get('/salesReport',adminController.loadSalesReport);
 admin_route.post('/salesReport',adminController.totalSales);
 admin_route.get('/totalSales',adminController.totalSales);
 // admin_route.get('/exportToExcel',adminController.exportToExcel);
+
+admin_route.get('/Aboutus',adminController.loadAboutus);
 
 
 

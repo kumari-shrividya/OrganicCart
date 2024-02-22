@@ -1,12 +1,25 @@
 <%- include('../layouts/adminHeader.ejs') %>
 
 <style>
-
+.swal2-button--confirm {
+  padding: 10px 20px; /* Adjust padding to change button size */
+    font-size: 16px; /* Adjust font size */
+}
   .swal2-confirm {
-        height: 20px; /* Adjust the height as needed */
-        background-color: aquamarine;
+    padding: 10px 20px; /* Adjust padding to change button size */
+    font-size: 16px;
       }
-  
+      .swal2-button{
+
+  border: 1px dashed #333;
+  height: 20px;
+}
+.swal2-popup .swal2-actions .swal2-confirm,
+.swal2-popup .swal2-actions .swal2-cancel {
+    padding: 15px 24px; /* Adjust padding to change button size */
+    font-size: 16px; /* Adjust font size */
+}
+
     </style>
 <section style=" padding-top: 5px;" >
     <!-- <div style="text-align: right;">Welcome, admin123@gmail.com</div> -->
@@ -52,6 +65,22 @@
 
 </div>
 </section>
+<!--pagination-->
+<% if (totalpages) { %>
+  <div class="pagination">
+    <% if (currentpage > 1) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage - 1 %>">Previous</a></button>
+    <% } %>
+
+    <% for (let i = 1; i <= totalpages; i++) { %> 
+      <button class="btn btn-sm"><a href="?page=<%= i %>" class="<%= i === currentpage ? 'active' : '' %>"><%= i %></a></button>
+    <% } %>
+
+    <% if (currentpage < totalpages) { %>
+      <button class="btn btn-sm"><a href="?page=<%= currentpage + 1 %>">Next</a></button>
+    <% } %>
+  </div>
+<% } %>
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -62,22 +91,24 @@
       language: {
         search: "_INPUT_",
         searchPlaceholder: "Search..."
-    }
+    },
+    "bPaginate": false,
   }
 
     );
 } );
   </script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <% if(typeof isEdit!=='undefined' && isEdit===true) { %>
     <script>
-    //  Swal.fire("category editted");
-    Swal.fire({
-        title: 'Category',
-        text: 'Category editted successfully',
-      
-        confirmButtonText: 'OK'
-    })
+   
+    swal.fire({
+            title:'Category editted successfully.',
+            showConfirmButton:false,
+            showCloseButton:true
+        })
+   
   </script>
  <% } %>
 

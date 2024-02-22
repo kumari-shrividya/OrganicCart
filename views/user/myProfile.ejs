@@ -1,4 +1,5 @@
 <%- include('../layouts/header.ejs') %>
+
 <style>
 body{background: #eee9f0}
 .form-control:focus{box-shadow: none;border-color: #BA68C8}
@@ -12,14 +13,21 @@ body{background: #eee9f0}
 </style>
 
 <section>
+
+
     <% if (typeof user!=='undefined') {%>
-    <div class="container rounded bg-white mt-5 mb-5" style="width:780px;height:420px" > 
-       
-        <form action="/myProfile" method="post"  >
-        <div class="row"> 
+    <div class="container rounded bg-white mt-5 mb-5" style="width:780px;height:480px" > 
+              
+        <form  id="editProfileForm" action="/myProfile"   method="post"  >
             
-            <div class="col-md-3 border-right"> 
-           
+    <div id="message" style="color:red;text-align: center;padding-top: 30px; font-weight: bold;">
+        <%if (typeof message !=='undefined'){%>
+            <%=message%>
+        <%}%></div>
+        <div class="row"> 
+
+         <div class="col-md-3 border-right"> 
+            
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <img class="rounded-circle mt-4" src="/images/avatar.jpg" style="margin-left: 40px;">
                 
@@ -36,7 +44,10 @@ body{background: #eee9f0}
                     <div class="col-md-12">
                     <!-- <label class="labels">Name</label> -->
                     <span>Name</span>
-                    <input  type="text" class="form-control" placeholder=" name"  name="name" value="<%=user.name%>">
+                    <input  type="text" class="form-control" placeholder="name"  name="name" value="<%=user.name%>">
+                    <% if( errors &&  errors.name  ) { %>
+                        <span class="text-danger"><%= errors.name.msg %></span>
+                        <% } %>
                  </div>
                    
                 </div>
@@ -44,7 +55,10 @@ body{background: #eee9f0}
                     <div class="col-md-12">
                         <!-- <label class="labels">PhoneNumber</label> -->
                         <span>PhoneNumber</span>
-                        <input type="text" class="form-control" placeholder=" phone number" name="phoneno" value="<%=user.phone%>">
+                        <input type="text" class="form-control" placeholder="phonenumber" name="phoneno" value="<%=user.phone%>">
+                        <% if( errors && errors.phone) { %>
+                            <span class="text-danger"><%= errors.phone.msg %></span>
+                            <% } %>
                     </div>
                     </div>
                     <div class="row mt-3">
@@ -52,24 +66,23 @@ body{background: #eee9f0}
                         <!-- <label class="labels">Email ID</label> -->
                         <span>Email ID</span>
                         <input type="text" class="form-control" placeholder="email id" name="email" value="<%=user.email%>">
+                        <% if( errors && errors.email ) { %>
+                            <span class="text-danger"><%= errors.email.msg %></span>
+                            <% } %>
                     </div> 
                     </div>
-                     <!-- <div class="row mt-3"> <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div> -->
                    
-                      <div class="mt-3 text-center"><button class="btn btn-primary profile-button" type="submit">Update Profile</button></div> </div> </div> 
+                   
+                      <div class="mt-2 text-center"><button class="btn btn-primary profile-button" type="submit">
+                        Update Profile</button></div> </div> </div> 
                       <%} %>
                 </form>
-                      <!-- <div class="col-md-4"> <div class="p-3 py-5"> 
-                       <div class="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"> -->
-
-                        <!-- </i>&nbsp;Experience</span></div><br> <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br> -->
-                         <!-- <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""> -->
-                        <!-- </div>  -->
-                    </div> 
+                
+                     </div> 
                 </div> 
             </div>
-           
 </div>
 </div>
 </div>
 </section>
+

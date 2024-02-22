@@ -8,10 +8,24 @@ const product = require("../models/productModel");
 //load admin OrderList
 const loadOrderList = async (req, res) => {
   try {
-    const orderData = await Order.find({}).sort({ order_Date: 1 });
+    let page = 1;
+    const limit = 15;
+    const orderData = await Order.find({}).sort({ order_Date: -1 });
+    // .sort({ order_Date: 1 });
     if (orderData) {
       req.session.orderId = orderData.orderId;
-      res.render("orders", { orders: orderData });
+      const itemsperpage = 15;
+      const currentpage = parseInt(req.query.page) || 1;
+      const startindex = (currentpage - 1) * itemsperpage;
+      const endindex = startindex + itemsperpage;
+      const totalpages = Math.ceil(orderData.length / 15);
+      let currentproducts = orderData.slice(startindex, endindex);
+
+      res.render("orders", {
+        orders: currentproducts,
+        totalpages,
+        currentpage,
+      });
     }
   } catch (error) {
     console.log(error);
@@ -28,11 +42,21 @@ const loadmyOrders = async (req, res) => {
     });
     if (orderData) {
       // req.session.orderId=orderData.orderId;
+
+      const itemsperpage = 8;
+      const currentpage = parseInt(req.query.page) || 1;
+      const startindex = (currentpage - 1) * itemsperpage;
+      const endindex = startindex + itemsperpage;
+      const totalpages = Math.ceil(orderData.length / 8);
+      let currentorderData = orderData.slice(startindex, endindex);
+
       res.render("myOrders", {
         user: userData,
-        orders: orderData,
+        orders: currentorderData,
         cart: req.session.cart,
-        message:''
+        message: "",
+        totalpages,
+        currentpage,
       });
     }
   } catch (error) {
@@ -72,107 +96,126 @@ const loadOrderDetails = async (req, res) => {
 };
 //cancel my order
 const cancelMyOrder = async (req, res) => {
-  
   // const order = await Order.findByIdAndUpdate(
-    //   req.params.id,
-    //   { order_Status: "cancelled" },
-    //   { new: true }
-    // );
-  
-       try {
-               const orderId=req.params.id;
-             const result= await Order.updateOne(
-            { _id: orderId },
+  //   req.params.id,
+  //   { order_Status: "cancelled" },
+  //   { new: true }
+  // );
+
+  try {
+    const orderId = req.params.id;
+    const result = await Order.updateOne(
+      { _id: orderId },
+      {
+        $set: {
+          order_Status: "Cancelled",
+        },
+      }
+    );
+
+    if (!result) {
+      // return res.status(400).send("Not updated");
+      return next(new Error("Not updated"));
+    } else {
+      const order = await Order.findOne({ _id: orderId });
+      // console.log(order.total_Amount);
+
+      const products = order.products;
+      const total = parseFloat(order.total_Amount);
+      const id = order._id;
+
+      if (typeof products !== "undefined") {
+        for (i = 0; i < products.length; i++) {
+          // find product and  incriment the  quantity
+
+          // await product.findByIdAndUpdate(products[i].product_Id, {
+          //   $inc: { quantity: products[i].quantity },
+          //  console.log(products[i].product_Id);
+          const productId = products[i].product_Id;
+          const qty = products[i].quantity;
+          const updated = await product.findByIdAndUpdate(
+            productId,
             {
-            $set: {
-            order_Status: "Cancelled"
-            }});
-       
-            if (!result) {
+              $inc: { quantity: qty },
+            },
+            { new: true }
+          );
+          // console.log(updated)
+        }
+      }
 
-              // return res.status(400).send("Not updated");
-               return next(new Error("Not updated"));
+      let wallet = [];
+      wallet.push({
+        order_id: order._id,
+        returned_Amount: total,
+        updated_Date: Date(),
+        reason: "Defected",
+      });
 
+      //incriment user wallet_balance and push details into  wallet history array
+      await User.updateMany(
+        { _id: req.session.user_id },
+        {
+          $push: { wallet_History: wallet },
+          $inc: { wallet_Balance: total },
+        },
+        { new: true }
+      );
 
-           } else {
+      const userData = await User.findOne({ _id: req.session.user_id });
+      const orderData = await Order.find({ user_Id: req.session.user_id }).sort(
+        {
+          order_Date: -1,
+        }
+      );
 
-            const order=await Order.findOne({_id: orderId})
-            console.log(order.total_Amount);
+      if (orderData) {
+        // req.session.orderId=orderData.orderId;
 
-            const products = order.products;
-            const total = parseFloat(order.total_Amount);
-            const id = order._id;
+        const itemsperpage = 8;
+        const currentpage = parseInt(req.query.page) || 1;
+        const startindex = (currentpage - 1) * itemsperpage;
+        const endindex = startindex + itemsperpage;
+        const totalpages = Math.ceil(orderData.length / 8);
+        let currentorderData = orderData.slice(startindex, endindex);
 
-            if (typeof products !== "undefined") {
-              for (i = 0; i < products.length; i++) {
-                // find product and  incriment the  quantity
-                await product.findByIdAndUpdate(products[i].product_Id, {
-                  $inc: { quantity: products[i].quantity },
-                });
-              }
-            }
-
-              let wallet = [];
-              wallet.push({
-                order_id: order._id,
-              returned_Amount: total,
-              updated_Date: Date(),
-              reason:"Cancelled"
-              });
-
-           //incriment user wallet_balance and push details into  wallet history array
-              await User.updateMany(
-                { _id: req.session.user_id },
-                {
-                  $push: { wallet_History: wallet },
-                  $inc: { wallet_Balance: total },
-                },
-                { new: true }
-              );
-
-               const userData = await User.findOne({ _id: req.session.user_id });
-              const orderData = await Order.find({ user_Id: req.session.user_id }).sort({
-              order_Date: -1
-              });
-              
-              if (orderData) {
-                // req.session.orderId=orderData.orderId;
-                res.render("myOrders", {
-                  user: userData,
-                  orders: orderData,
-                  cart: req.session.cart,success:true,message:'Order cancelled successfully!'
-                });
-              }
-      
-                  }
-            //method to reoad the orders with updated status
-          //  loadmyOrders
-          } catch (error) {
-            console.log(error);
-            return res.status(500).send("Server Error");
-          }
-  };
-
+        res.render("myOrders", {
+          user: userData,
+          orders: currentorderData,
+          cart: req.session.cart,
+          success: true,
+          message: "",
+          isCancel: true,
+          totalpages,
+          currentpage,
+        });
+      }
+    }
+    //method to reoad the orders with updated status
+    //  loadmyOrders
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server Error");
+  }
+};
 
 //load  admin order Status
 const loadOrderStatus = async (req, res) => {
   try {
     const orderID = req.params.id;
-    res.render("updateOrderStatus", { orderId: orderID }); 
+    res.render("updateOrderStatus", { orderId: orderID });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server Error");
-    }
+  }
 };
 
 //update  order status
 const updateOrderStatus = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { order_Status: req.body.status },
-      
-    );
+    const order = await Order.findByIdAndUpdate(req.params.id, {
+      order_Status: req.body.status,
+    });
     //{ new: true }
     if (!order) {
       return res.status(400).send("Not updated");
@@ -213,8 +256,6 @@ const sendReturnRequest = async (req, res) => {
         }
       }
     }
-    // res.send("order cancelled");
-    //  loadmyOrders
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server Error");
@@ -334,38 +375,39 @@ const rejectReturnRequest = async (req, res) => {
   }
 };
 //sales
-const sales=async()=>{
-//quantity of products sold
+const sales = async () => {
+  //quantity of products sold
 
-const result=await Order.aggregate([
-    
-      { $unwind: "$products" },
-      { $group: { _id: "$products.name",  count: { $sum:"$products.quantity" }}}
-   ])
+  const result = await Order.aggregate([
+    { $unwind: "$products" },
+    {
+      $group: { _id: "$products.name", count: { $sum: "$products.quantity" } },
+    },
+  ]);
   //productwise sales
-//   const result=await Order.aggregate([
-    
-//     { $unwind: "$products" },
-//     { $group: { _id: "$products.name", Total_Sales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} } }
-//  ])
-//datewise sales
-// const result=await Order.aggregate([
-  
-//   { $unwind: "$products" },
-//   { $group: { _id: {
-//       year : { $year : "$order_Date" },        
-//       month : { $month : "$order_Date" },        
-     
-//     }, Total_Sales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} } }
-// ])
-// day : { $dayOfMonth : "$order_Date" },
-//  {
-//   year : { $year : "$date" },        
-//   month : { $month : "$date" },        
-//   day : { $dayOfMonth : "$date" },
-// },
- console.log(result);
-}
+  //   const result=await Order.aggregate([
+
+  //     { $unwind: "$products" },
+  //     { $group: { _id: "$products.name", Total_Sales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} } }
+  //  ])
+  //datewise sales
+  // const result=await Order.aggregate([
+
+  //   { $unwind: "$products" },
+  //   { $group: { _id: {
+  //       year : { $year : "$order_Date" },
+  //       month : { $month : "$order_Date" },
+
+  //     }, Total_Sales: { $sum: { $multiply: [ "$products.price", "$products.quantity" ] }} } }
+  // ])
+  // day : { $dayOfMonth : "$order_Date" },
+  //  {
+  //   year : { $year : "$date" },
+  //   month : { $month : "$date" },
+  //   day : { $dayOfMonth : "$date" },
+  // },
+  console.log(result);
+};
 
 //Exports
 module.exports = {
@@ -382,5 +424,5 @@ module.exports = {
   loadAdminOrderDetails,
   acceptReturnRequest,
   rejectReturnRequest,
-  sales //check
+  sales, //check
 };

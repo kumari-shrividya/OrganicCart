@@ -18,7 +18,7 @@
              <h5 style="border-width: 1px;"> <%=user.name%></h5>
              <h5 style="border-width: 1px;"><%=bill_address[0].HouseName%></h5>
              <h5 style="border-width: 1px;"><%=bill_address[0].StreetName%></h5>
-             <h5 style="border-width: 1px;"><%=bill_address[0].City%></h5>&nbsp;
+             <h5 style="border-width: 1px;"><%=bill_address[0].City%></h5>&nb1  ````````````sp;
              <h5 style="border-width: 1px;"><%=bill_address[0].State%></h5>
                 <%=bill_address[0].Country%>,<br>&nbsp;<%=bill_address[0].Pincode%><br>
                &nbsp;<%=bill_address[0].ContactNumber%></small>  -->
@@ -105,46 +105,7 @@
           </div>
 
         </div>
-      
-          
-<!--           
-          <% if( typeof cart !=='undefined' ) { %>
-          <table class="table " style="vertical-align: middle; width:100% ">
-            <thead ">
-              <th>Item</th>
-              <th>Qty</th>
-              <th style="text-align: end;">Price</th>
-            </thead>
-            <tbody>
-            <% var count=parseFloat(0) %>
-            <% cart.forEach(function(product){ %>        
-           <tr >
-            <td><img style="width:100px;height: 100px; text-align: right;"; src="/images/product/<%= product.image %>" alt=" ">&nbsp;&nbsp;<%= product.name %></td>&nbsp;
-            <td><%=product.quantity %></td>
-            <td style="text-align: right;"><%=product.price %></td>
-            <% count+=1%>
-            <% }) %>
-           </tr>
-           <tr>
-            <td colspan="3" style="text-align-last:right">
-                
-            <p>Sub Total(<%=count%>)Items:<%=total%>.00</p>
-            <p>Shipping:0.00</p>
-            <p>Total:<%=total%>.00</p>
-          </td>
-        </tr>
-          <tr>
-            <td></td><td></td>
-           <td>
-             <div style="text-align: right"> 
-              <a class="btn btn-primary" href="/cart/payment">Select Pament Method</a>
-           </div>
-           </td>
-          </tr>
-        </tbody>
-      </table>
-      
-       -->
+
      </section> 
 
 <!-- </div> -->
