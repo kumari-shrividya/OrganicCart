@@ -9,12 +9,11 @@ const session=require('express-session');
 const config=require("../config/config");
 address_route.use(session({secret:config.sessionSecret,resave:true, saveUninitialized: true}))
 
-//addressController controller
+//addressController 
 const addressController=require('../controllers/addressController');
 
 //middleware
 const auth=require("../middleware/auth")
-//middleware
 const validation=require("../middleware/validation")
 
 
@@ -41,7 +40,7 @@ addressController.loadAdd_Address);
 //     if(!errors.isEmpty()){return res.render('addAddress',{errors:errors.mapped(),data:data});}}
 // ,addressController.add_Address);
 
- address_route.post('/addAddress',addressController.add_Address);
+ address_route.post('/addAddress',auth.isLogin,addressController.add_Address);
 
   //load address list
   address_route.get('/addressList',auth.isLogin,addressController.loadAddressList);
@@ -51,34 +50,29 @@ addressController.loadAdd_Address);
   //load edit  address page
   address_route.get('/editAddress/:id',auth.isLogin, addressController.loadEditAddress);
 
-    
-    //post edit  address page
-   address_route.post('/editAddress/:id',auth.isLogin,validation.addressValidationRules(),(req,res,next)=>{
-
-    try{
-          var errors=validationResult(req);
-          const data = matchedData(req);
-            if (errors.isEmpty()) {
+  //post edit  address page
+  address_route.post('/editAddress/:id',auth.isLogin,validation.addressValidationRules(),
+     (req,res,next)=>{
+        try{
+           var errors=validationResult(req);
+           const data = matchedData(req);
+          if (errors.isEmpty()) {
             return next();
           } 
-        if(!errors.isEmpty()){
-          return res.render('editAddress',{user:req.session.editAddressUser,address:req.session.editAddressUser.address,
+          if(!errors.isEmpty()){
+            return res.render('editAddress',{user:req.session.editAddressUser,
+              address:req.session.editAddressUser.address,
             errors:errors.mapped(),data:data});
           }
-    }catch(error){
- 
-      return res.status(500).send("Server Error");
-    }
+      }catch(error){
+       return res.status(500).send("Server Error");
+      }
+  },addressController.updateEditAddress);
 
-},addressController.updateEditAddress);
-
-//delete address
+  //delete address
   address_route.get('/deleteAddress/:id',auth.isLogin,addressController.deleteAddress);
-
-  //get checkout addess
-
+ //get checkout addess
   address_route.get('/getCheckoutAddress/:id',auth.isLogin,addressController.getCheckoutAddress);
 
-
 //Exports
-module.exports=address_route
+ module.exports=address_route

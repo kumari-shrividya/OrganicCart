@@ -25,6 +25,8 @@ const bodyparser=require('body-parser');
 product_route.use(bodyparser.urlencoded({extended:false}));
 product_route.use(bodyparser.json());
 
+//admin auth
+const adminAuth=require('../middleware/adminAuth');
 
 //multer
 const multer=require('multer');
@@ -35,73 +37,34 @@ const path=require('path');
 const storageProd=multer.memoryStorage();
 const uploadprod=multer({storage:storageProd});
 
-//load user product list search
+// search products by name or description
  product_route.post('/user_Products_FilterSearch',productController.getAllProducts);
 
-//load user product list search
+// filter  product  by category
 product_route.post('/filterProductsByCategory',productController.filterProductsByCategory);
 
-// product_route.get('/filterProductsByCategory',productController.filterProductsByCategory);
- //load user home product list
+ //load  search page
   product_route.get('/user_Products_Search',productController.loadUser_Product_Search);
 
  //load product details
  product_route.get('/details/:id',productController.getProductDetails);
 
- //delete product image
- product_route.get('/deleteImage/:id',productController.deleteImage);
-
  //load add coupon
- product_route.get('/addCoupon',couponController.loadCoupon);
- //post add coupon
-//  product_route.post('/addCoupon',validation.couponValidationRules(), async (req,res,next)=>{
-//     var errors=validationResult(req);
-//     const data = matchedData(req);
-//     console.log(errors);
-//     if (errors.isEmpty()) {  return next();    }
-//     if(!errors.isEmpty()){
-//         try{
-            
-//             return res.render('product',{addCoupon,errors:errors.mapped(),data:data});
-//         }catch(error){
-//             console.log(error);
-//         }
-//     }
-// }
-//  ,couponController.addCoupon);
-
-product_route.post('/addCoupon',couponController.addCoupon);
+ product_route.get('/addCoupon',adminAuth.isLogin,couponController.loadCoupon);
+ 
+product_route.post('/addCoupon',adminAuth.isLogin,couponController.addCoupon);
 
 //load coupon list
-product_route.get('/couponList',couponController.loadCouponList);
+product_route.get('/couponList',adminAuth.isLogin,couponController.loadCouponList);
 
 //load edit coupon
-product_route.get('/editCoupon/:id',couponController.loadEditCoupon);
+product_route.get('/editCoupon/:id',adminAuth.isLogin,couponController.loadEditCoupon);
 
 //edit coupon
-product_route.put('/editCoupon/:id',couponController.editCoupon);
+product_route.put('/editCoupon/:id',adminAuth.isLogin,couponController.editCoupon);
 
 //delete coupon
-product_route.get('/deleteCoupon/:id',couponController.deleteCoupon);
-
-
-
-//edit product image
-//post category ,multer to upload ,sharp to resize, and express-validator 
-// product_route.get('/editImage/:id',uploadprod.single('image'),
-// async(req,res,next)=>{
-// req.session.prodFileName=Date.now()+'_'+req.file.originalname;
-// try{
-//     await sharp(req.file.buffer)
-//     .resize({width:250,height:225})
-//     .jpeg
-//     .toFile('./public/images/product/'+req.session.prodFileName);
-//    next();
-// }catch(error){
-//     console.log(error);
-// }
-
-// }, productController.editProductImage);
+product_route.get('/deleteCoupon/:id',adminAuth.isLogin,couponController.deleteCoupon);
 
 //export
 module.exports= product_route

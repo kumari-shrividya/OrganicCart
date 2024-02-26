@@ -49,13 +49,13 @@
 
                   <h6><%= products[i].title %></h6>
                  <div>Price: <strong>Rs.<%=products[i].unit_price %>.00</strong>&nbsp;&nbsp;
-               
+                
                   <a data-toggle="tooltip" data-placement="top" title="Add to Wishlist"  href="#" 
                      onclick="addToWishList('<%=products[i]._id %>','<%i%>')">
-                     <span  > <i class="fa fa-heart"  style=" color:#add8e6"></i></span>
+                     <span > <i class="fa fa-heart"  style=" color:#add8e6"></i></span>
                      <small  id="wishlistIcon<%=products[i]._id %>" style="color:red;text-decoration: none;"></small>
                     </a>
-                   
+                 
                 </div>
 
                 <div class="my-2"> 

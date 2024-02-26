@@ -115,17 +115,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <% if(typeof isOtpVerified!=='undefined' && isOtpVerified===true) { %>
  <script>
-//   Swal.fire({
-//   title: "Organic Cart",
-//   text: "Product Added",
-//   icon: "success"
-// });
-Swal.fire("Otp verification completed.Enjoy shopping");
-// swal.fire(
-//   'Organic Cart',
-//   'Product Added',
-//   'success'
-//   )
+
+swal.fire({
+                        title:'Your Otp verification completed successfully.Enjoy shopping!!',
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
+
 </script>
 <% } %>
 

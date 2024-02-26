@@ -29,15 +29,9 @@ const addressValidationRules=()=>{
 
         var errors=validationResult(req);
         const data = matchedData(req);
-        //console.log(errors);
-       // req.session.addresserrors=errors;
-        // if (errors.isEmpty()) {
-        //  return next();
-        // } 
-        // if(!errors.isEmpty()){
-        // //  return res.render('editAddress/:id',{errors:errors.mapped(),data:data});
+       
         return ({errors:errors.mapped(),data:data})
-        //}
+     
       }
 
 

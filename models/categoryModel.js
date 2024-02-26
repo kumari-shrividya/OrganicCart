@@ -4,18 +4,7 @@ const mongoose=require('mongoose');
 
 const catgorySchema= new mongoose.Schema({
 
-    // title:{
-    //     type:String,
-    //     required:true
-    // },
-    // description:{
-    //     type:String,
-    //     required:true
-    // },
-    // isActive:{
-    //     type:Number,
-    //     default:1
-    // }
+    
     category: { type: String, 
         required: true,
        

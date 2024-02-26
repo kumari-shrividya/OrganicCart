@@ -7,7 +7,7 @@
         <h5>Wallet History</h5>
         <hr>
          <h6>Wallet balance:&nbsp;Rs.<%=user.wallet_Balance%>.00</h6>
-          <table class="table mt-5 table-striped">
+          <table class="table mt-5 table-striped" id="myTable">
             <thead>
              <tr>
                   <th scope="col">Order _Id</th>
@@ -36,4 +36,17 @@
           </table>
     
    </div>
+   <script>
+    $(document).ready( function () {
+      $('#myTable').DataTable({
+        language: {
+          search: "_INPUT_",
+          searchPlaceholder: "Search..."
+      },
+   
+    }
+  
+      );
+  } );
+    </script>
 <!-- </section> -->

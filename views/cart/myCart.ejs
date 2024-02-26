@@ -1,13 +1,6 @@
 <%- include('../layouts/header.ejs') %>
 
-<!-- <section class="main">
-  <div class="container py-5">
-      <div class="row py-4">
-          <div class="col-lg-7 pt-5 text-center">
-              <h2 class="pt-4">Nature Has Always Cared For Us!</h2>
-          </div>
-      </div>
-  </div> -->
+
 
 </section>
 
@@ -138,11 +131,7 @@ function incriment(PId,index){
                   console.log(res.grandTotal);
                  
                 }else{
-            //       new swal({  
-            // title: " Oops!",  
-            // text: res.message, 
-            // icon: "error",  
-            // button: "oh no!",  
+            
             if(res.message!='' || res.message!='undefined')
             alert(res.message)
             // }); 
@@ -177,11 +166,7 @@ function decriment(PId,index){
                 }
    
               }else{
-          //       new swal({  
-          // title: " Oops!",  
-          // text: res.message, 
-          // icon: "error",  
-          // button: "oh no!",  
+         
           if(res.message!='' || res.message!='undefined')
           alert(res.message)
           // }); 
@@ -209,23 +194,13 @@ $.ajax({
           // let num= parseInt(document.getElementById(`quantity${index}`).innerHTML)
           if(res.quantity==0){
             window.location.reload()
-          // }else{
-          //   document.getElementById(`quantity${index}`).innerHTML =res.quantity;
-          // // let Aprice = parseInt(price)
-          // // let totalAmount = parseInt(document.getElementById("totalAountSub").innerHTML)
-          // document.getElementById(`subTotal${index}`).innerHTML = res.subTotal;
-          // document.getElementById(`grandTotal`).innerHTML ="Rs. " + res.grandTotal +" .00";
-          // // console.log(res.grandTotal);
+          
 
            }
            
          
         }else{
-            //       new swal({  
-            // title: " Oops!",  
-            // text: res.message, 
-            // icon: "error",  
-            // button: "oh no!",  
+            
             if(res.message!='' || res.message!='undefined')
             alert(res.message)
             // }); 

@@ -71,7 +71,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <% if(typeof isEditted!=='undefined' && isEditted===true) { %>
 <script>
-Swal.fire("Product Editted");
+swal.fire({  title:"Product Editted",
+                        showConfirmButton:false,
+                        showCloseButton:true
+                    })
 </script>
 <% } %>
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>

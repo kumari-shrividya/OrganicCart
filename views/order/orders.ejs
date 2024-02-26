@@ -1,5 +1,16 @@
 <%- include('../layouts/adminHeader.ejs') %>
 
+<div name="error" >
+  <%
+  if(typeof message !=='undefined'){
+
+   %>
+ <h5 style="color:red;text-align: center;"><%= message %></h5>
+ <%
+  }
+ %>
+</div>
+
 <section style="padding-top: 5px;" >
   <br><br>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
